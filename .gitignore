@@ -1,0 +1,104 @@
+# ---------------------------------------------------------------
+# Datasets (downloaded separately - see MMAD/README.md)
+# ---------------------------------------------------------------
+MMAD/GoodsAD/
+MMAD/MVTec-LOCO/
+MMAD/MVTec-AD/
+MMAD/VisA/
+MMAD/DS-MVTec/
+MMAD/mmad.json
+MMAD/metadata.csv
+
+# Any dataset-ish folder dropped anywhere
+data/
+datasets/
+raw_data/
+
+# ---------------------------------------------------------------
+# Environments
+# ---------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+Local-training/.venv/
+
+# ---------------------------------------------------------------
+# Python bytecode / build junk
+# ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------------
+# Model weights / checkpoints / heavy binaries
+# ---------------------------------------------------------------
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.onnx
+*.h5
+*.pkl
+*.npz
+*.npy
+checkpoints/
+models/
+weights/
+lora_adapters/
+adapters/
+
+# Hugging Face / torch caches if they ever land in-tree
+.cache/
+huggingface/
+hf_cache/
+torch_cache/
+transformers_cache/
+
+# ---------------------------------------------------------------
+# Archives
+# ---------------------------------------------------------------
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+*.rar
+
+# ---------------------------------------------------------------
+# Logs / runtime scratch
+# ---------------------------------------------------------------
+*.log
+logs/
+runs/
+wandb/
+tmp/
+scratch/
+nohup.out
+
+# ---------------------------------------------------------------
+# OS / editor
+# ---------------------------------------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# ---------------------------------------------------------------
+# Secrets
+# ---------------------------------------------------------------
+.env
+.env.*
+!.env.example

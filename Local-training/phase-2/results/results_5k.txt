@@ -1,0 +1,2236 @@
+==========================================================================================
+PHASE 2 & PHASE 3: 5,000-SAMPLE HIGH-SCALE ROBUSTNESS REPORT
+==========================================================================================
+Generated on          : 2026-09-19 02:40:14
+Evaluated Model       : Qwen/Qwen3-VL-2B-Instruct (FP16)
+Hardware              : NVIDIA GeForce RTX 4060 Laptop GPU (8.19 GB VRAM)
+Total Unique Images   : 5,000
+Total Evaluated Items : 25,000
+Severity Tested       : Level 4 (Severe Factory Industrial Condition)
+==========================================================================================
+
+1. EXECUTIVE ACCURACY SUMMARY (N=5,000)
+------------------------------------------------------------------------------------------
+Clean Laboratory Baseline Accuracy : 69.86%
+Conveyor Motion Blur (Corrupted)   : 66.10% (Loss: -3.76%)
+TTA Mitigated Motion Blur          : 65.78% (RRR: -8.51%)
+Gaussian Sensor Noise (Corrupted)  : 66.64% (Loss: -3.22%)
+TTA Mitigated Gaussian Noise       : 66.68% (RRR: +1.24%)
+
+2. SUBTASK-LEVEL ACCURACY TABLE (N=5,000)
+------------------------------------------------------------------------------------------
+Subtask                    | Samples  | Clean Acc  | MBlur Acc  | MBlur TTA  | GNoise Acc  | GNoise TTA 
+-----------------------------------------------------------------------------------------------
+Anomaly Detection          | 558      |    55.56% |    55.20% |    54.30% |     53.76% |     53.76%
+Defect Analysis            | 555      |    76.94% |    86.13% |    86.85% |     87.39% |     87.75%
+Defect Classification      | 555      |    45.77% |    60.54% |    61.62% |     44.14% |     43.60%
+Defect Description         | 555      |    72.61% |    72.07% |    71.53% |     74.05% |     73.87%
+Defect Localization        | 555      |    47.75% |    53.15% |    56.58% |     50.63% |     49.55%
+Object Analysis            | 555      |    82.52% |    65.05% |    62.70% |     67.57% |     67.03%
+Object Classification      | 557      |    89.23% |    69.84% |    66.25% |     77.56% |     78.82%
+Object Details             | 555      |    74.05% |    62.34% |    62.16% |     67.21% |     69.01%
+Object Structure           | 555      |    84.32% |    70.63% |    70.09% |     77.48% |     76.76%
+
+
+3. SAMPLE DETAILED QUESTION EVALUATION CARDS (First 200 Samples)
+------------------------------------------------------------------------------------------
+
+[CARD #0001] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/023_008.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0002] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_half_open/024_009.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0003] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/051_001.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0004] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/069_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0005] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/028_014.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0006] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/095_001.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0007] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_open/087_022.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0008] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/114_006.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0009] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/082_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0010] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/050_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0011] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/047_004.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0012] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/surface_damage/029_019.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0013] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/040_020.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0014] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/071_002.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0015] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/063_002.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0016] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/056_004.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0017] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/087_016.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0018] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/016_028.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0019] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/deformation/015_019.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0020] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/broken/070_009.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0021] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/054_001.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0022] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/opened/014_009.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0023] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/061_024.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0024] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/037_008.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0025] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/035_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0026] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/049_008.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0027] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/037_021.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0028] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/089_019.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0029] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/opened/015_026.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0030] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/surface_damage/026_015.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0031] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/077_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0032] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/013_001.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0033] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/017_003.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0034] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/028_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0035] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/040_023.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0036] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/surface_damage/002_024.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0037] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/076_008.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0038] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/014_003.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0039] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/081_006.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0040] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/straw_missing/054_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0041] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/114_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0042] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/054_006.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0043] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/004_023.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0044] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/109_006.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0045] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/deformation/019_033.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0046] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/surface_damage/012_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0047] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/broken/071_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0048] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/058_016.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0049] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/113_002.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0050] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/opened/032_025.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0051] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/029_016.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0052] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_open/009_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0053] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/003_018.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0054] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/035_006.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0055] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/061_009.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0056] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/deformation/046_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0057] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/008_008.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0058] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/broken/089_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0059] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/deformation/024_026.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0060] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/opened/062_013.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0061] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/054_022.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0062] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/041_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0063] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/025_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0064] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/001_004.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0065] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/053_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0066] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/007_009.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0067] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/deformation/041_006.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0068] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/037_004.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0069] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/016_029.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0070] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/113_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0071] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/051_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0072] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/054_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0073] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/opened/019_034.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0074] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/018_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0075] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/deformation/029_021.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0076] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/020_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0077] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/deformation/037_024.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0078] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/deformation/004_028.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0079] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/074_004.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0080] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/066_008.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0081] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/059_024.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0082] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/093_003.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0083] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/035_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0084] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/027_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0085] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/broken/077_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0086] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/017_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0087] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/030_003.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0088] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/026_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0089] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/028_013.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0090] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/021_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0091] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/opened/042_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0092] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/004_021.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0093] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/062_027.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0094] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/024_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0095] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/008_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0096] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/opened/003_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0097] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/088_027.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0098] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/001_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0099] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/good/026_026.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0100] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/011_006.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0101] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/010_017.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0102] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/072_002.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0103] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/good/015_012.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0104] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/018_024.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0105] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/060_022.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0106] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/022_004.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0107] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/076_002.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0108] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/opened/037_024.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0109] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/good/015_002.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0110] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/078_002.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0111] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/045_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0112] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/surface_damage/052_018.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0113] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/016_022.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0114] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/028_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0115] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/opened/031_027.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0116] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/002_001.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0117] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/058_017.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0118] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/079_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0119] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/031_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0120] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/opened/014_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0121] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/034_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0122] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/057_018.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0123] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/surface_damage/014_008.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0124] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/048_019.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0125] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/surface_damage/012_012.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0126] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/017_027.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0127] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/deformation/024_027.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0128] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/088_026.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0129] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_open/081_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0130] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/deformation/028_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0131] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/surface_damage/041_017.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0132] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/052_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0133] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/002_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0134] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_half_open/018_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0135] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/011_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0136] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/007_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0137] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/018_001.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0138] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/087_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0139] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/040_021.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0140] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/surface_damage/056_013.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0141] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/019_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0142] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/008_028.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0143] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/005_025.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0144] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/surface_damage/054_013.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0145] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/surface_damage/007_033.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0146] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/018_014.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0147] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/039_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0148] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/063_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0149] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/023_003.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0150] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/086_009.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0151] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_half_open/039_008.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0152] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/089_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0153] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/030_015.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0154] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/059_023.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0155] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/025_008.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0156] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/055_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0157] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/090_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0158] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/deformation/046_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0159] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/good/055_021.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0160] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/016_019.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0161] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/opened/019_036.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0162] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/006_003.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0163] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/057_020.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0164] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/surface_damage/055_023.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0165] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/036_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0166] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/deformation/024_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0167] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_half_open/006_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0168] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/004_009.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0169] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/deformation/061_006.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0170] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/022_009.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0171] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/085_009.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0172] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/broken/077_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0173] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/061_008.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0174] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/005_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0175] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/deformation/046_029.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0176] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/019_005.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0177] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/035_015.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0178] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/021_002.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0179] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/001_001.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0180] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/broken/068_009.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0181] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/good/026_025.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0182] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/surface_damage/030_014.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0183] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/039_003.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0184] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_half_open/026_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0185] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/deformation/026_026.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0186] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/good/007_002.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0187] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/023_006.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0188] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/013_006.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0189] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/025_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0190] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/019_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0191] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/046_010.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0192] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/045_004.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0193] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/surface_damage/026_029.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0194] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/025_004.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0195] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/024_009.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0196] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_open/012_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0197] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_open/021_011.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='B' -> TTA Restored='B'
+
+[CARD #0198] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/051_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : A [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='A'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0199] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/surface_damage/012_039.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='A' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'
+
+[CARD #0200] Subtask: Anomaly Detection | Dataset: GoodsAD | Category: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/056_009.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Motion Blur Test (Sev 4)     : Corrupted='B' -> TTA Restored='B'
+Gaussian Noise Test (Sev 4)  : Corrupted='A' -> TTA Restored='A'

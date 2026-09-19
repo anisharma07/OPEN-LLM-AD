@@ -1,0 +1,171 @@
+{
+  "phase": "Phase 2 — Industrial Corruption Robustness Study",
+  "timestamp": "2026-09-18T20:07:33.928554+00:00",
+  "model": "Qwen/Qwen3-VL-2B-Instruct",
+  "loader": "Qwen3VLForConditionalGeneration",
+  "gpu_info": {
+    "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "gpu_memory_gb": 8.19,
+    "cuda_version": "12.4"
+  },
+  "clean_accuracy": 73.33,
+  "mean_rds": 0.381,
+  "severities_evaluated": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "corruptions_evaluated": [
+    "gaussian_noise",
+    "motion_blur",
+    "low_light",
+    "specular_glare",
+    "defocus_blur",
+    "perspective_tilt",
+    "compression"
+  ],
+  "rds_values": {
+    "gaussian_noise": 0.889,
+    "motion_blur": 1.778,
+    "low_light": 0.444,
+    "specular_glare": 0.0,
+    "defocus_blur": 0.444,
+    "perspective_tilt": -0.889,
+    "compression": 0.0
+  },
+  "cfb_values": {
+    "gaussian_noise": ">5 (Resilient)",
+    "motion_blur": ">5 (Resilient)",
+    "low_light": ">5 (Resilient)",
+    "specular_glare": ">5 (Resilient)",
+    "defocus_blur": ">5 (Resilient)",
+    "perspective_tilt": ">5 (Resilient)",
+    "compression": ">5 (Resilient)"
+  },
+  "rri_values": {
+    "gaussian_noise": 0.982,
+    "motion_blur": 1.0,
+    "low_light": 1.0,
+    "specular_glare": 1.024,
+    "defocus_blur": 0.988,
+    "perspective_tilt": 1.079,
+    "compression": 1.061
+  },
+  "corruption_curves": {
+    "gaussian_noise": [
+      73.33333333333333,
+      75.55555555555556,
+      75.55555555555556,
+      71.11111111111111,
+      68.88888888888889,
+      68.88888888888889
+    ],
+    "motion_blur": [
+      73.33333333333333,
+      77.77777777777779,
+      75.55555555555556,
+      75.55555555555556,
+      73.33333333333333,
+      64.44444444444444
+    ],
+    "low_light": [
+      73.33333333333333,
+      73.33333333333333,
+      73.33333333333333,
+      75.55555555555556,
+      73.33333333333333,
+      71.11111111111111
+    ],
+    "specular_glare": [
+      73.33333333333333,
+      73.33333333333333,
+      75.55555555555556,
+      77.77777777777779,
+      75.55555555555556,
+      73.33333333333333
+    ],
+    "defocus_blur": [
+      73.33333333333333,
+      80.0,
+      75.55555555555556,
+      66.66666666666666,
+      68.88888888888889,
+      71.11111111111111
+    ],
+    "perspective_tilt": [
+      73.33333333333333,
+      80.0,
+      77.77777777777779,
+      80.0,
+      80.0,
+      77.77777777777779
+    ],
+    "compression": [
+      73.33333333333333,
+      80.0,
+      77.77777777777779,
+      77.77777777777779,
+      80.0,
+      73.33333333333333
+    ]
+  },
+  "subtask_resilience": {
+    "Anomaly Detection": {
+      "clean_accuracy": 60.0,
+      "sev5_accuracy": 65.7,
+      "degradation_drop": -5.7,
+      "rds": -1.143
+    },
+    "Defect Analysis": {
+      "clean_accuracy": 80.0,
+      "sev5_accuracy": 85.7,
+      "degradation_drop": -5.7,
+      "rds": -1.143
+    },
+    "Defect Classification": {
+      "clean_accuracy": 60.0,
+      "sev5_accuracy": 57.1,
+      "degradation_drop": 2.9,
+      "rds": 0.571
+    },
+    "Defect Description": {
+      "clean_accuracy": 60.0,
+      "sev5_accuracy": 60.0,
+      "degradation_drop": 0.0,
+      "rds": 0.0
+    },
+    "Defect Localization": {
+      "clean_accuracy": 40.0,
+      "sev5_accuracy": 34.3,
+      "degradation_drop": 5.7,
+      "rds": 1.143
+    },
+    "Object Analysis": {
+      "clean_accuracy": 100.0,
+      "sev5_accuracy": 91.4,
+      "degradation_drop": 8.6,
+      "rds": 1.714
+    },
+    "Object Classification": {
+      "clean_accuracy": 100.0,
+      "sev5_accuracy": 94.3,
+      "degradation_drop": 5.7,
+      "rds": 1.143
+    },
+    "Object Details": {
+      "clean_accuracy": 60.0,
+      "sev5_accuracy": 57.1,
+      "degradation_drop": 2.9,
+      "rds": 0.571
+    },
+    "Object Structure": {
+      "clean_accuracy": 100.0,
+      "sev5_accuracy": 97.1,
+      "degradation_drop": 2.9,
+      "rds": 0.571
+    }
+  },
+  "total_inferences": 1620
+}

@@ -1,0 +1,644 @@
+========================================================================================
+          PHASE 2: INDUSTRIAL CORRUPTION ROBUSTNESS & DEGRADATION REPORT
+========================================================================================
+
+1. HARDWARE & BENCHMARK CONFIGURATION
+----------------------------------------------------------------------------------------
+  Model Evaluated     : Qwen/Qwen3-VL-2B-Instruct (FP16)
+  Hardware Device     : NVIDIA GeForce RTX 4060 Laptop GPU (8.19 GB VRAM)
+  Clean Baseline Acc  : 73.3%
+  Mean Degradation RDS: 0.381 % accuracy drop per severity level
+  Corruptions Tested  : 7 real-world industrial imaging faults
+  Severities Tested   : [1, 2, 3, 4, 5] (from mild to extreme)
+  Total Evaluations   : 1620 inferences
+
+2. ROBUSTNESS DEGRADATION SLOPE (RDS) & CRITICAL FAILURE BOUNDARIES (CFB)
+----------------------------------------------------------------------------------------
+| Corruption Type            | Clean   | Sev 1   | Sev 3   | Sev 5   | RDS     | CFB        |
+|----------------------------+---------+---------+---------+---------+---------+------------|
+| Gaussian Sensor Noise      | 73.3 % | 75.6%   | 71.1%   | 68.9%   | +0.89   | >5 (Resilient) |
+| Conveyor Motion Blur       | 73.3 % | 77.8%   | 75.6%   | 64.4%   | +1.78   | >5 (Resilient) |
+| Low-Light / Underexposure  | 73.3 % | 73.3%   | 75.6%   | 71.1%   | +0.44   | >5 (Resilient) |
+| Specular Glare / Reflection | 73.3 % | 73.3%   | 77.8%   | 73.3%   | +0.00   | >5 (Resilient) |
+| Defocus Blur (Optical Drift) | 73.3 % | 80.0%   | 66.7%   | 71.1%   | +0.44   | >5 (Resilient) |
+| Perspective Off-Axis Tilt  | 73.3 % | 80.0%   | 80.0%   | 77.8%   | -0.89   | >5 (Resilient) |
+| JPEG Edge Compression      | 73.3 % | 80.0%   | 77.8%   | 73.3%   | +0.00   | >5 (Resilient) |
+----------------------------------------------------------------------------------------
+
+3. SUBTASK FRAGILITY & RESILIENCE RANKING (CLEAN VS SEVERITY 5)
+----------------------------------------------------------------------------------------
+| Subtask Name             | Clean Acc   | Sev 5 Acc   | Drop (%)   | Status           |
+|--------------------------+-------------+-------------+------------+------------------|
+| Object Analysis          | 100.0    % | 91.4     % | 8.6     % | 🛡️ RESILIENT     |
+| Defect Localization      | 40.0     % | 34.3     % | 5.7     % | 🛡️ RESILIENT     |
+| Object Classification    | 100.0    % | 94.3     % | 5.7     % | 🛡️ RESILIENT     |
+| Defect Classification    | 60.0     % | 57.1     % | 2.9     % | 🛡️ RESILIENT     |
+| Object Details           | 60.0     % | 57.1     % | 2.9     % | 🛡️ RESILIENT     |
+| Object Structure         | 100.0    % | 97.1     % | 2.9     % | 🛡️ RESILIENT     |
+| Defect Description       | 60.0     % | 60.0     % | 0.0     % | 🛡️ RESILIENT     |
+| Anomaly Detection        | 60.0     % | 65.7     % | -5.7    % | 🛡️ RESILIENT     |
+| Defect Analysis          | 80.0     % | 85.7     % | -5.7    % | 🛡️ RESILIENT     |
+----------------------------------------------------------------------------------------
+
+4. SAMPLE CORRUPTED TEST CASE CARDS (INSPECTION LOG)
+----------------------------------------------------------------------------------------
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0001 | Clean (Clean) | Subtask: Anomaly Detection | PASS [MATCH]               │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 006.png
+│ Question         : Is there any defect in the object?
+│ Actual Answer    : (B) No.
+│ Generated Answer : (B) No.
+│ Status           : CORRECT [PASS] (0.5s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0002 | Clean (Clean) | Subtask: Anomaly Detection | FAIL [MISMATCH]            │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 012.png
+│ Question         : Is there any defect in the object?
+│ Actual Answer    : (A) Yes.
+│ Generated Answer : (B) No.
+│ Status           : INCORRECT [FAIL] (0.16s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0003 | Clean (Clean) | Subtask: Anomaly Detection | PASS [MATCH]               │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 069.JPG
+│ Question         : Is there any defect in the object?
+│ Actual Answer    : (B) Yes.
+│ Generated Answer : (B) Yes.
+│ Status           : CORRECT [PASS] (0.14s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0004 | Clean (Clean) | Subtask: Anomaly Detection | PASS [MATCH]               │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 078.JPG
+│ Question         : Is there any defect in the object?
+│ Actual Answer    : (B) Yes.
+│ Generated Answer : (B) Yes.
+│ Status           : CORRECT [PASS] (0.14s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0005 | Clean (Clean) | Subtask: Anomaly Detection | FAIL [MISMATCH]            │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 073.png
+│ Question         : Is there any defect in the object?
+│ Actual Answer    : (B) No.
+│ Generated Answer : (A) Yes.
+│ Status           : INCORRECT [FAIL] (0.13s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0006 | Clean (Clean) | Subtask: Defect Classification | FAIL [MISMATCH]        │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 005.png
+│ Question         : There is a defect in the object. What is the type of the defect?
+│ Actual Answer    : (D) A small, distinct, circular spot.
+│ Generated Answer : (B) Missing teeth on the zipper.
+│ Status           : INCORRECT [FAIL] (0.15s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0007 | Clean (Clean) | Subtask: Defect Classification | PASS [MATCH]           │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 013.png
+│ Question         : There is a defect in the object. What is the type of the defect?
+│ Actual Answer    : (C) Thread damage.
+│ Generated Answer : (C) Thread damage.
+│ Status           : CORRECT [PASS] (0.15s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0008 | Clean (Clean) | Subtask: Defect Classification | FAIL [MISMATCH]        │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 055_009.jpg
+│ Question         : There is a defect in the object. What is the type of the defect?
+│ Actual Answer    : (B) Scratch
+│ Generated Answer : (C) Dent
+│ Status           : INCORRECT [FAIL] (0.2s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0009 | Clean (Clean) | Subtask: Defect Classification | PASS [MATCH]           │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 002.png
+│ Question         : There is a defect in the object. What is the type of the defect?
+│ Actual Answer    : (B) Faulty imprint.
+│ Generated Answer : (B) Faulty imprint.
+│ Status           : CORRECT [PASS] (0.15s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0010 | Clean (Clean) | Subtask: Defect Classification | PASS [MATCH]           │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 019_007.jpg
+│ Question         : There is a defect in the object. What is the type of the defect?
+│ Actual Answer    : (A) Disruption along the top edge
+│ Generated Answer : (A) Disruption along the top edge
+│ Status           : CORRECT [PASS] (0.2s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0011 | Clean (Clean) | Subtask: Defect Localization | PASS [MATCH]             │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 008.png
+│ Question         : There is a defect in the object. Where is the defect?
+│ Actual Answer    : (D) Center left.
+│ Generated Answer : (D) Center left.
+│ Status           : CORRECT [PASS] (0.16s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0012 | Clean (Clean) | Subtask: Defect Localization | PASS [MATCH]             │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 011.png
+│ Question         : There is a defect in the object. Where is the defect?
+│ Actual Answer    : (D) Top right.
+│ Generated Answer : (D) Top right.
+│ Status           : CORRECT [PASS] (0.15s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0013 | Clean (Clean) | Subtask: Defect Localization | FAIL [MISMATCH]          │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 001.png
+│ Question         : There is a defect in the object. Where is the defect located?
+│ Actual Answer    : (C) Center-right area of the screw's head.
+│ Generated Answer : (D) Center-left area of the screw's head.
+│ Status           : INCORRECT [FAIL] (0.14s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0014 | Clean (Clean) | Subtask: Defect Localization | FAIL [MISMATCH]          │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 028.png
+│ Question         : There is a defect in the object. Where is the defect?
+│ Actual Answer    : (B) In the center
+│ Generated Answer : (A) On the right side
+│ Status           : INCORRECT [FAIL] (0.14s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0015 | Clean (Clean) | Subtask: Defect Localization | FAIL [MISMATCH]          │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 005.png
+│ Question         : There is a defect in the object. Where is the defect?
+│ Actual Answer    : (C) Top right
+│ Generated Answer : (A) Top left
+│ Status           : INCORRECT [FAIL] (0.14s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0016 | Clean (Clean) | Subtask: Defect Description | PASS [MATCH]              │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 012_028.jpg
+│ Question         : There is a defect in the object. What is the appearance of the de
+│ Actual Answer    : (D) Irregular, possibly torn or peeled back
+│ Generated Answer : (D) Irregular, possibly torn or peeled back
+│ Status           : CORRECT [PASS] (0.19s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0017 | Clean (Clean) | Subtask: Defect Description | PASS [MATCH]              │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 008.png
+│ Question         : There is a defect in the object. What is the appearance of the de
+│ Actual Answer    : (B) Thin, lighter lines that converge in a radial pattern.
+│ Generated Answer : (B) Thin, lighter lines that converge in a radial pattern.
+│ Status           : CORRECT [PASS] (0.16s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0018 | Clean (Clean) | Subtask: Defect Description | FAIL [MISMATCH]           │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 009_010.jpg
+│ Question         : There is a defect in the object. What is the appearance of the de
+│ Actual Answer    : (B) Small and subtle
+│ Generated Answer : (C) Large and prominent
+│ Status           : INCORRECT [FAIL] (0.19s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0019 | Clean (Clean) | Subtask: Defect Description | FAIL [MISMATCH]           │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 010.png
+│ Question         : There is a defect in the object. What is the appearance of the de
+│ Actual Answer    : (A) Additional pushpin.
+│ Generated Answer : (D) Missing pushpin.
+│ Status           : INCORRECT [FAIL] (0.14s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0020 | Clean (Clean) | Subtask: Defect Description | PASS [MATCH]              │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 029_020.jpg
+│ Question         : There is a defect in the object. What is the appearance of the de
+│ Actual Answer    : (C) Irregular surface
+│ Generated Answer : (C) Irregular surface
+│ Status           : CORRECT [PASS] (0.19s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0021 | Clean (Clean) | Subtask: Defect Analysis | FAIL [MISMATCH]              │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 029_004.jpg
+│ Question         : There is a defect in the object. What is the effect of the defect
+│ Actual Answer    : (B) Disrupts the packaging design
+│ Generated Answer : (D) Reduces the product's value
+│ Status           : INCORRECT [FAIL] (0.2s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0022 | Clean (Clean) | Subtask: Defect Analysis | PASS [MATCH]                 │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 057.png
+│ Question         : There is a defect in the object. What is the effect of the defect
+│ Actual Answer    : (C) The defect will prevent the proper assembly of the hardware
+│ Generated Answer : (C) The defect will prevent the proper assembly of the hardware
+│ Status           : CORRECT [PASS] (0.16s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0023 | Clean (Clean) | Subtask: Defect Analysis | PASS [MATCH]                 │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 006_009.jpg
+│ Question         : There is a defect in the object. What is the potential effect of 
+│ Actual Answer    : (B) Compromises the integrity of the bottle
+│ Generated Answer : (B) Compromises the integrity of the bottle
+│ Status           : CORRECT [PASS] (0.19s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0024 | Clean (Clean) | Subtask: Defect Analysis | PASS [MATCH]                 │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 019.JPG
+│ Question         : There is a defect in the object. What is the effect of the defect
+│ Actual Answer    : (C) Affects the product's functionality
+│ Generated Answer : (C) Affects the product's functionality
+│ Status           : CORRECT [PASS] (0.12s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0025 | Clean (Clean) | Subtask: Defect Analysis | PASS [MATCH]                 │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 001.png
+│ Question         : There is a defect in the object. What is the effect of the defect
+│ Actual Answer    : (D) It disrupts the cable's uniform circular arrangement.
+│ Generated Answer : (D) It disrupts the cable's uniform circular arrangement.
+│ Status           : CORRECT [PASS] (0.16s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0026 | Clean (Clean) | Subtask: Object Classification | PASS [MATCH]           │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 043.png
+│ Question         : What kind of product is in the image?
+│ Actual Answer    : (C) Bolts and nuts
+│ Generated Answer : (C) Bolts and nuts
+│ Status           : CORRECT [PASS] (0.14s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0027 | Clean (Clean) | Subtask: Object Classification | PASS [MATCH]           │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 018_001.jpg
+│ Question         : What kind of product is in the image?
+│ Actual Answer    : (C) Cigarette box
+│ Generated Answer : (C) Cigarette box
+│ Status           : CORRECT [PASS] (0.19s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0028 | Clean (Clean) | Subtask: Object Classification | PASS [MATCH]           │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 0935.JPG
+│ Question         : What kind of product is in the image?
+│ Actual Answer    : (D) Ultrasonic sensor module
+│ Generated Answer : (D) Ultrasonic sensor module
+│ Status           : CORRECT [PASS] (0.13s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0029 | Clean (Clean) | Subtask: Object Classification | PASS [MATCH]           │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 0196.JPG
+│ Question         : What kind of product is in the image?
+│ Actual Answer    : (C) Pasta
+│ Generated Answer : (C) Pasta
+│ Status           : CORRECT [PASS] (0.11s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0030 | Clean (Clean) | Subtask: Object Classification | PASS [MATCH]           │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 025.png
+│ Question         : What kind of product is in the image?
+│ Actual Answer    : (B) Bolts and nuts.
+│ Generated Answer : (B) Bolts and nuts.
+│ Status           : CORRECT [PASS] (0.15s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0031 | Clean (Clean) | Subtask: Object Structure | PASS [MATCH]                │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 0804.JPG
+│ Question         : What is the arrangement of the candles in the image?
+│ Actual Answer    : (D) Grid
+│ Generated Answer : (D) Grid
+│ Status           : CORRECT [PASS] (0.14s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0032 | Clean (Clean) | Subtask: Object Structure | PASS [MATCH]                │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 0170.JPG
+│ Question         : What are the main components on the circuit board?
+│ Actual Answer    : (A) Integrated circuits, resistors, and pin headers
+│ Generated Answer : (A) Integrated circuits, resistors, and pin headers
+│ Status           : CORRECT [PASS] (0.12s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0033 | Clean (Clean) | Subtask: Object Structure | PASS [MATCH]                │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 030.png
+│ Question         : What is the layout of the label on the bottle?
+│ Actual Answer    : (B) The label is centered on the bottle.
+│ Generated Answer : (B) The label is centered on the bottle.
+│ Status           : CORRECT [PASS] (0.12s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0034 | Clean (Clean) | Subtask: Object Structure | PASS [MATCH]                │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 089.png
+│ Question         : What are the subcomponents of the breakfast box?
+│ Actual Answer    : (A) Granola, dried fruits, nuts, and fresh fruits
+│ Generated Answer : (A) Granola, dried fruits, nuts, and fresh fruits
+│ Status           : CORRECT [PASS] (0.18s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0035 | Clean (Clean) | Subtask: Object Structure | PASS [MATCH]                │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 1002.JPG
+│ Question         : What are the main subcomponents of the object?
+│ Actual Answer    : (A) Resistors, capacitors, and an integrated circuit.
+│ Generated Answer : (A) Resistors, capacitors, and an integrated circuit.
+│ Status           : CORRECT [PASS] (0.12s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0036 | Clean (Clean) | Subtask: Object Details | PASS [MATCH]                  │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 010.png
+│ Question         : What is the graphic element on the label?
+│ Actual Answer    : (C) Cherries
+│ Generated Answer : (C) Cherries
+│ Status           : CORRECT [PASS] (0.12s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0037 | Clean (Clean) | Subtask: Object Details | FAIL [MISMATCH]               │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 0871.JPG
+│ Question         : Where is the six-pin header located on the board?
+│ Actual Answer    : (D) Top right
+│ Generated Answer : (A) Top left
+│ Status           : INCORRECT [FAIL] (0.12s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0038 | Clean (Clean) | Subtask: Object Details | PASS [MATCH]                  │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 0237.JPG
+│ Question         : Where are the header pin connectors located on the PCB?
+│ Actual Answer    : (A) On the top edge
+│ Generated Answer : (A) On the top edge
+│ Status           : CORRECT [PASS] (0.12s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0039 | Clean (Clean) | Subtask: Object Details | PASS [MATCH]                  │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 272.JPG
+│ Question         : What is the relative position of the radial bars?
+│ Actual Answer    : (C) Equally spaced
+│ Generated Answer : (C) Equally spaced
+│ Status           : CORRECT [PASS] (0.11s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0040 | Clean (Clean) | Subtask: Object Details | FAIL [MISMATCH]               │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 015.png
+│ Question         : What is the appearance of the metal nut?
+│ Actual Answer    : (C) It is hexagonal.
+│ Generated Answer : (A) It is square-shaped.
+│ Status           : INCORRECT [FAIL] (0.14s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0041 | Clean (Clean) | Subtask: Object Analysis | PASS [MATCH]                 │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 055_006.jpg
+│ Question         : What does the "100%" on the label indicate about the product?
+│ Actual Answer    : (B) It is 100% pure or whole
+│ Generated Answer : (B) It is 100% pure or whole
+│ Status           : CORRECT [PASS] (0.19s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0042 | Clean (Clean) | Subtask: Object Analysis | PASS [MATCH]                 │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 006_008.jpg
+│ Question         : What is the likely purpose or effect of the puffed nature of the 
+│ Actual Answer    : (C) To provide cushioning for the contents
+│ Generated Answer : (C) To provide cushioning for the contents
+│ Status           : CORRECT [PASS] (0.19s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0043 | Clean (Clean) | Subtask: Object Analysis | PASS [MATCH]                 │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 025.png
+│ Question         : What is the material of the push pins?
+│ Actual Answer    : (A) Plastic
+│ Generated Answer : (A) Plastic
+│ Status           : CORRECT [PASS] (0.14s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0044 | Clean (Clean) | Subtask: Object Analysis | PASS [MATCH]                 │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 0657.JPG
+│ Question         : What is the purpose of this electronic sensor module?
+│ Actual Answer    : (B) To detect environmental conditions.
+│ Generated Answer : (B) To detect environmental conditions.
+│ Status           : CORRECT [PASS] (0.11s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0045 | Clean (Clean) | Subtask: Object Analysis | PASS [MATCH]                 │
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 008.png
+│ Question         : What is the appearance of the fabric surrounding the zipper teeth
+│ Actual Answer    : (D) Consistent, textured pattern.
+│ Generated Answer : (D) Consistent, textured pattern.
+│ Status           : CORRECT [PASS] (0.14s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0046 | Gaussian Sensor Noise (Sev 1) | Subtask: Anomaly Detection | PASS [MATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 006.png
+│ Question         : Is there any defect in the object?
+│ Actual Answer    : (B) No.
+│ Generated Answer : (B) No.
+│ Status           : CORRECT [PASS] (0.15s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0047 | Gaussian Sensor Noise (Sev 1) | Subtask: Anomaly Detection | FAIL [MISMATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 012.png
+│ Question         : Is there any defect in the object?
+│ Actual Answer    : (A) Yes.
+│ Generated Answer : (B) No.
+│ Status           : INCORRECT [FAIL] (0.16s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0048 | Gaussian Sensor Noise (Sev 1) | Subtask: Anomaly Detection | PASS [MATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 069.JPG
+│ Question         : Is there any defect in the object?
+│ Actual Answer    : (B) Yes.
+│ Generated Answer : (B) Yes.
+│ Status           : CORRECT [PASS] (0.14s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0049 | Gaussian Sensor Noise (Sev 1) | Subtask: Anomaly Detection | PASS [MATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 078.JPG
+│ Question         : Is there any defect in the object?
+│ Actual Answer    : (B) Yes.
+│ Generated Answer : (B) Yes.
+│ Status           : CORRECT [PASS] (0.14s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0050 | Gaussian Sensor Noise (Sev 1) | Subtask: Anomaly Detection | FAIL [MISMATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 073.png
+│ Question         : Is there any defect in the object?
+│ Actual Answer    : (B) No.
+│ Generated Answer : (A) Yes.
+│ Status           : INCORRECT [FAIL] (0.13s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0051 | Gaussian Sensor Noise (Sev 1) | Subtask: Defect Classification | FAIL [MISMATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 005.png
+│ Question         : There is a defect in the object. What is the type of the defect?
+│ Actual Answer    : (D) A small, distinct, circular spot.
+│ Generated Answer : (B) Missing teeth on the zipper.
+│ Status           : INCORRECT [FAIL] (0.15s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0052 | Gaussian Sensor Noise (Sev 1) | Subtask: Defect Classification | PASS [MATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 013.png
+│ Question         : There is a defect in the object. What is the type of the defect?
+│ Actual Answer    : (C) Thread damage.
+│ Generated Answer : (C) Thread damage.
+│ Status           : CORRECT [PASS] (0.15s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0053 | Gaussian Sensor Noise (Sev 1) | Subtask: Defect Classification | FAIL [MISMATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 055_009.jpg
+│ Question         : There is a defect in the object. What is the type of the defect?
+│ Actual Answer    : (B) Scratch
+│ Generated Answer : (A) Crack
+│ Status           : INCORRECT [FAIL] (0.2s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0054 | Gaussian Sensor Noise (Sev 1) | Subtask: Defect Classification | PASS [MATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 002.png
+│ Question         : There is a defect in the object. What is the type of the defect?
+│ Actual Answer    : (B) Faulty imprint.
+│ Generated Answer : (B) Faulty imprint.
+│ Status           : CORRECT [PASS] (0.16s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0055 | Gaussian Sensor Noise (Sev 1) | Subtask: Defect Classification | PASS [MATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 019_007.jpg
+│ Question         : There is a defect in the object. What is the type of the defect?
+│ Actual Answer    : (A) Disruption along the top edge
+│ Generated Answer : (A) Disruption along the top edge
+│ Status           : CORRECT [PASS] (0.2s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0056 | Gaussian Sensor Noise (Sev 1) | Subtask: Defect Localization | PASS [MATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 008.png
+│ Question         : There is a defect in the object. Where is the defect?
+│ Actual Answer    : (D) Center left.
+│ Generated Answer : (D) Center left.
+│ Status           : CORRECT [PASS] (0.17s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0057 | Gaussian Sensor Noise (Sev 1) | Subtask: Defect Localization | PASS [MATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 011.png
+│ Question         : There is a defect in the object. Where is the defect?
+│ Actual Answer    : (D) Top right.
+│ Generated Answer : (D) Top right.
+│ Status           : CORRECT [PASS] (0.17s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0058 | Gaussian Sensor Noise (Sev 1) | Subtask: Defect Localization | FAIL [MISMATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 001.png
+│ Question         : There is a defect in the object. Where is the defect located?
+│ Actual Answer    : (C) Center-right area of the screw's head.
+│ Generated Answer : (D) Center-left area of the screw's head.
+│ Status           : INCORRECT [FAIL] (0.15s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0059 | Gaussian Sensor Noise (Sev 1) | Subtask: Defect Localization | FAIL [MISMATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 028.png
+│ Question         : There is a defect in the object. Where is the defect?
+│ Actual Answer    : (B) In the center
+│ Generated Answer : (A) On the right side
+│ Status           : INCORRECT [FAIL] (0.15s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────────┐
+│ TEST #0060 | Gaussian Sensor Noise (Sev 1) | Subtask: Defect Localization | PASS [MATCH]│
+├──────────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 005.png
+│ Question         : There is a defect in the object. Where is the defect?
+│ Actual Answer    : (C) Top right
+│ Generated Answer : (C) Top right
+│ Status           : CORRECT [PASS] (0.15s)
+└──────────────────────────────────────────────────────────────────────────────────────┘
+

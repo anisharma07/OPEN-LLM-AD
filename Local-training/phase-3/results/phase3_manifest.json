@@ -1,0 +1,269 @@
+{
+  "phase": "phase-3",
+  "title": "Industrial Robustness Adaptation, Mitigation & Recovery",
+  "timestamp": "2026-09-19 01:46:00",
+  "model": "Qwen/Qwen3-VL-2B-Instruct",
+  "gpu_info": {
+    "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "gpu_memory_gb": 8.19,
+    "cuda_version": "12.4"
+  },
+  "clean_accuracy": 0.7111,
+  "sample_size": 45,
+  "corruptions_evaluated": [
+    "motion_blur",
+    "gaussian_noise",
+    "low_light"
+  ],
+  "severities_evaluated": [
+    3,
+    5
+  ],
+  "strategies": [
+    "corrupted_baseline",
+    "mitigated_tta",
+    "mitigated_dar",
+    "mitigated_hybrid"
+  ],
+  "recovery_summary": {
+    "motion_blur": {
+      "3": {
+        "corrupted_baseline": {
+          "accuracy": 0.7333,
+          "count": 45
+        },
+        "mitigated_tta": {
+          "accuracy": 0.6889,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": -0.0444
+        },
+        "mitigated_dar": {
+          "accuracy": 0.6667,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": -0.0666
+        },
+        "mitigated_hybrid": {
+          "accuracy": 0.6444,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": -0.0889
+        }
+      },
+      "5": {
+        "corrupted_baseline": {
+          "accuracy": 0.7333,
+          "count": 45
+        },
+        "mitigated_tta": {
+          "accuracy": 0.7333,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": 0.0
+        },
+        "mitigated_dar": {
+          "accuracy": 0.5778,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": -0.1555
+        },
+        "mitigated_hybrid": {
+          "accuracy": 0.5778,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": -0.1555
+        }
+      }
+    },
+    "gaussian_noise": {
+      "3": {
+        "corrupted_baseline": {
+          "accuracy": 0.8,
+          "count": 45
+        },
+        "mitigated_tta": {
+          "accuracy": 0.7556,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": -0.0444
+        },
+        "mitigated_dar": {
+          "accuracy": 0.6889,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": -0.1111
+        },
+        "mitigated_hybrid": {
+          "accuracy": 0.7111,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": -0.0889
+        }
+      },
+      "5": {
+        "corrupted_baseline": {
+          "accuracy": 0.6667,
+          "count": 45
+        },
+        "mitigated_tta": {
+          "accuracy": 0.6667,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": 0.0
+        },
+        "mitigated_dar": {
+          "accuracy": 0.6222,
+          "count": 45,
+          "rrr": -100.2,
+          "acc_gain": -0.0445
+        },
+        "mitigated_hybrid": {
+          "accuracy": 0.6222,
+          "count": 45,
+          "rrr": -100.2,
+          "acc_gain": -0.0445
+        }
+      }
+    },
+    "low_light": {
+      "3": {
+        "corrupted_baseline": {
+          "accuracy": 0.7333,
+          "count": 45
+        },
+        "mitigated_tta": {
+          "accuracy": 0.7333,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": 0.0
+        },
+        "mitigated_dar": {
+          "accuracy": 0.6889,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": -0.0444
+        },
+        "mitigated_hybrid": {
+          "accuracy": 0.7111,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": -0.0222
+        }
+      },
+      "5": {
+        "corrupted_baseline": {
+          "accuracy": 0.7556,
+          "count": 45
+        },
+        "mitigated_tta": {
+          "accuracy": 0.7111,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": -0.0445
+        },
+        "mitigated_dar": {
+          "accuracy": 0.6889,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": -0.0667
+        },
+        "mitigated_hybrid": {
+          "accuracy": 0.7111,
+          "count": 45,
+          "rrr": 0.0,
+          "acc_gain": -0.0445
+        }
+      }
+    }
+  },
+  "subtask_recovery": {
+    "Anomaly Detection": {
+      "clean_acc": 0.4,
+      "corrupted_baseline": 0.5667,
+      "mitigated_tta": 0.4667,
+      "mitigated_dar": 0.6,
+      "mitigated_hybrid": 0.6,
+      "recovery_gain": 0.0333,
+      "rrr_hybrid": 0.0
+    },
+    "Object Classification": {
+      "clean_acc": 0.6,
+      "corrupted_baseline": 0.8333,
+      "mitigated_tta": 0.8333,
+      "mitigated_dar": 0.8,
+      "mitigated_hybrid": 0.8333,
+      "recovery_gain": 0.0,
+      "rrr_hybrid": 0.0
+    },
+    "Object Details": {
+      "clean_acc": 1.0,
+      "corrupted_baseline": 1.0,
+      "mitigated_tta": 0.9667,
+      "mitigated_dar": 0.8333,
+      "mitigated_hybrid": 0.8,
+      "recovery_gain": -0.2,
+      "rrr_hybrid": 0.0
+    },
+    "Object Analysis": {
+      "clean_acc": 0.8,
+      "corrupted_baseline": 0.7333,
+      "mitigated_tta": 0.7333,
+      "mitigated_dar": 0.6,
+      "mitigated_hybrid": 0.6,
+      "recovery_gain": -0.1333,
+      "rrr_hybrid": -200.0
+    },
+    "Object Structure": {
+      "clean_acc": 1.0,
+      "corrupted_baseline": 0.8667,
+      "mitigated_tta": 0.8333,
+      "mitigated_dar": 0.8667,
+      "mitigated_hybrid": 0.8667,
+      "recovery_gain": 0.0,
+      "rrr_hybrid": 0.0
+    },
+    "Defect Classification": {
+      "clean_acc": 0.4,
+      "corrupted_baseline": 0.5,
+      "mitigated_tta": 0.4667,
+      "mitigated_dar": 0.3667,
+      "mitigated_hybrid": 0.4,
+      "recovery_gain": -0.1,
+      "rrr_hybrid": 0.0
+    },
+    "Defect Localization": {
+      "clean_acc": 0.8,
+      "corrupted_baseline": 0.6,
+      "mitigated_tta": 0.6667,
+      "mitigated_dar": 0.6667,
+      "mitigated_hybrid": 0.6333,
+      "recovery_gain": 0.0333,
+      "rrr_hybrid": 16.67
+    },
+    "Defect Description": {
+      "clean_acc": 0.6,
+      "corrupted_baseline": 0.6333,
+      "mitigated_tta": 0.5667,
+      "mitigated_dar": 0.4333,
+      "mitigated_hybrid": 0.5333,
+      "recovery_gain": -0.1,
+      "rrr_hybrid": 0.0
+    },
+    "Defect Analysis": {
+      "clean_acc": 0.8,
+      "corrupted_baseline": 0.9,
+      "mitigated_tta": 0.9,
+      "mitigated_dar": 0.7333,
+      "mitigated_hybrid": 0.7,
+      "recovery_gain": -0.2,
+      "rrr_hybrid": 0.0
+    }
+  },
+  "figures_generated": [
+    "phase3_recovery_rate_barchart.png",
+    "phase3_mitigation_before_after_comparison.png",
+    "phase3_restoration_visual_samples.png",
+    "phase3_subtask_recovery_heatmap.png"
+  ]
+}

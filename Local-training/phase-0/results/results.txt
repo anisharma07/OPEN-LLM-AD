@@ -1,0 +1,249 @@
+==================================================================================
+       PHASE 0: COMPREHENSIVE BENCHMARK EVALUATION REPORT
+==================================================================================
+
+1. EXPERIMENT & HARDWARE SUMMARY
+----------------------------------------------------------------------------------
+  Model Evaluated     : Qwen/Qwen3-VL-2B-Instruct (FP16)
+  Hardware Device     : NVIDIA GeForce RTX 4060 Laptop GPU (8.19 GB VRAM)
+  VRAM Used           : 4.26 GB / 8.19 GB (~52% utilization)
+  PyTorch / CUDA      : 2.6.0+cu124 / CUDA 12.4
+  Dataset             : MMAD Full Benchmark (Local DS-MVTec Real Images)
+  Execution Mode      : Greedy Decoding (temperature=0, deterministic)
+
+2. DETAILED EVALUATION (QUESTION, OPTIONS, ACTUAL VS GENERATED ANSWER)
+----------------------------------------------------------------------------------
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ TEST CASE #01 | Status: PASS [MATCH] | Latency: 1.32s                          │
+├────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 000.png
+│ Full Image Path  : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/DS-MVTec/DS-MVTec/bottle/image/broken_large/000.png
+│
+│ Question:
+│   Is there any defect in the object?
+│
+│ Available Options:
+│   (A) Yes.
+│   (B) No.
+│
+│ Actual Answer    : (A) Yes.
+│ Generated Answer : (A) Yes.
+│ Raw Model Output : A
+│ Verification     : CORRECT [YES]
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ TEST CASE #02 | Status: PASS [MATCH] | Latency: 0.32s                          │
+├────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 000.png
+│ Full Image Path  : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/DS-MVTec/DS-MVTec/bottle/image/broken_large/000.png
+│
+│ Question:
+│   There is a defect in the object. What is the type of the defect?
+│
+│ Available Options:
+│   (A) Foggy appearance.
+│   (B) Color fading.
+│   (C) Broken large.
+│   (D) Scratched surface.
+│
+│ Actual Answer    : (C) Broken large.
+│ Generated Answer : (C) Broken large.
+│ Raw Model Output : C
+│ Verification     : CORRECT [YES]
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ TEST CASE #03 | Status: FAIL [MISMATCH] | Latency: 0.31s                       │
+├────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 000.png
+│ Full Image Path  : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/DS-MVTec/DS-MVTec/bottle/image/broken_large/000.png
+│
+│ Question:
+│   There is a defect in the object. Where is the defect?
+│
+│ Available Options:
+│   (A) Top right.
+│   (B) Top left.
+│   (C) Center.
+│   (D) Bottom right.
+│
+│ Actual Answer    : (D) Bottom right.
+│ Generated Answer : (A) Top right.
+│ Raw Model Output : A
+│ Verification     : INCORRECT [NO]
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ TEST CASE #04 | Status: FAIL [MISMATCH] | Latency: 0.31s                       │
+├────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 000.png
+│ Full Image Path  : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/DS-MVTec/DS-MVTec/bottle/image/broken_large/000.png
+│
+│ Question:
+│   There is a defect in the object. What is the appearance of the defect?
+│
+│ Available Options:
+│   (A) A jagged irregular break.
+│   (B) A smooth crack.
+│   (C) A round hole.
+│   (D) A small chip.
+│
+│ Actual Answer    : (A) A jagged irregular break.
+│ Generated Answer : (D) A small chip.
+│ Raw Model Output : D
+│ Verification     : INCORRECT [NO]
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ TEST CASE #05 | Status: PASS [MATCH] | Latency: 0.32s                          │
+├────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 000.png
+│ Full Image Path  : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/DS-MVTec/DS-MVTec/bottle/image/broken_large/000.png
+│
+│ Question:
+│   There is a defect in the object. What is the effect of the defect?
+│
+│ Available Options:
+│   (A) It enhances the bottle's aesthetics.
+│   (B) It presents a safety hazard.
+│   (C) It changes the color of the glass.
+│   (D) It has no effect on the bottle's function.
+│
+│ Actual Answer    : (B) It presents a safety hazard.
+│ Generated Answer : (B) It presents a safety hazard.
+│ Raw Model Output : B
+│ Verification     : CORRECT [YES]
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ TEST CASE #06 | Status: PASS [MATCH] | Latency: 0.32s                          │
+├────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 001.png
+│ Full Image Path  : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/DS-MVTec/DS-MVTec/bottle/image/broken_large/001.png
+│
+│ Question:
+│   Is there any defect in the object?
+│
+│ Available Options:
+│   (A) Yes.
+│   (B) No.
+│
+│ Actual Answer    : (A) Yes.
+│ Generated Answer : (A) Yes.
+│ Raw Model Output : A
+│ Verification     : CORRECT [YES]
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ TEST CASE #07 | Status: PASS [MATCH] | Latency: 0.32s                          │
+├────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 001.png
+│ Full Image Path  : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/DS-MVTec/DS-MVTec/bottle/image/broken_large/001.png
+│
+│ Question:
+│   There is a defect in the object. What is the type of the defect?
+│
+│ Available Options:
+│   (A) Smudge.
+│   (B) Discoloration.
+│   (C) Scratch.
+│   (D) Break or chip.
+│
+│ Actual Answer    : (D) Break or chip.
+│ Generated Answer : (D) Break or chip.
+│ Raw Model Output : D
+│ Verification     : CORRECT [YES]
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ TEST CASE #08 | Status: PASS [MATCH] | Latency: 0.33s                          │
+├────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 001.png
+│ Full Image Path  : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/DS-MVTec/DS-MVTec/bottle/image/broken_large/001.png
+│
+│ Question:
+│   There is a defect in the object. What is the appearance of the defect?
+│
+│ Available Options:
+│   (A) An indentation.
+│   (B) A series of small dots.
+│   (C) A significant irregularity interrupting the circular edge.
+│   (D) A crack extending down the side.
+│
+│ Actual Answer    : (C) A significant irregularity interrupting the circular edge.
+│ Generated Answer : (C) A significant irregularity interrupting the circular edge.
+│ Raw Model Output : C
+│ Verification     : CORRECT [YES]
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ TEST CASE #09 | Status: PASS [MATCH] | Latency: 0.33s                          │
+├────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 002.png
+│ Full Image Path  : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/DS-MVTec/DS-MVTec/bottle/image/broken_large/002.png
+│
+│ Question:
+│   Is there any defect in the object?
+│
+│ Available Options:
+│   (A) No.
+│   (B) Yes.
+│
+│ Actual Answer    : (B) Yes.
+│ Generated Answer : (B) Yes.
+│ Raw Model Output : B
+│ Verification     : CORRECT [YES]
+└────────────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────────────────────────────────────────────────────────────┐
+│ TEST CASE #10 | Status: FAIL [MISMATCH] | Latency: 0.32s                       │
+├────────────────────────────────────────────────────────────────────────────────┤
+│ Image File       : 002.png
+│ Full Image Path  : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/DS-MVTec/DS-MVTec/bottle/image/broken_large/002.png
+│
+│ Question:
+│   There is a defect in the object. What is the type of the defect?
+│
+│ Available Options:
+│   (A) Discoloration.
+│   (B) Large break.
+│   (C) Dent.
+│   (D) Scratch.
+│
+│ Actual Answer    : (B) Large break.
+│ Generated Answer : (C) Dent.
+│ Raw Model Output : C
+│ Verification     : INCORRECT [NO]
+└────────────────────────────────────────────────────────────────────────────────┘
+
+3. COMPARISON MATRIX (QUICK REFERENCE)
+----------------------------------------------------------------------------------
+| #  | Image   | Question (Snippet)         | Actual Answer    | Generated Answer | Result | Latency |
+|----+---------+----------------------------+------------------+------------------+--------+---------|
+| 01 | 000.png | Is there any defect in the obj... | (A) Yes.         | (A) Yes.         | PASS   | 1.32s   |
+| 02 | 000.png | There is a defect in the objec... | (C) Broken large | (C) Broken large | PASS   | 0.32s   |
+| 03 | 000.png | There is a defect in the objec... | (D) Bottom right | (A) Top right.   | FAIL   | 0.31s   |
+| 04 | 000.png | There is a defect in the objec... | (A) A jagged irr | (D) A small chip | FAIL   | 0.31s   |
+| 05 | 000.png | There is a defect in the objec... | (B) It presents  | (B) It presents  | PASS   | 0.32s   |
+| 06 | 001.png | Is there any defect in the obj... | (A) Yes.         | (A) Yes.         | PASS   | 0.32s   |
+| 07 | 001.png | There is a defect in the objec... | (D) Break or chi | (D) Break or chi | PASS   | 0.32s   |
+| 08 | 001.png | There is a defect in the objec... | (C) A significan | (C) A significan | PASS   | 0.33s   |
+| 09 | 002.png | Is there any defect in the obj... | (B) Yes.         | (B) Yes.         | PASS   | 0.33s   |
+| 10 | 002.png | There is a defect in the objec... | (B) Large break. | (C) Dent.        | FAIL   | 0.32s   |
+----------------------------------------------------------------------------------
+
+4. OVERALL BENCHMARK PERFORMANCE
+----------------------------------------------------------------------------------
+  Total Questions Run       : 10
+  Correct Predictions       : 7 / 10 (70.0%)
+  Incorrect Predictions     : 3 / 10
+  Regex Parse Success Rate  : 10 / 10 (100.0%)
+  Average Inference Time    : 0.42s per question
+  Execution Reliability     : Zero runtime errors (100% reliable)
+
+5. EXIT CRITERION CONCLUSION
+----------------------------------------------------------------------------------
+  [PASSED] One model (Qwen3-VL-2B-Instruct) answered MMAD questions end-to-end
+           with real industrial images and parseable answers on local RTX 4060.
+==================================================================================

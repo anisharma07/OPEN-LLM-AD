@@ -1,0 +1,277 @@
+{
+  "phase": "Phase 1 — Clean MMAD Baseline",
+  "timestamp": "2026-09-18T19:57:58.193655+00:00",
+  "model": "Qwen/Qwen3-VL-2B-Instruct",
+  "loader": "Qwen3VLForConditionalGeneration",
+  "gpu_info": {
+    "gpu_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "gpu_memory_gb": 8.19,
+    "cuda_version": "12.4"
+  },
+  "total_questions": 2500,
+  "overall_accuracy": 71.2,
+  "cohen_kappa": 0.615,
+  "parse_success_rate": 100.0,
+  "average_latency_s": 0.16,
+  "dataset_accuracy": {
+    "DS-MVTec": {
+      "total": 497,
+      "correct": 385,
+      "accuracy": 77.5
+    },
+    "GoodsAD": {
+      "total": 716,
+      "correct": 500,
+      "accuracy": 69.8
+    },
+    "MVTec-LOCO": {
+      "total": 500,
+      "correct": 308,
+      "accuracy": 61.6
+    },
+    "VisA": {
+      "total": 787,
+      "correct": 587,
+      "accuracy": 74.6
+    }
+  },
+  "subtask_accuracy": {
+    "Anomaly Detection": {
+      "total": 282,
+      "correct": 173,
+      "accuracy": 61.3
+    },
+    "Defect Analysis": {
+      "total": 278,
+      "correct": 228,
+      "accuracy": 82.0
+    },
+    "Defect Classification": {
+      "total": 277,
+      "correct": 113,
+      "accuracy": 40.8
+    },
+    "Defect Description": {
+      "total": 277,
+      "correct": 197,
+      "accuracy": 71.1
+    },
+    "Defect Localization": {
+      "total": 278,
+      "correct": 132,
+      "accuracy": 47.5
+    },
+    "Object Analysis": {
+      "total": 277,
+      "correct": 228,
+      "accuracy": 82.3
+    },
+    "Object Classification": {
+      "total": 277,
+      "correct": 263,
+      "accuracy": 94.9
+    },
+    "Object Details": {
+      "total": 277,
+      "correct": 221,
+      "accuracy": 79.8
+    },
+    "Object Structure": {
+      "total": 277,
+      "correct": 225,
+      "accuracy": 81.2
+    }
+  },
+  "category_accuracy": {
+    "bottle": {
+      "total": 14,
+      "correct": 12,
+      "accuracy": 85.7
+    },
+    "breakfast_box": {
+      "total": 70,
+      "correct": 41,
+      "accuracy": 58.6
+    },
+    "cable": {
+      "total": 35,
+      "correct": 24,
+      "accuracy": 68.6
+    },
+    "candle": {
+      "total": 74,
+      "correct": 62,
+      "accuracy": 83.8
+    },
+    "capsule": {
+      "total": 35,
+      "correct": 28,
+      "accuracy": 80.0
+    },
+    "capsules": {
+      "total": 66,
+      "correct": 53,
+      "accuracy": 80.3
+    },
+    "carpet": {
+      "total": 30,
+      "correct": 27,
+      "accuracy": 90.0
+    },
+    "cashew": {
+      "total": 51,
+      "correct": 32,
+      "accuracy": 62.7
+    },
+    "chewinggum": {
+      "total": 46,
+      "correct": 30,
+      "accuracy": 65.2
+    },
+    "cigarette_box": {
+      "total": 109,
+      "correct": 74,
+      "accuracy": 67.9
+    },
+    "drink_bottle": {
+      "total": 188,
+      "correct": 135,
+      "accuracy": 71.8
+    },
+    "drink_can": {
+      "total": 66,
+      "correct": 40,
+      "accuracy": 60.6
+    },
+    "food_bottle": {
+      "total": 127,
+      "correct": 92,
+      "accuracy": 72.4
+    },
+    "food_box": {
+      "total": 96,
+      "correct": 69,
+      "accuracy": 71.9
+    },
+    "food_package": {
+      "total": 130,
+      "correct": 90,
+      "accuracy": 69.2
+    },
+    "fryum": {
+      "total": 40,
+      "correct": 29,
+      "accuracy": 72.5
+    },
+    "grid": {
+      "total": 13,
+      "correct": 6,
+      "accuracy": 46.2
+    },
+    "hazelnut": {
+      "total": 34,
+      "correct": 26,
+      "accuracy": 76.5
+    },
+    "juice_bottle": {
+      "total": 83,
+      "correct": 59,
+      "accuracy": 71.1
+    },
+    "leather": {
+      "total": 31,
+      "correct": 27,
+      "accuracy": 87.1
+    },
+    "macaroni1": {
+      "total": 82,
+      "correct": 62,
+      "accuracy": 75.6
+    },
+    "macaroni2": {
+      "total": 82,
+      "correct": 58,
+      "accuracy": 70.7
+    },
+    "metal_nut": {
+      "total": 42,
+      "correct": 28,
+      "accuracy": 66.7
+    },
+    "pcb1": {
+      "total": 71,
+      "correct": 58,
+      "accuracy": 81.7
+    },
+    "pcb2": {
+      "total": 75,
+      "correct": 57,
+      "accuracy": 76.0
+    },
+    "pcb3": {
+      "total": 92,
+      "correct": 71,
+      "accuracy": 77.2
+    },
+    "pcb4": {
+      "total": 61,
+      "correct": 40,
+      "accuracy": 65.6
+    },
+    "pill": {
+      "total": 40,
+      "correct": 29,
+      "accuracy": 72.5
+    },
+    "pipe_fryum": {
+      "total": 47,
+      "correct": 35,
+      "accuracy": 74.5
+    },
+    "pushpins": {
+      "total": 108,
+      "correct": 75,
+      "accuracy": 69.4
+    },
+    "screw": {
+      "total": 56,
+      "correct": 40,
+      "accuracy": 71.4
+    },
+    "screw_bag": {
+      "total": 128,
+      "correct": 77,
+      "accuracy": 60.2
+    },
+    "splicing_connectors": {
+      "total": 111,
+      "correct": 56,
+      "accuracy": 50.5
+    },
+    "tile": {
+      "total": 47,
+      "correct": 39,
+      "accuracy": 83.0
+    },
+    "toothbrush": {
+      "total": 9,
+      "correct": 7,
+      "accuracy": 77.8
+    },
+    "transistor": {
+      "total": 39,
+      "correct": 27,
+      "accuracy": 69.2
+    },
+    "wood": {
+      "total": 33,
+      "correct": 31,
+      "accuracy": 93.9
+    },
+    "zipper": {
+      "total": 39,
+      "correct": 34,
+      "accuracy": 87.2
+    }
+  }
+}

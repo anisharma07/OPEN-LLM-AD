@@ -1,0 +1,842 @@
+=====================================================================================
+PHASE 3: INDUSTRIAL ROBUSTNESS ADAPTATION, MITIGATION & RECOVERY REPORT
+=====================================================================================
+Generated on          : 2026-09-19 01:46:00
+Evaluated Model       : Qwen/Qwen3-VL-2B-Instruct (FP16)
+Compute Hardware      : NVIDIA GeForce RTX 4060 Laptop GPU (8.19 GB VRAM)
+Corruptions Mitigated : motion_blur, gaussian_noise, low_light
+Severity Levels       : [3, 5]
+Total Evaluations     : 1125
+=====================================================================================
+
+1. EXECUTIVE SUMMARY & RECOVERY METRICS
+-------------------------------------------------------------------------------------
+Clean Laboratory Baseline Accuracy : 71.11%
+
+Corruption               | Sev  | Corrupted Acc | TTA-IR Acc (RRR)   | DAR Acc (RRR)      | Hybrid Acc (RRR)  
+---------------------------------------------------------------------------------------------------------
+Conveyor Motion Blur     | 3    |  73.33%       |  68.89% ( +0.0%)   |  66.67% ( +0.0%)   |  64.44% ( +0.0%)
+Conveyor Motion Blur     | 5    |  73.33%       |  73.33% ( +0.0%)   |  57.78% ( +0.0%)   |  57.78% ( +0.0%)
+Gaussian Sensor Noise    | 3    |  80.00%       |  75.56% ( +0.0%)   |  68.89% ( +0.0%)   |  71.11% ( +0.0%)
+Gaussian Sensor Noise    | 5    |  66.67%       |  66.67% ( +0.0%)   |  62.22% (-100.2%)   |  62.22% (-100.2%)
+Low-Light / Underexposure | 3    |  73.33%       |  73.33% ( +0.0%)   |  68.89% ( +0.0%)   |  71.11% ( +0.0%)
+Low-Light / Underexposure | 5    |  75.56%       |  71.11% ( +0.0%)   |  68.89% ( +0.0%)   |  71.11% ( +0.0%)
+
+
+2. SUBTASK-LEVEL RECOVERY BREAKDOWN
+-------------------------------------------------------------------------------------
+Subtask                    | Clean Acc  | Corrupted  | Hybrid Mitigated  | Net Gain (Δ) | RRR %   
+------------------------------------------------------------------------------------------
+Anomaly Detection          |    40.00% |    56.67% |           60.00% |      +3.33% |    0.0%
+Defect Analysis            |    80.00% |    90.00% |           70.00% |     -20.00% |    0.0%
+Defect Classification      |    40.00% |    50.00% |           40.00% |     -10.00% |    0.0%
+Defect Description         |    60.00% |    63.33% |           53.33% |     -10.00% |    0.0%
+Defect Localization        |    80.00% |    60.00% |           63.33% |      +3.33% |   16.7%
+Object Analysis            |    80.00% |    73.33% |           60.00% |     -13.33% | -200.0%
+Object Classification      |    60.00% |    83.33% |           83.33% |      +0.00% |    0.0%
+Object Details             |   100.00% |   100.00% |           80.00% |     -20.00% |    0.0%
+Object Structure           |   100.00% |    86.67% |           86.67% |      +0.00% |    0.0%
+
+
+3. DETAILED QUESTION-BY-QUESTION EVALUATION CARDS
+-------------------------------------------------------------------------------------
+
+[CARD #001] Subtask: Anomaly Detection | Dataset: GoodsAD | Product: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/023_008.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) No.
+  (B) Yes.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'B' [REGRESSED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'B' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'B' [REGRESSED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [STILL_FAILED]
+
+[CARD #002] Subtask: Anomaly Detection | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_half_open/024_009.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'A' [RECOVERED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'A' [RECOVERED]
+
+[CARD #003] Subtask: Anomaly Detection | Dataset: GoodsAD | Product: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/051_001.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [STILL_FAILED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'A' [REGRESSED]
+
+[CARD #004] Subtask: Anomaly Detection | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/069_007.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'A' [RECOVERED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'A' [RECOVERED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'A' [RECOVERED]
+
+[CARD #005] Subtask: Anomaly Detection | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/028_014.jpg
+Question   : Is there any defect in the object?
+Options    :
+  (A) Yes.
+  (B) No.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+
+[CARD #006] Subtask: Object Classification | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/083_004.jpg
+Question   : What kind of product is in the image?
+Options    :
+  (A) Bottle of beverage
+  (B) Bottle of wine
+  (C) Bottle of shampoo
+  (D) Bottle of milk
+Ground Truth Correct Answer : A
+Clean Model Prediction      : D [INCORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'C' [REGRESSED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'A' [RECOVERED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+
+[CARD #007] Subtask: Object Classification | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/032_001.jpg
+Question   : What kind of product is in the image?
+Options    :
+  (A) Soda bottle
+  (B) Milk carton
+  (C) Drink bottle
+  (D) Shampoo bottle
+Ground Truth Correct Answer : C
+Clean Model Prediction      : C [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+
+[CARD #008] Subtask: Object Classification | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/011_003.jpg
+Question   : What kind of product is in the image?
+Options    :
+  (A) Shampoo
+  (B) Alcoholic beverage
+  (C) Soft drink
+  (D) Cooking oil
+Ground Truth Correct Answer : C
+Clean Model Prediction      : C [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+
+[CARD #009] Subtask: Object Classification | Dataset: GoodsAD | Product: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/038_009.jpg
+Question   : What kind of product is in the image?
+Options    :
+  (A) Baked goods
+  (B) Dried fruits
+  (C) Snack food
+  (D) Canned goods
+Ground Truth Correct Answer : B
+Clean Model Prediction      : C [INCORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'B' [RECOVERED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+
+[CARD #010] Subtask: Object Classification | Dataset: GoodsAD | Product: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/113_004.jpg
+Question   : What kind of product is in the image?
+Options    :
+  (A) Smartphone
+  (B) Cigarette box
+  (C) Chocolate bar
+  (D) Perfume bottle
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+
+[CARD #011] Subtask: Object Details | Dataset: GoodsAD | Product: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/029_015.jpg
+Question   : What is the relative position or characteristic of the perforations on the box?
+Options    :
+  (A) All of the above.
+  (B) They are a standard feature.
+  (C) They are located at the top of the box.
+  (D) They are used for easy opening.
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'B' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'B' [REGRESSED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+
+[CARD #012] Subtask: Object Details | Dataset: GoodsAD | Product: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/042_001.jpg
+Question   : What is the color scheme of the cigarette pack?
+Options    :
+  (A) Blue and white
+  (B) Gold and red
+  (C) Green and yellow
+  (D) Red and black
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'D' [REGRESSED]
+
+[CARD #013] Subtask: Object Details | Dataset: GoodsAD | Product: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/039_003.jpg
+Question   : What is the dominant color scheme used in the design of the cigarette box?
+Options    :
+  (A) Green, brown, and beige
+  (B) Black and white
+  (C) Yellow and purple
+  (D) Red and blue
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+
+[CARD #014] Subtask: Object Details | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/014_007.jpg
+Question   : What is the color of the cap on the bottle?
+Options    :
+  (A) Red
+  (B) Yellow
+  (C) Green
+  (D) Blue
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+
+[CARD #015] Subtask: Object Details | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/091_019.jpg
+Question   : Where is the label located on the bottle?
+Options    :
+  (A) All over
+  (B) Middle
+  (C) Bottom
+  (D) Top
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'C' [REGRESSED]
+
+[CARD #016] Subtask: Object Analysis | Dataset: GoodsAD | Product: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/good/006_004.jpg
+Question   : What is the purpose or effect of this Somersby apple-flavored beverage?
+Options    :
+  (A) It is a non-alcoholic juice drink.
+  (B) It is a low-alcohol content beverage.
+  (C) It is a high-alcohol content beer.
+  (D) It is a carbonated soft drink.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'C' [REGRESSED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'D' [REGRESSED]
+
+[CARD #017] Subtask: Object Analysis | Dataset: GoodsAD | Product: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/030_009.jpg
+Question   : What is the overall condition of the object?
+Options    :
+  (A) Well-shaped and properly sealed
+  (B) Damaged and leaking
+  (C) Partially open
+  (D) Expired or outdated
+Ground Truth Correct Answer : A
+Clean Model Prediction      : C [INCORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+
+[CARD #018] Subtask: Object Analysis | Dataset: GoodsAD | Product: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/good/032_003.jpg
+Question   : What additional information can be found on the cigarette pack?
+Options    :
+  (A) Brand and variant
+  (B) Barcode
+  (C) Nutrition facts
+  (D) Expiration date
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+
+[CARD #019] Subtask: Object Analysis | Dataset: GoodsAD | Product: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/081_007.jpg
+Question   : What information is displayed on the package besides the product name?
+Options    :
+  (A) Nutritional facts
+  (B) Expiration date
+  (C) Serving size
+  (D) All of the above
+Ground Truth Correct Answer : D
+Clean Model Prediction      : D [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+
+[CARD #020] Subtask: Object Analysis | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/075_006.jpg
+Question   : What is the overall appearance of the bottle?
+Options    :
+  (A) Covered in scratches
+  (B) Discolored and faded
+  (C) Dented and deformed
+  (D) Clean and well-presented
+Ground Truth Correct Answer : D
+Clean Model Prediction      : D [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'D' [RECOVERED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+
+[CARD #021] Subtask: Object Structure | Dataset: GoodsAD | Product: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/good/060_009.jpg
+Question   : What are the different compartments within the packaging?
+Options    :
+  (A) Packaging materials
+  (B) Advertising information
+  (C) Decorative elements
+  (D) Separate servings or parts of the food product
+Ground Truth Correct Answer : D
+Clean Model Prediction      : D [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+
+[CARD #022] Subtask: Object Structure | Dataset: GoodsAD | Product: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/018_014.jpg
+Question   : What is the layout or arrangement of the elements on the box?
+Options    :
+  (A) Haphazard and inconsistent
+  (B) Disorganized and cluttered
+  (C) Varied and asymmetrical
+  (D) Symmetrical and balanced
+Ground Truth Correct Answer : D
+Clean Model Prediction      : D [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+
+[CARD #023] Subtask: Object Structure | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/good/097_022.jpg
+Question   : What design elements are featured on the label?
+Options    :
+  (A) Text in an East Asian script and a cartoon-like illustration
+  (B) All of the above
+  (C) Barcode and QR codes
+  (D) White and blue colors
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+
+[CARD #024] Subtask: Object Structure | Dataset: GoodsAD | Product: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/good/050_006.jpg
+Question   : What are the subcomponents or elements of the object?
+Options    :
+  (A) Packaging, product, branding
+  (B) Packaging, product images, text
+  (C) All of the above
+  (D) Packaging, colors, shapes
+Ground Truth Correct Answer : C
+Clean Model Prediction      : C [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+
+[CARD #025] Subtask: Object Structure | Dataset: GoodsAD | Product: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/good/053_003.jpg
+Question   : What is the layout or arrangement of the elements on the packaging?
+Options    :
+  (A) The packaging features only text and logos.
+  (B) The packaging has only an image of the product.
+  (C) The packaging has a combination of text, logos, and an image.
+  (D) The packaging has no visual elements, only text.
+Ground Truth Correct Answer : C
+Clean Model Prediction      : C [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+
+[CARD #026] Subtask: Defect Classification | Dataset: GoodsAD | Product: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/003_005.jpg
+Question   : There is a defect in the object. What is the type of the defect?
+Options    :
+  (A) Crack
+  (B) Discoloration
+  (C) Misalignment
+  (D) Scratches
+Ground Truth Correct Answer : C
+Clean Model Prediction      : D [INCORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+
+[CARD #027] Subtask: Defect Classification | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_open/058_020.jpg
+Question   : There is a defect in the object. What is the type of the defect?
+Options    :
+  (A) Scratch
+  (B) Discoloration
+  (C) Dent
+  (D) Cap open
+Ground Truth Correct Answer : D
+Clean Model Prediction      : D [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+
+[CARD #028] Subtask: Defect Classification | Dataset: GoodsAD | Product: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/surface_damage/026_031.jpg
+Question   : There is a defect in the object. What is the type of the defect?
+Options    :
+  (A) Dent
+  (B) Discoloration
+  (C) Crack
+  (D) Surface damage
+Ground Truth Correct Answer : D
+Clean Model Prediction      : C [INCORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'C' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+
+[CARD #029] Subtask: Defect Classification | Dataset: GoodsAD | Product: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/deformation/039_028.jpg
+Question   : There is a defect in the object. What is the type of the defect?
+Options    :
+  (A) Scratches
+  (B) Discoloration
+  (C) Dents
+  (D) Crumpled or damaged lid
+Ground Truth Correct Answer : D
+Clean Model Prediction      : D [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+
+[CARD #030] Subtask: Defect Classification | Dataset: GoodsAD | Product: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/straw_missing/072_005.jpg
+Question   : There is a defect in the object. What is the type of the defect?
+Options    :
+  (A) Dent
+  (B) Discoloration
+  (C) Missing component
+  (D) Crack
+Ground Truth Correct Answer : C
+Clean Model Prediction      : D [INCORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+
+[CARD #031] Subtask: Defect Localization | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_half_open/097_026.jpg
+Question   : There is a defect in the object. Where is the defect?
+Options    :
+  (A) On the label
+  (B) At the bottom of the bottle
+  (C) On the side of the bottle
+  (D) At the top of the bottle where the cap meets the neck
+Ground Truth Correct Answer : D
+Clean Model Prediction      : D [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'C' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+
+[CARD #032] Subtask: Defect Localization | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/016_030.jpg
+Question   : There is a defect in the object. Where is the defect?
+Options    :
+  (A) On the top of the bottle
+  (B) On the bottom of the bottle
+  (C) On the center of the bottle
+  (D) On the label of the bottle
+Ground Truth Correct Answer : C
+Clean Model Prediction      : A [INCORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'C' [RECOVERED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'B' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'C' [RECOVERED]
+
+[CARD #033] Subtask: Defect Localization | Dataset: GoodsAD | Product: drink_can
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_can/test/straw_missing/047_005.jpg
+Question   : There is a defect in the object. Where is the defect?
+Options    :
+  (A) On the front of the carton
+  (B) On the top of the carton
+  (C) On the bottom of the carton
+  (D) On the back of the carton
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'A' [RECOVERED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+
+[CARD #034] Subtask: Defect Localization | Dataset: GoodsAD | Product: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/108_007.jpg
+Question   : There is a defect in the object. Where is the defect?
+Options    :
+  (A) Sides of the pack
+  (B) Bottom of the pack
+  (C) Top of the pack
+  (D) All over the pack
+Ground Truth Correct Answer : C
+Clean Model Prediction      : C [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [STILL_FAILED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+
+[CARD #035] Subtask: Defect Localization | Dataset: GoodsAD | Product: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/052_005.jpg
+Question   : There is a defect in the object. Where is the defect?
+Options    :
+  (A) Bottom
+  (B) Right side
+  (C) Top center
+  (D) Left side
+Ground Truth Correct Answer : C
+Clean Model Prediction      : C [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [UNCHANGED_CORRECT]
+
+[CARD #036] Subtask: Defect Description | Dataset: GoodsAD | Product: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/opened/015_026.jpg
+Question   : There is a defect in the object. What is the appearance of the defect?
+Options    :
+  (A) Uniform
+  (B) Rough
+  (C) Smooth
+  (D) Irregular
+Ground Truth Correct Answer : D
+Clean Model Prediction      : D [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+
+[CARD #037] Subtask: Defect Description | Dataset: GoodsAD | Product: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/057_004.jpg
+Question   : There is a defect in the object. What is the appearance of the defect?
+Options    :
+  (A) The box is completely damaged.
+  (B) The top flap of the box is not aligned neatly.
+  (C) The box has visible scratches.
+  (D) The box has holes throughout.
+Ground Truth Correct Answer : B
+Clean Model Prediction      : B [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'C' [REGRESSED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'C' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'C' [REGRESSED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'C' [REGRESSED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'C' [REGRESSED]
+
+[CARD #038] Subtask: Defect Description | Dataset: GoodsAD | Product: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/deformation/051_019.jpg
+Question   : There is a defect in the object. What is the appearance of the defect?
+Options    :
+  (A) Peeling
+  (B) Faded
+  (C) Bulging
+  (D) Caved-in
+Ground Truth Correct Answer : D
+Clean Model Prediction      : D [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'C' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'C' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'D' [RECOVERED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'C' -> Hybrid Pred = 'D' [RECOVERED]
+
+[CARD #039] Subtask: Defect Description | Dataset: GoodsAD | Product: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/deformation/033_022.jpg
+Question   : There is a defect in the object. What is the appearance of the defect?
+Options    :
+  (A) Crumpled and crushed
+  (B) Chipped and broken
+  (C) Faded and discolored
+  (D) Smooth and round
+Ground Truth Correct Answer : A
+Clean Model Prediction      : B [INCORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [STILL_FAILED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'B' -> Hybrid Pred = 'B' [STILL_FAILED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'B' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'B' [REGRESSED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'B' [REGRESSED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'B' [REGRESSED]
+
+[CARD #040] Subtask: Defect Description | Dataset: GoodsAD | Product: food_package
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_package/test/surface_anomaly/019_011.jpg
+Question   : There is a defect in the object. What is the appearance of the defect?
+Options    :
+  (A) Faded and discolored
+  (B) Shiny and reflective
+  (C) Smooth and uniform
+  (D) Rough and uneven
+Ground Truth Correct Answer : D
+Clean Model Prediction      : A [INCORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'D' [RECOVERED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'D' [RECOVERED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'D' [RECOVERED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'D' [RECOVERED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'D' [RECOVERED]
+
+[CARD #041] Subtask: Defect Analysis | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/surface_damage/072_007.jpg
+Question   : There is a defect in the object. What is the possible effect of the defect?
+Options    :
+  (A) Reduces the visual appeal of the product
+  (B) Affects the taste of the beverage
+  (C) Increases the price of the product
+  (D) Compromises the structural integrity of the bottle
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'D' [REGRESSED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'D' [REGRESSED]
+
+[CARD #042] Subtask: Defect Analysis | Dataset: GoodsAD | Product: cigarette_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/cigarette_box/test/opened/022_006.jpg
+Question   : There is a defect in the object. What is the potential effect of the defect?
+Options    :
+  (A) Affects visual presentation
+  (B) Improves product quality
+  (C) Increases product value
+  (D) No effect on the product
+Ground Truth Correct Answer : A
+Clean Model Prediction      : A [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+
+[CARD #043] Subtask: Defect Analysis | Dataset: GoodsAD | Product: food_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_bottle/test/surface_damage/018_027.jpg
+Question   : There is a defect in the object. What is the potential effect of the defect?
+Options    :
+  (A) Affects the product's presentation
+  (B) Compromises the structural integrity
+  (C) Causes the product to expire faster
+  (D) Makes the product unsafe to consume
+Ground Truth Correct Answer : A
+Clean Model Prediction      : D [INCORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'A' -> Hybrid Pred = 'A' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'B' [REGRESSED]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'A' [RECOVERED]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'A' -> Hybrid Pred = 'B' [REGRESSED]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'A' [RECOVERED]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'B' [STILL_FAILED]
+
+[CARD #044] Subtask: Defect Analysis | Dataset: GoodsAD | Product: food_box
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/food_box/test/opened/015_022.jpg
+Question   : There is a defect in the object. What is the potential effect of the defect?
+Options    :
+  (A) It could make the product more expensive.
+  (B) It could make the product more attractive.
+  (C) It could improve the product's taste.
+  (D) It could affect the product's freshness and safety.
+Ground Truth Correct Answer : D
+Clean Model Prediction      : D [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+
+[CARD #045] Subtask: Defect Analysis | Dataset: GoodsAD | Product: drink_bottle
+Image Path : /home/anirudh-sharma/Desktop/M.tech Dissertation/Open-IAD/MMAD/GoodsAD/drink_bottle/test/cap_half_open/036_006.jpg
+Question   : There is a defect in the object. What is the potential effect of the defect?
+Options    :
+  (A) The bottle's contents may leak out
+  (B) The bottle's contents may become contaminated
+  (C) The bottle may be difficult to open
+  (D) Both A and B
+Ground Truth Correct Answer : D
+Clean Model Prediction      : D [CORRECT]
+Mitigation Test Trajectory under Severe Corruptions:
+  • [Conveyor Motion Blur Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Conveyor Motion Blur Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Gaussian Sensor Noise Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 3]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
+  • [Low-Light / Underexposure Sev 5]: Corrupted Pred = 'D' -> Hybrid Pred = 'D' [UNCHANGED_CORRECT]
