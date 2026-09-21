@@ -55,5 +55,24 @@
       "Object Details": 0.7204,
       "Object Structure": 0.7906
     }
+  },
+  "google/gemma-4-E4B-it": {
+    "model_name": "google/gemma-4-E4B-it",
+    "sample_count": 2500,
+    "accuracy": 0.656,
+    "kappa": 0.5403,
+    "avg_latency": 0.847,
+    "throughput_fps": 1.2,
+    "subtask_accuracy": {
+      "Anomaly Detection": 0.4496,
+      "Defect Analysis": 0.7599,
+      "Defect Classification": 0.5341,
+      "Defect Description": 0.6534,
+      "Defect Localization": 0.3141,
+      "Object Analysis": 0.8267,
+      "Object Classification": 0.8087,
+      "Object Details": 0.7527,
+      "Object Structure": 0.8051
+    }
   }
 }

@@ -39,7 +39,7 @@ import seaborn as sns
 from PIL import Image
 from sklearn.metrics import cohen_kappa_score
 import torch
-from transformers import AutoProcessor, AutoModelForImageTextToText
+from transformers import AutoProcessor, AutoModelForImageTextToText, AutoConfig
 
 CURRENT_DIR = Path(__file__).resolve().parent
 PARENT_DIR = CURRENT_DIR.parent
@@ -289,29 +289,69 @@ if not args.generate_plots_only:
     t_load0 = time.time()
     processor = AutoProcessor.from_pretrained(args.model_id, trust_remote_code=True)
     
-    from transformers import BitsAndBytesConfig
-    bnb_config = BitsAndBytesConfig(
-        load_in_4bit=True,
-        bnb_4bit_compute_dtype=torch.float16,
-        bnb_4bit_quant_type='nf4',
-        llm_int8_enable_fp32_cpu_offload=True
-    )
+    if "gemma-4-E4B" in args.model_id or "gemma-4-e4b" in args.model_id.lower():
+        from accelerate.hooks import remove_hook_from_module
+        offload_dir = Path("/tmp/gemma_offload")
+        offload_dir.mkdir(parents=True, exist_ok=True)
+        weights_id = "unsloth/gemma-4-E4B-it-unsloth-bnb-4bit"
 
-    try:
+        config = AutoConfig.from_pretrained(weights_id)
+        all_skips = list(config.quantization_config.get("llm_int8_skip_modules", []))
+        for name in ['model.vision_tower', 'model.vision_tower.patch_embedder.input_proj', 'vision_tower', 'patch_embedder', 'input_proj', 'model.audio_tower', 'audio_tower', 'embed_audio']:
+            if name not in all_skips:
+                all_skips.append(name)
+        config.quantization_config['llm_int8_skip_modules'] = all_skips
+        config.quantization_config['llm_int8_enable_fp32_cpu_offload'] = True
+
+        device_map = {
+            'model.audio_tower': 'cpu',
+            'model.embed_audio': 'cpu',
+            'model.language_model.embed_tokens': 'cpu',
+            'model.language_model.embed_tokens_per_layer': 'cpu',
+            'model.language_model.per_layer_model_projection': 0,
+            'model.language_model.per_layer_projection_norm': 0,
+            'lm_head': 'cpu',
+            'model.vision_tower': 0,
+            'model.embed_vision': 0,
+            'model.language_model.norm': 0,
+        }
+        for i in range(42):
+            device_map[f'model.language_model.layers.{i}'] = 0
+
+        processor = AutoProcessor.from_pretrained(weights_id, trust_remote_code=True)
         model = AutoModelForImageTextToText.from_pretrained(
-            args.model_id,
-            quantization_config=bnb_config,
-            device_map="auto",
+            weights_id,
+            config=config,
+            device_map=device_map,
+            offload_folder=str(offload_dir),
             trust_remote_code=True,
         )
-    except Exception as e:
-        print(f"   Fallback to float16 loading: {e}")
-        model = AutoModelForImageTextToText.from_pretrained(
-            args.model_id,
-            torch_dtype=torch.float16,
-            device_map="auto",
-            trust_remote_code=True,
+        remove_hook_from_module(model.model.language_model.embed_tokens_per_layer, recurse=True)
+        remove_hook_from_module(model.model.language_model.embed_tokens, recurse=True)
+    else:
+        from transformers import BitsAndBytesConfig
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_compute_dtype=torch.float16,
+            bnb_4bit_quant_type='nf4',
+            llm_int8_enable_fp32_cpu_offload=True
         )
+
+        try:
+            model = AutoModelForImageTextToText.from_pretrained(
+                args.model_id,
+                quantization_config=bnb_config,
+                device_map="auto",
+                trust_remote_code=True,
+            )
+        except Exception as e:
+            print(f"   Fallback to float16 loading: {e}")
+            model = AutoModelForImageTextToText.from_pretrained(
+                args.model_id,
+                torch_dtype=torch.float16,
+                device_map="auto",
+                trust_remote_code=True,
+            )
 
     model.eval()
     vram_used = torch.cuda.memory_allocated(0) / 1e9 if torch.cuda.is_available() else 0
@@ -358,7 +398,7 @@ if not args.generate_plots_only:
             f.write(json.dumps(rec) + "\n")
         completed_keys.add(q_idx)
 
-        if (len(completed_keys)) % 100 == 0 or len(completed_keys) == len(sample_questions):
+        if (len(completed_keys)) % 50 == 0 or len(completed_keys) == len(sample_questions):
             el = time.time() - t_bench0
             rate = len(completed_keys) / max(0.1, el)
             rem = len(sample_questions) - len(completed_keys)

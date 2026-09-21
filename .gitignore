@@ -1,6 +1,7 @@
-# ---------------------------------------------------------------
-# Datasets (downloaded separately - see MMAD/README.md)
-# ---------------------------------------------------------------
+# ===============================================================
+# DATASETS (MMAD & External Benchmarks)
+# ===============================================================
+# MMAD raw datasets and annotations (GBs of images & annotations)
 MMAD/GoodsAD/
 MMAD/MVTec-LOCO/
 MMAD/MVTec-AD/
@@ -9,23 +10,91 @@ MMAD/DS-MVTec/
 MMAD/mmad.json
 MMAD/metadata.csv
 
-# Any dataset-ish folder dropped anywhere
+# Keep MMAD documentation & domain knowledge prompt configurations
+!MMAD/README.md
+!MMAD/domain_knowledge.json
+
+# Generic dataset directories anywhere in repository
 data/
 datasets/
+dataset/
 raw_data/
+**/data/
+**/datasets/
+**/dataset/
+**/raw_data/
 
-# ---------------------------------------------------------------
-# Environments
-# ---------------------------------------------------------------
+# ===============================================================
+# BENCHMARK DUMPS, PREDICTIONS & LARGE LOGS
+# ===============================================================
+# Raw prediction dumps and large json lines files (15MB+ each)
+*.jsonl
+Local-training/benchmark_5k_results.jsonl
+
+# Large stdout/terminal evaluation log dumps
+results.txt
+results_5k.txt
+*.log
+logs/
+nohup.out
+
+# Large generated visualization galleries & image grids (>5MB each)
+*grid*.png
+*gallery*.png
+*samples*.png
+*preview*.png
+*sample_predictions*.png
+corruption_preview_test.png
+
+# Parquet, feather, hdf5 data dumps
+*.parquet
+*.feather
+*.h5
+*.hdf5
+*.csv.gz
+
+# ===============================================================
+# MODEL WEIGHTS, CHECKPOINTS & EMBEDDINGS
+# ===============================================================
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.onnx
+*.engine
+*.gguf
+*.pkl
+*.pickle
+*.joblib
+*.npy
+*.npz
+
+checkpoints/
+models/
+weights/
+lora_adapters/
+adapters/
+
+# Hugging Face & Torch caches
+.cache/
+**/.cache/
+huggingface/
+hf_cache/
+torch_cache/
+transformers_cache/
+
+# ===============================================================
+# PYTHON & ENVIRONMENT
+# ===============================================================
 .venv/
 venv/
 env/
 ENV/
 Local-training/.venv/
+**/.venv/
+**/venv/
 
-# ---------------------------------------------------------------
-# Python bytecode / build junk
-# ---------------------------------------------------------------
 __pycache__/
 *.py[cod]
 *$py.class
@@ -40,65 +109,45 @@ dist/
 .ruff_cache/
 .ipynb_checkpoints/
 
-# ---------------------------------------------------------------
-# Model weights / checkpoints / heavy binaries
-# ---------------------------------------------------------------
-*.pt
-*.pth
-*.ckpt
-*.safetensors
-*.bin
-*.onnx
-*.h5
-*.pkl
-*.npz
-*.npy
-checkpoints/
-models/
-weights/
-lora_adapters/
-adapters/
+# ===============================================================
+# EXPERIMENT TRACKING
+# ===============================================================
+wandb/
+runs/
+lightning_logs/
+tmp/
+scratch/
 
-# Hugging Face / torch caches if they ever land in-tree
-.cache/
-huggingface/
-hf_cache/
-torch_cache/
-transformers_cache/
-
-# ---------------------------------------------------------------
-# Archives
-# ---------------------------------------------------------------
+# ===============================================================
+# ARCHIVES & COMPRESSED FILES
+# ===============================================================
 *.zip
 *.tar
 *.tar.gz
 *.tgz
 *.7z
 *.rar
+*.bz2
+*.xz
+*.zst
 
-# ---------------------------------------------------------------
-# Logs / runtime scratch
-# ---------------------------------------------------------------
-*.log
-logs/
-runs/
-wandb/
-tmp/
-scratch/
-nohup.out
+# ===============================================================
+# LARGE BINARY DOCUMENTS (Compiled PDFs)
+# ===============================================================
+*.pdf
 
-# ---------------------------------------------------------------
-# OS / editor
-# ---------------------------------------------------------------
+# ===============================================================
+# OS & IDE
+# ===============================================================
 .DS_Store
 Thumbs.db
 *.swp
 .idea/
 .vscode/
 
-# ---------------------------------------------------------------
-# Secrets
-# ---------------------------------------------------------------
+# ===============================================================
+# SECRETS & CREDENTIALS
+# ===============================================================
 .env
 .env.*
 !.env.example
