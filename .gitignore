@@ -151,3 +151,11 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+
+# ===============================================================
+# COMPARATIVE ANALYSIS (MMAD paper vs this work)
+# ===============================================================
+# Small derived CSVs (~250 KB total) that the figures are built from.
+# The generic **/data/ rule above would otherwise swallow them.
+!comparative-analysis/data/
+!comparative-analysis/data/**

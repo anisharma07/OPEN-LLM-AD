@@ -1,0 +1,10 @@
+,draft_phase1_table,measured_phase1_2500,measured_5k_clean,draft_vs_phase1,draft_vs_5k_clean
+Anomaly Detection,55.56,61.3,55.56,-5.74,0.0
+Defect Analysis,76.98,82.0,76.94,-5.02,0.04
+Defect Classification,45.85,40.8,45.77,5.05,0.08
+Defect Description,72.66,71.1,72.61,1.56,0.05
+Defect Localization,47.65,47.5,47.75,0.15,-0.1
+Object Analysis,82.67,82.3,82.52,0.37,0.15
+Object Classification,89.21,94.9,89.23,-5.69,-0.02
+Object Details,74.1,79.8,74.05,-5.7,0.05
+Object Structure,84.53,81.2,84.32,3.33,0.21

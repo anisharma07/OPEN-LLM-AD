@@ -1,0 +1,10 @@
+subtask,clean,corr_motion_blur,tta_motion_blur,corr_gaussian_noise,tta_gaussian_noise
+Object Classification,89.23,69.84,66.25,77.56,78.82
+Object Structure,84.32,70.63,70.09,77.48,76.76
+Object Analysis,82.52,65.05,62.7,67.57,67.03
+Defect Analysis,76.94,86.13,86.85,87.39,87.75
+Object Details,74.05,62.34,62.16,67.21,69.01
+Defect Description,72.61,72.07,71.53,74.05,73.87
+Anomaly Detection,55.56,55.2,54.3,53.76,53.76
+Defect Localization,47.75,53.15,56.58,50.63,49.55
+Defect Classification,45.77,60.54,61.62,44.14,43.6

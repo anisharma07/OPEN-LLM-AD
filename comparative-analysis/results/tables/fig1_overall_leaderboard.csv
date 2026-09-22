@@ -1,0 +1,26 @@
+model,scale,params_b,family,anomaly_discrimination,defect_classification,defect_localization,defect_description,defect_analysis,object_classification,object_analysis,average,source,setting
+Random Chance,-,,baseline,50.0,25.0,25.0,25.0,25.0,25.0,25.0,28.57,MMAD ICLR-2025 (1-shot),1-shot
+AnomalyGPT,7B,7.0,open_source,65.57,27.49,27.97,36.86,32.11,29.84,35.82,36.52,MMAD ICLR-2025 (1-shot),1-shot
+Cambrian-1,8B,8.0,open_source,55.6,32.53,35.39,43.46,49.14,78.15,67.22,51.64,MMAD ICLR-2025 (1-shot),1-shot
+Qwen-VL-Chat,7B,7.0,open_source,53.65,31.33,28.62,41.66,63.99,74.46,67.94,51.66,MMAD ICLR-2025 (1-shot),1-shot
+LLaVA-1.5 (7B),7B,7.0,open_source,51.33,37.04,36.62,50.6,69.79,68.29,69.53,54.74,MMAD ICLR-2025 (1-shot),1-shot
+LLaVA-1.5 (13B),13B,13.0,open_source,49.96,38.78,46.17,58.17,73.09,73.62,70.98,58.68,MMAD ICLR-2025 (1-shot),1-shot
+Gemma-4-E2B,2.3B,2.3,this_work,55.042194092827,46.95,26.35,63.9,75.63,73.29,70.46333333333334,58.80364677516577,"This work (0-shot, N=2500)",0-shot
+LLaVA-NEXT-Interleave,7B,7.0,open_source,57.64,33.79,47.72,51.84,67.93,81.39,74.91,59.32,MMAD ICLR-2025 (1-shot),1-shot
+SPHINX,7B,7.0,open_source,53.13,33.93,52.27,50.96,71.23,85.07,73.1,59.96,MMAD ICLR-2025 (1-shot),1-shot
+InternLM-XComposer2-VL,7B,7.0,open_source,55.85,41.8,48.27,57.52,76.6,74.34,77.75,61.73,MMAD ICLR-2025 (1-shot),1-shot
+Gemma-4-E4B,4.4B,4.4,this_work,51.58227848101266,53.41,31.41,65.34,75.99000000000001,80.87,79.48333333333335,62.58365883062087,"This work (0-shot, N=2500)",0-shot
+InternVL2 (8B),8B,8.0,open_source,59.97,43.85,47.91,57.6,78.1,74.18,80.37,63.14,MMAD ICLR-2025 (1-shot),1-shot
+LLaVA-OneVision,7B,7.0,open_source,51.77,46.13,41.85,62.19,69.73,90.31,80.93,63.27,MMAD ICLR-2025 (1-shot),1-shot
+Qwen2.5-VL-3B,3.1B,3.1,this_work,47.43143459915612,51.24999999999999,51.25999999999999,62.45,77.42,90.61,78.16333333333333,65.51210970464136,"This work (0-shot, N=2500)",0-shot
+MiniCPM-V2.6,8B,8.0,open_source,57.31,49.22,43.28,65.86,75.24,92.02,80.8,66.25,MMAD ICLR-2025 (1-shot),1-shot
+GPT-4o-mini,-,,commercial,64.33,48.58,38.75,63.68,80.4,88.56,79.74,66.29,MMAD ICLR-2025 (1-shot),1-shot
+LLaVA-NeXT (34B),34B,34.0,open_source,57.92,48.79,52.87,71.34,80.28,81.12,77.8,67.16,MMAD ICLR-2025 (1-shot),1-shot
+Claude-3.5-sonnet,-,,commercial,60.14,60.14,48.81,67.13,79.11,85.19,79.83,68.36,MMAD ICLR-2025 (1-shot),1-shot
+Qwen3-VL-2B,2.2B,2.2,this_work,61.40845070422535,40.8,47.5,71.1,82.0,94.9,81.10000000000001,68.40120724346077,"This work (0-shot, N=2500)",0-shot
+Gemini-1.5-flash,-,,commercial,58.58,54.7,49.1,66.53,82.24,91.47,79.71,68.9,MMAD ICLR-2025 (1-shot),1-shot
+InternVL2 (76B),76B,76.0,open_source,68.25,54.22,56.66,66.3,80.47,86.4,82.92,70.75,MMAD ICLR-2025 (1-shot),1-shot
+Gemini-1.5-pro,-,,commercial,68.63,60.12,58.56,70.38,82.46,89.2,82.25,73.09,MMAD ICLR-2025 (1-shot),1-shot
+GPT-4o,-,,commercial,68.63,65.8,55.62,73.21,83.41,94.98,82.8,74.92,MMAD ICLR-2025 (1-shot),1-shot
+Human (ordinary),-,,human,86.9,66.25,85.58,71.25,81.52,89.58,69.72,78.69,MMAD ICLR-2025 (1-shot),1-shot
+Human (expert),-,,human,95.24,75.0,92.31,83.33,94.2,86.11,80.37,86.65,MMAD ICLR-2025 (1-shot),1-shot

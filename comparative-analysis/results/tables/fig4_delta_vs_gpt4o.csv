@@ -1,0 +1,6 @@
+model,anomaly_discrimination,defect_classification,defect_localization,defect_description,defect_analysis,object_classification,object_analysis,"7-task
+average"
+Qwen3-VL-2B,-7.22,-25.0,-8.12,-2.11,-1.41,-0.08,-1.7,-6.52
+Qwen2.5-VL-3B,-21.2,-14.55,-4.36,-10.76,-5.99,-4.37,-4.64,-9.41
+Gemma-4-E4B,-17.05,-12.39,-24.21,-7.87,-7.42,-14.11,-3.32,-12.34
+Gemma-4-E2B,-13.59,-18.85,-29.27,-9.31,-7.78,-21.69,-12.34,-16.12

@@ -1,0 +1,6 @@
+condition,accuracy,n
+clean,69.86,5000
+tta_gaussian_noise,66.67999999999999,5000
+corr_gaussian_noise,66.64,5000
+corr_motion_blur,66.10000000000001,5000
+tta_motion_blur,65.78,5000
