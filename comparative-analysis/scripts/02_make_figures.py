@@ -384,8 +384,9 @@ fig, (a1, a2) = plt.subplots(1, 2, figsize=(12.4, 5.8))
 fig.subplots_adjust(top=0.74, wspace=0.22)
 t = tw.sort_values("average", ascending=False).reset_index(drop=True)
 # Colour follows the model, not its position in the ranking.
-MODEL_COLOR = {"Qwen3-VL-2B": AQUA, "Qwen2.5-VL-3B": BLUE,
-               "Gemma-4-E4B": ORANGE, "Gemma-4-E2B": YELLOW}
+MODEL_COLOR = {"Qwen3-VL-8B": MAGENTA, "Qwen3-VL-4B": VIOLET, "Qwen3-VL-2B": AQUA, "Qwen2.5-VL-3B": BLUE,
+               "Gemma-4-E4B": ORANGE, "Gemma-4-E2B": YELLOW, "SmolVLM-500M": "#17becf",
+               "SmolVLM-256M": "#9edae5", "Moondream2-1.8B": "#e377c2", "PaliGemma2-3B": "#bcbd22"}
 mc = [MODEL_COLOR[m] for m in t.model]
 
 a1.scatter(t.vram_gb, t.average, s=200, marker="D",

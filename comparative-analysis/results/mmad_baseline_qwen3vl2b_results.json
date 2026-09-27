@@ -1,0 +1,151 @@
+{
+  "model": "Qwen3-VL-2B-Instruct",
+  "benchmark": "MMAD (ICLR 2025)",
+  "few_shot": 1,
+  "images_evaluated": 3800,
+  "images_total": 8366,
+  "coverage": "45.4%",
+  "total_questions": 18651,
+  "overall_correct": 13204,
+  "overall_accuracy": 70.8,
+  "per_dataset": {
+    "MVTec-AD": {
+      "total_questions": 8235,
+      "correct": 6445,
+      "accuracy": 78.26,
+      "Anomaly Detection": {
+        "accuracy": 79.04,
+        "correct": 1320,
+        "total": 1670
+      },
+      "Defect Analysis": {
+        "accuracy": 90.04,
+        "correct": 1085,
+        "total": 1205
+      },
+      "Defect Classification": {
+        "accuracy": 62.9,
+        "correct": 758,
+        "total": 1205
+      },
+      "Defect Description": {
+        "accuracy": 75.68,
+        "correct": 918,
+        "total": 1213
+      },
+      "Defect Localization": {
+        "accuracy": 67.98,
+        "correct": 811,
+        "total": 1193
+      },
+      "Object Analysis": {
+        "accuracy": 85.36,
+        "correct": 1114,
+        "total": 1305
+      },
+      "Object Classification": {
+        "accuracy": 98.87,
+        "correct": 439,
+        "total": 444
+      },
+      "detection_metrics": {
+        "balanced_accuracy": 77.39,
+        "precision": 89.53,
+        "recall": 80.91,
+        "f1": 85.0
+      }
+    },
+    "MVTec-LOCO": {
+      "total_questions": 7624,
+      "correct": 4642,
+      "accuracy": 60.89,
+      "Anomaly Detection": {
+        "accuracy": 58.34,
+        "correct": 913,
+        "total": 1565
+      },
+      "Defect Analysis": {
+        "accuracy": 72.01,
+        "correct": 687,
+        "total": 954
+      },
+      "Defect Classification": {
+        "accuracy": 31.77,
+        "correct": 312,
+        "total": 982
+      },
+      "Defect Description": {
+        "accuracy": 54.31,
+        "correct": 529,
+        "total": 974
+      },
+      "Defect Localization": {
+        "accuracy": 46.44,
+        "correct": 456,
+        "total": 982
+      },
+      "Object Analysis": {
+        "accuracy": 78.19,
+        "correct": 1269,
+        "total": 1623
+      },
+      "Object Classification": {
+        "accuracy": 87.5,
+        "correct": 476,
+        "total": 544
+      },
+      "detection_metrics": {
+        "balanced_accuracy": 62.53,
+        "precision": 78.81,
+        "recall": 46.88,
+        "f1": 58.79
+      }
+    },
+    "VisA": {
+      "total_questions": 2792,
+      "correct": 2117,
+      "accuracy": 75.82,
+      "Anomaly Detection": {
+        "accuracy": 79.43,
+        "correct": 448,
+        "total": 564
+      },
+      "Defect Analysis": {
+        "accuracy": 72.57,
+        "correct": 254,
+        "total": 350
+      },
+      "Defect Classification": {
+        "accuracy": 58.38,
+        "correct": 202,
+        "total": 346
+      },
+      "Defect Description": {
+        "accuracy": 73.99,
+        "correct": 256,
+        "total": 346
+      },
+      "Defect Localization": {
+        "accuracy": 57.06,
+        "correct": 202,
+        "total": 354
+      },
+      "Object Analysis": {
+        "accuracy": 90.19,
+        "correct": 561,
+        "total": 622
+      },
+      "Object Classification": {
+        "accuracy": 92.38,
+        "correct": 194,
+        "total": 210
+      },
+      "detection_metrics": {
+        "balanced_accuracy": 82.74,
+        "precision": 96.48,
+        "recall": 69.77,
+        "f1": 80.98
+      }
+    }
+  }
+}

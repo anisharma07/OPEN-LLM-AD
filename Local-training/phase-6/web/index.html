@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arm-B Lab</title>
+  <link rel="stylesheet" href="/web/style.css">
+</head>
+<body>
+  <div id="toolbar">
+    <div class="brand">Arm-B Lab <small>detector-guided MLLM · Phase 6</small></div>
+    <button class="tb-btn primary" id="btn-run" title="Run graph (Ctrl+Enter)">▶ Run</button>
+    <button class="tb-btn" id="btn-stop" title="Stop the running job">■ Stop</button>
+    <div class="tb-sep"></div>
+    <div class="dropdown"><button class="tb-btn" id="btn-templates">Templates ▾</button></div>
+    <div class="dropdown"><button class="tb-btn" id="btn-workflow">Workflow ▾</button></div>
+    <button class="tb-btn" id="btn-add" title="Add node (double-click canvas)">＋ Node</button>
+    <button class="tb-btn" id="btn-undo" title="Undo (Ctrl+Z)">↶</button>
+    <button class="tb-btn" id="btn-redo" title="Redo (Ctrl+Shift+Z)">↷</button>
+    <button class="tb-btn" id="btn-fit" title="Fit view (.)">⤢</button>
+    <div class="tb-sep"></div>
+    <button class="tb-btn" id="btn-experiment" title="Run this graph over an MMAD sample, with sweeps">⚗ Experiment</button>
+    <button class="tb-btn" id="btn-lab" title="Experiment results">📊 Results</button>
+    <div class="tb-spacer"></div>
+    <div id="sysinfo"></div>
+    <div class="dropdown"><button class="tb-btn" id="btn-system">⚙ ▾</button></div>
+    <button class="tb-btn" id="btn-help" title="Help">?</button>
+  </div>
+
+  <div id="viewport">
+    <div id="world">
+      <svg id="wires"></svg>
+    </div>
+    <div id="selbox" class="hidden"></div>
+  </div>
+
+  <div id="lab" class="hidden">
+    <aside id="runs"></aside>
+    <main id="runview"></main>
+  </div>
+
+  <div id="side" class="hidden">
+    <header><b>Help</b><button class="tb-btn" id="side-close">✕</button></header>
+    <div class="body" id="side-body"></div>
+  </div>
+
+  <div id="toasts"></div>
+  <script type="module" src="/web/js/main.js"></script>
+</body>
+</html>

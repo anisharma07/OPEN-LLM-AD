@@ -1,0 +1,307 @@
+{
+ "version": 1,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "MMADSample",
+   "pos": [
+    0,
+    0
+   ],
+   "params": {
+    "subtask": "Anomaly Detection",
+    "condition": "any",
+    "index": 0
+   }
+  },
+  {
+   "id": 2,
+   "type": "NormalReferences",
+   "pos": [
+    0,
+    560
+   ],
+   "params": {
+    "k": 8
+   }
+  },
+  {
+   "id": 3,
+   "type": "PatchCore",
+   "pos": [
+    360,
+    0
+   ],
+   "params": {}
+  },
+  {
+   "id": 4,
+   "type": "HeatmapToBox",
+   "pos": [
+    700,
+    0
+   ],
+   "params": {}
+  },
+  {
+   "id": 5,
+   "type": "DetectorMetrics",
+   "pos": [
+    1030,
+    0
+   ],
+   "params": {
+    "label": "patchcore"
+   }
+  },
+  {
+   "id": 6,
+   "type": "WinCLIP",
+   "pos": [
+    360,
+    520
+   ],
+   "params": {}
+  },
+  {
+   "id": 7,
+   "type": "HeatmapToBox",
+   "pos": [
+    700,
+    520
+   ],
+   "params": {}
+  },
+  {
+   "id": 8,
+   "type": "DetectorMetrics",
+   "pos": [
+    1030,
+    520
+   ],
+   "params": {
+    "label": "winclip"
+   }
+  },
+  {
+   "id": 9,
+   "type": "Note",
+   "pos": [
+    0,
+    900
+   ],
+   "params": {
+    "text": "Detector-only benchmark (no MLLM, fast).\nImage AUROC, pixel AUROC, box IoU, TPR/FPR of the gate.\nUses Anomaly Detection questions so each image is counted once."
+   }
+  }
+ ],
+ "links": [
+  {
+   "id": 1,
+   "from": [
+    1,
+    0
+   ],
+   "to": [
+    2,
+    0
+   ]
+  },
+  {
+   "id": 2,
+   "from": [
+    1,
+    1
+   ],
+   "to": [
+    3,
+    0
+   ]
+  },
+  {
+   "id": 3,
+   "from": [
+    2,
+    0
+   ],
+   "to": [
+    3,
+    1
+   ]
+  },
+  {
+   "id": 4,
+   "from": [
+    3,
+    0
+   ],
+   "to": [
+    4,
+    0
+   ]
+  },
+  {
+   "id": 5,
+   "from": [
+    1,
+    1
+   ],
+   "to": [
+    4,
+    1
+   ]
+  },
+  {
+   "id": 6,
+   "from": [
+    3,
+    0
+   ],
+   "to": [
+    5,
+    0
+   ]
+  },
+  {
+   "id": 7,
+   "from": [
+    1,
+    0
+   ],
+   "to": [
+    5,
+    1
+   ]
+  },
+  {
+   "id": 8,
+   "from": [
+    4,
+    0
+   ],
+   "to": [
+    5,
+    2
+   ]
+  },
+  {
+   "id": 9,
+   "from": [
+    1,
+    1
+   ],
+   "to": [
+    5,
+    3
+   ]
+  },
+  {
+   "id": 10,
+   "from": [
+    1,
+    1
+   ],
+   "to": [
+    6,
+    0
+   ]
+  },
+  {
+   "id": 11,
+   "from": [
+    2,
+    0
+   ],
+   "to": [
+    6,
+    1
+   ]
+  },
+  {
+   "id": 12,
+   "from": [
+    1,
+    0
+   ],
+   "to": [
+    6,
+    2
+   ]
+  },
+  {
+   "id": 13,
+   "from": [
+    6,
+    0
+   ],
+   "to": [
+    7,
+    0
+   ]
+  },
+  {
+   "id": 14,
+   "from": [
+    1,
+    1
+   ],
+   "to": [
+    7,
+    1
+   ]
+  },
+  {
+   "id": 15,
+   "from": [
+    6,
+    0
+   ],
+   "to": [
+    8,
+    0
+   ]
+  },
+  {
+   "id": 16,
+   "from": [
+    1,
+    0
+   ],
+   "to": [
+    8,
+    1
+   ]
+  },
+  {
+   "id": 17,
+   "from": [
+    7,
+    0
+   ],
+   "to": [
+    8,
+    2
+   ]
+  },
+  {
+   "id": 18,
+   "from": [
+    1,
+    1
+   ],
+   "to": [
+    8,
+    3
+   ]
+  }
+ ],
+ "experiment": {
+  "name": "PatchCore vs WinCLIP detector quality",
+  "n": 200,
+  "seed": 42,
+  "subtasks": [
+   "Anomaly Detection"
+  ],
+  "sweep": []
+ }
+}

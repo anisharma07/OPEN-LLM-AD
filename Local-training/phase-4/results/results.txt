@@ -1,7 +1,7 @@
 ==========================================================================================
 PHASE 4: CROSS-MODEL MULTIMODAL LLM ARCHITECTURE BENCHMARK REPORT
 ==========================================================================================
-Generated on   : 2026-09-19 03:42:39
+Generated on   : 2026-09-26 22:47:09
 Hardware       : NVIDIA GeForce RTX 4060 Laptop GPU (8.19 GB VRAM)
 Questions/Model: 2,500 (Identical to Phase 1)
 ==========================================================================================
@@ -9,5 +9,12 @@ Questions/Model: 2,500 (Identical to Phase 1)
 Model Architecture               | Accuracy   | Kappa    | Latency    | Throughput
 --------------------------------------------------------------------------------
 Qwen3-VL-2B-Instruct             |    71.20% |  0.615 |   0.160s  |    6.2 fps
+Qwen/Qwen3-VL-8B-Instruct        |    72.16% |  0.627 |   0.320s  |    3.1 fps
 google/gemma-4-E2B-it            |    60.92% |  0.476 |   0.337s  |    3.0 fps
+HuggingFaceTB/SmolVLM-500M-Instruct |    45.72% |  0.277 |   0.462s  |    2.2 fps
+Qwen/Qwen3-VL-4B-Instruct        |    68.80% |  0.582 |   0.190s  |    5.3 fps
 Qwen/Qwen2.5-VL-3B-Instruct      |    67.68% |  0.574 |   0.223s  |    4.5 fps
+vikhyatk/moondream2              |    67.56% |  0.567 |   0.452s  |    2.2 fps
+google/paligemma2-3b-pt-224      |     8.20% | -0.076 |   0.211s  |    4.7 fps
+HuggingFaceTB/SmolVLM-256M-Instruct |    32.56% |  0.122 |   0.435s  |    2.3 fps
+google/gemma-4-E4B-it            |    65.60% |  0.540 |   0.847s  |    1.2 fps

@@ -48,6 +48,12 @@ THIS_WORK_META = {
     "Qwen3-VL-2B-Instruct": dict(
         short="Qwen3-VL-2B", params_b=2.2, precision="FP16", vram_gb=4.82,
         vision="Dynamic-resolution patch ViT"),
+    "Qwen/Qwen3-VL-8B-Instruct": dict(
+        short="Qwen3-VL-8B", params_b=8.2, precision="4-bit NF4", vram_gb=6.73,
+        vision="Dynamic-resolution patch ViT"),
+    "Qwen/Qwen3-VL-4B-Instruct": dict(
+        short="Qwen3-VL-4B", params_b=4.4, precision="4-bit NF4", vram_gb=3.06,
+        vision="Dynamic-resolution patch ViT"),
     "Qwen/Qwen2.5-VL-3B-Instruct": dict(
         short="Qwen2.5-VL-3B", params_b=3.1, precision="FP16", vram_gb=5.86,
         vision="Windowed dynamic ViT"),
@@ -57,6 +63,18 @@ THIS_WORK_META = {
     "google/gemma-4-E2B-it": dict(
         short="Gemma-4-E2B", params_b=2.3, precision="FP16", vram_gb=4.65,
         vision="SigLIP token pooler"),
+    "HuggingFaceTB/SmolVLM-500M-Instruct": dict(
+        short="SmolVLM-500M", params_b=0.5, precision="FP16", vram_gb=1.11,
+        vision="SigLIP token pooler"),
+    "HuggingFaceTB/SmolVLM-256M-Instruct": dict(
+        short="SmolVLM-256M", params_b=0.26, precision="FP16", vram_gb=0.85,
+        vision="SigLIP token pooler"),
+    "vikhyatk/moondream2": dict(
+        short="Moondream2-1.8B", params_b=1.8, precision="FP16", vram_gb=2.1,
+        vision="SigLIP token pooler"),
+    "google/paligemma2-3b-pt-224": dict(
+        short="PaliGemma2-3B", params_b=3.0, precision="FP16", vram_gb=5.8,
+        vision="SigLIP-So400m"),
 }
 
 # Per-subtask question counts of the shared 2,500-question sample (phase-1
@@ -129,9 +147,15 @@ phase4 = json.loads((LT / "phase-4" / "results" / "phase4_manifest.json").read_t
 
 RAW_RUNS = {
     "Qwen3-VL-2B-Instruct": LT / "phase-1" / "results" / "phase1_results.jsonl",
+    "Qwen/Qwen3-VL-8B-Instruct": LT / "phase-4" / "results" / "qwen_qwen3_vl_8b_instruct_results.jsonl",
+    "Qwen/Qwen3-VL-4B-Instruct": LT / "phase-4" / "results" / "qwen_qwen3_vl_4b_instruct_results.jsonl",
     "Qwen/Qwen2.5-VL-3B-Instruct": LT / "phase-4" / "results" / "qwen_qwen2.5_vl_3b_instruct_results.jsonl",
     "google/gemma-4-E2B-it": LT / "phase-4" / "results" / "google_gemma_4_e2b_it_results.jsonl",
     "google/gemma-4-E4B-it": LT / "phase-4" / "results" / "google_gemma_4_e4b_it_results.jsonl",
+    "HuggingFaceTB/SmolVLM-500M-Instruct": LT / "phase-4" / "results" / "huggingfacetb_smolvlm_500m_instruct_results.jsonl",
+    "HuggingFaceTB/SmolVLM-256M-Instruct": LT / "phase-4" / "results" / "huggingfacetb_smolvlm_256m_instruct_results.jsonl",
+    "vikhyatk/moondream2": LT / "phase-4" / "results" / "vikhyatk_moondream2_results.jsonl",
+    "google/paligemma2-3b-pt-224": LT / "phase-4" / "results" / "google_paligemma2_3b_pt_224_results.jsonl",
 }
 
 rows, subtask_rows = [], []

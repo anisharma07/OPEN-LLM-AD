@@ -1,0 +1,650 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "MMADSample",
+      "pos": [
+        0,
+        0
+      ],
+      "params": {
+        "source": "any",
+        "subtask": "any",
+        "condition": "any",
+        "index": 0,
+        "order": "shuffled",
+        "max_side": 1024
+      },
+      "bypass": false,
+      "collapsed": false,
+      "width": 300
+    },
+    {
+      "id": 2,
+      "type": "QuestionBuilder",
+      "pos": [
+        0,
+        560
+      ],
+      "params": {
+        "paraphrase": "original",
+        "shuffle_options": false,
+        "shuffle_seed": 0
+      },
+      "bypass": false,
+      "collapsed": false,
+      "width": 270
+    },
+    {
+      "id": 3,
+      "type": "TextPrompt",
+      "pos": [
+        1040,
+        -560
+      ],
+      "params": {
+        "template": "MMAD vanilla (Arm A)",
+        "custom_template": "{question}\n\n{options}\n\n{answer_instruction}",
+        "answer_format": "letter only",
+        "cue_aware": true,
+        "domain_knowledge": false,
+        "color_word": "RED"
+      },
+      "bypass": false,
+      "title": "Prompt (vanilla)",
+      "collapsed": false,
+      "width": 320
+    },
+    {
+      "id": 4,
+      "type": "MLLM",
+      "pos": [
+        1390,
+        -560
+      ],
+      "params": {
+        "model": "chance-baseline (uniform random letter)",
+        "precision": "auto",
+        "device": "auto",
+        "answer_mode": "generate",
+        "max_new_tokens": 8,
+        "temperature": 0,
+        "top_p": 1,
+        "seed": 0,
+        "max_pixels": 401408,
+        "extra_image_first": true,
+        "system_prompt": ""
+      },
+      "bypass": false,
+      "title": "MLLM (Arm A)",
+      "collapsed": false,
+      "width": 310
+    },
+    {
+      "id": 5,
+      "type": "AnswerParser",
+      "pos": [
+        1740,
+        -560
+      ],
+      "params": {
+        "mode": "lenient",
+        "on_failure": "mark wrong"
+      },
+      "bypass": false,
+      "collapsed": false,
+      "width": 250
+    },
+    {
+      "id": 6,
+      "type": "Score",
+      "pos": [
+        1740,
+        -410
+      ],
+      "params": {
+        "label": "arm_a"
+      },
+      "bypass": false,
+      "collapsed": false,
+      "width": 230
+    },
+    {
+      "id": 7,
+      "type": "NormalReferences",
+      "pos": [
+        360,
+        540
+      ],
+      "params": {
+        "strategy": "similar",
+        "k": 8,
+        "source": "from sample",
+        "seed": 0
+      },
+      "bypass": false,
+      "collapsed": false,
+      "width": 270
+    },
+    {
+      "id": 8,
+      "type": "PatchCore",
+      "pos": [
+        360,
+        120
+      ],
+      "params": {
+        "backbone": "wide_resnet50_2",
+        "layers": "layer2+layer3",
+        "resolution": "256",
+        "feat_dim": 1024,
+        "coreset_ratio": 0.1,
+        "knn": 1,
+        "sigma": 4,
+        "score_agg": "max",
+        "calib_margin": 1,
+        "device": "auto"
+      },
+      "bypass": false,
+      "collapsed": false,
+      "width": 290
+    },
+    {
+      "id": 9,
+      "type": "HeatmapToBox",
+      "pos": [
+        700,
+        120
+      ],
+      "params": {
+        "gate": "calibrated",
+        "gate_value": 1,
+        "threshold": "calibrated",
+        "threshold_value": 1,
+        "box_mode": "components",
+        "max_boxes": 1,
+        "min_area_frac": 0.001,
+        "pad_frac": 0.1
+      },
+      "bypass": false,
+      "collapsed": false,
+      "width": 290
+    },
+    {
+      "id": 10,
+      "type": "VisualPrompt",
+      "pos": [
+        1040,
+        120
+      ],
+      "params": {
+        "style": "box+wash+label",
+        "color": "red",
+        "thickness": 1,
+        "label": "DEFECT CANDIDATE",
+        "alpha": 0.45,
+        "crop_context": 0.5
+      },
+      "bypass": false,
+      "collapsed": false,
+      "width": 290
+    },
+    {
+      "id": 11,
+      "type": "TextPrompt",
+      "pos": [
+        1040,
+        450
+      ],
+      "params": {
+        "template": "grounded (Phase 5)",
+        "custom_template": "{question}\n\n{options}\n\n{answer_instruction}",
+        "answer_format": "letter only",
+        "cue_aware": true,
+        "domain_knowledge": false,
+        "color_word": "RED"
+      },
+      "bypass": false,
+      "title": "Prompt (grounded)",
+      "collapsed": false,
+      "width": 320
+    },
+    {
+      "id": 12,
+      "type": "MLLM",
+      "pos": [
+        1390,
+        120
+      ],
+      "params": {
+        "model": "chance-baseline (uniform random letter)",
+        "precision": "auto",
+        "device": "auto",
+        "answer_mode": "generate",
+        "max_new_tokens": 8,
+        "temperature": 0,
+        "top_p": 1,
+        "seed": 0,
+        "max_pixels": 401408,
+        "extra_image_first": true,
+        "system_prompt": ""
+      },
+      "bypass": false,
+      "title": "MLLM (arm_b)",
+      "collapsed": false,
+      "width": 310
+    },
+    {
+      "id": 13,
+      "type": "AnswerParser",
+      "pos": [
+        1740,
+        120
+      ],
+      "params": {
+        "mode": "lenient",
+        "on_failure": "mark wrong"
+      },
+      "bypass": false,
+      "collapsed": false,
+      "width": 250
+    },
+    {
+      "id": 14,
+      "type": "Score",
+      "pos": [
+        1740,
+        270
+      ],
+      "params": {
+        "label": "arm_b"
+      },
+      "bypass": false,
+      "collapsed": false,
+      "width": 230
+    },
+    {
+      "id": 15,
+      "type": "DetectorMetrics",
+      "pos": [
+        700,
+        510
+      ],
+      "params": {
+        "label": "patchcore"
+      },
+      "bypass": false,
+      "collapsed": false,
+      "width": 270
+    },
+    {
+      "id": 16,
+      "type": "Note",
+      "pos": [
+        0,
+        820
+      ],
+      "params": {
+        "text": "Arm A vs Arm B on identical questions.\nThe results page reports the paired difference, fixes/breaks and an exact McNemar test."
+      },
+      "bypass": false,
+      "collapsed": false,
+      "width": 280
+    }
+  ],
+  "links": [
+    {
+      "id": 1,
+      "from": [
+        1,
+        2
+      ],
+      "to": [
+        2,
+        0
+      ]
+    },
+    {
+      "id": 2,
+      "from": [
+        2,
+        0
+      ],
+      "to": [
+        3,
+        0
+      ]
+    },
+    {
+      "id": 3,
+      "from": [
+        1,
+        1
+      ],
+      "to": [
+        4,
+        0
+      ]
+    },
+    {
+      "id": 4,
+      "from": [
+        3,
+        0
+      ],
+      "to": [
+        4,
+        1
+      ]
+    },
+    {
+      "id": 5,
+      "from": [
+        2,
+        0
+      ],
+      "to": [
+        4,
+        2
+      ]
+    },
+    {
+      "id": 6,
+      "from": [
+        4,
+        0
+      ],
+      "to": [
+        5,
+        0
+      ]
+    },
+    {
+      "id": 7,
+      "from": [
+        2,
+        0
+      ],
+      "to": [
+        5,
+        1
+      ]
+    },
+    {
+      "id": 8,
+      "from": [
+        5,
+        0
+      ],
+      "to": [
+        6,
+        0
+      ]
+    },
+    {
+      "id": 9,
+      "from": [
+        2,
+        0
+      ],
+      "to": [
+        6,
+        1
+      ]
+    },
+    {
+      "id": 10,
+      "from": [
+        1,
+        0
+      ],
+      "to": [
+        7,
+        0
+      ]
+    },
+    {
+      "id": 11,
+      "from": [
+        1,
+        1
+      ],
+      "to": [
+        8,
+        0
+      ]
+    },
+    {
+      "id": 12,
+      "from": [
+        7,
+        0
+      ],
+      "to": [
+        8,
+        1
+      ]
+    },
+    {
+      "id": 13,
+      "from": [
+        8,
+        0
+      ],
+      "to": [
+        9,
+        0
+      ]
+    },
+    {
+      "id": 14,
+      "from": [
+        1,
+        1
+      ],
+      "to": [
+        9,
+        1
+      ]
+    },
+    {
+      "id": 15,
+      "from": [
+        1,
+        1
+      ],
+      "to": [
+        10,
+        0
+      ]
+    },
+    {
+      "id": 16,
+      "from": [
+        9,
+        0
+      ],
+      "to": [
+        10,
+        1
+      ]
+    },
+    {
+      "id": 17,
+      "from": [
+        8,
+        0
+      ],
+      "to": [
+        10,
+        2
+      ]
+    },
+    {
+      "id": 18,
+      "from": [
+        2,
+        0
+      ],
+      "to": [
+        11,
+        0
+      ]
+    },
+    {
+      "id": 19,
+      "from": [
+        9,
+        0
+      ],
+      "to": [
+        11,
+        1
+      ]
+    },
+    {
+      "id": 20,
+      "from": [
+        10,
+        0
+      ],
+      "to": [
+        12,
+        0
+      ]
+    },
+    {
+      "id": 21,
+      "from": [
+        11,
+        0
+      ],
+      "to": [
+        12,
+        1
+      ]
+    },
+    {
+      "id": 22,
+      "from": [
+        2,
+        0
+      ],
+      "to": [
+        12,
+        2
+      ]
+    },
+    {
+      "id": 23,
+      "from": [
+        12,
+        0
+      ],
+      "to": [
+        13,
+        0
+      ]
+    },
+    {
+      "id": 24,
+      "from": [
+        2,
+        0
+      ],
+      "to": [
+        13,
+        1
+      ]
+    },
+    {
+      "id": 25,
+      "from": [
+        13,
+        0
+      ],
+      "to": [
+        14,
+        0
+      ]
+    },
+    {
+      "id": 26,
+      "from": [
+        2,
+        0
+      ],
+      "to": [
+        14,
+        1
+      ]
+    },
+    {
+      "id": 27,
+      "from": [
+        8,
+        0
+      ],
+      "to": [
+        15,
+        0
+      ]
+    },
+    {
+      "id": 28,
+      "from": [
+        1,
+        0
+      ],
+      "to": [
+        15,
+        1
+      ]
+    },
+    {
+      "id": 29,
+      "from": [
+        9,
+        0
+      ],
+      "to": [
+        15,
+        2
+      ]
+    },
+    {
+      "id": 30,
+      "from": [
+        1,
+        1
+      ],
+      "to": [
+        15,
+        3
+      ]
+    }
+  ],
+  "experiment": {
+    "name": "UI test: gate sweep",
+    "notes": "",
+    "n": 27,
+    "seed": 42,
+    "condition": "any",
+    "save_thumbnails": true,
+    "datasets": [],
+    "subtasks": [],
+    "sweep": [
+      {
+        "node_id": 9,
+        "param": "gate_value",
+        "values": [
+          0.8,
+          1,
+          1.2
+        ],
+        "text": "0.8, 1.0, 1.2"
+      }
+    ]
+  }
+}

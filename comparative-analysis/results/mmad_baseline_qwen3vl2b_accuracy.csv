@@ -1,0 +1,5 @@
+Dataset,Anomaly Detection,Defect Analysis,Defect Classification,Defect Description,Defect Localization,Object Analysis,Object Classification,Average
+MVTec-AD,79.04,90.04,62.9,75.68,67.98,85.36,98.87,78.26
+MVTec-LOCO,58.34,72.01,31.77,54.31,46.44,78.19,87.5,60.89
+VisA,79.43,72.57,58.38,73.99,57.06,90.19,92.38,75.82
+AVERAGE,72.27,78.21,51.02,67.99,57.16,84.58,92.92,71.66

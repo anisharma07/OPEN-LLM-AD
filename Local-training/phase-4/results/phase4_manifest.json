@@ -18,6 +18,25 @@
       "Object Structure": 0.812
     }
   },
+  "Qwen/Qwen3-VL-8B-Instruct": {
+    "model_name": "Qwen/Qwen3-VL-8B-Instruct",
+    "sample_count": 2500,
+    "accuracy": 0.7216,
+    "kappa": 0.6274,
+    "avg_latency": 0.32,
+    "throughput_fps": 3.1,
+    "subtask_accuracy": {
+      "Anomaly Detection": 0.5863,
+      "Defect Analysis": 0.7957,
+      "Defect Classification": 0.595,
+      "Defect Description": 0.7112,
+      "Defect Localization": 0.5596,
+      "Object Analysis": 0.8592,
+      "Object Classification": 0.9025,
+      "Object Details": 0.7276,
+      "Object Structure": 0.7581
+    }
+  },
   "google/gemma-4-E2B-it": {
     "model_name": "google/gemma-4-E2B-it",
     "sample_count": 2500,
@@ -37,6 +56,44 @@
       "Object Structure": 0.6787
     }
   },
+  "HuggingFaceTB/SmolVLM-500M-Instruct": {
+    "model_name": "HuggingFaceTB/SmolVLM-500M-Instruct",
+    "sample_count": 2500,
+    "accuracy": 0.4572,
+    "kappa": 0.2766,
+    "avg_latency": 0.462,
+    "throughput_fps": 2.2,
+    "subtask_accuracy": {
+      "Anomaly Detection": 0.4784,
+      "Defect Analysis": 0.3297,
+      "Defect Classification": 0.3154,
+      "Defect Description": 0.4079,
+      "Defect Localization": 0.3321,
+      "Object Analysis": 0.6679,
+      "Object Classification": 0.5596,
+      "Object Details": 0.5161,
+      "Object Structure": 0.509
+    }
+  },
+  "Qwen/Qwen3-VL-4B-Instruct": {
+    "model_name": "Qwen/Qwen3-VL-4B-Instruct",
+    "sample_count": 2500,
+    "accuracy": 0.688,
+    "kappa": 0.5824,
+    "avg_latency": 0.19,
+    "throughput_fps": 5.3,
+    "subtask_accuracy": {
+      "Anomaly Detection": 0.5576,
+      "Defect Analysis": 0.767,
+      "Defect Classification": 0.4875,
+      "Defect Description": 0.6173,
+      "Defect Localization": 0.5162,
+      "Object Analysis": 0.8303,
+      "Object Classification": 0.9097,
+      "Object Details": 0.767,
+      "Object Structure": 0.7401
+    }
+  },
   "Qwen/Qwen2.5-VL-3B-Instruct": {
     "model_name": "Qwen/Qwen2.5-VL-3B-Instruct",
     "sample_count": 2500,
@@ -54,6 +111,63 @@
       "Object Classification": 0.9061,
       "Object Details": 0.7204,
       "Object Structure": 0.7906
+    }
+  },
+  "vikhyatk/moondream2": {
+    "model_name": "vikhyatk/moondream2",
+    "sample_count": 2500,
+    "accuracy": 0.6756,
+    "kappa": 0.5667,
+    "avg_latency": 0.452,
+    "throughput_fps": 2.2,
+    "subtask_accuracy": {
+      "Anomaly Detection": 0.5971,
+      "Defect Analysis": 0.6989,
+      "Defect Classification": 0.4158,
+      "Defect Description": 0.6931,
+      "Defect Localization": 0.5921,
+      "Object Analysis": 0.787,
+      "Object Classification": 0.8736,
+      "Object Details": 0.681,
+      "Object Structure": 0.7437
+    }
+  },
+  "google/paligemma2-3b-pt-224": {
+    "model_name": "google/paligemma2-3b-pt-224",
+    "sample_count": 2500,
+    "accuracy": 0.082,
+    "kappa": -0.0759,
+    "avg_latency": 0.211,
+    "throughput_fps": 4.7,
+    "subtask_accuracy": {
+      "Anomaly Detection": 0.0,
+      "Defect Analysis": 0.1254,
+      "Defect Classification": 0.0251,
+      "Defect Description": 0.0722,
+      "Defect Localization": 0.1011,
+      "Object Analysis": 0.0722,
+      "Object Classification": 0.1372,
+      "Object Details": 0.0932,
+      "Object Structure": 0.1119
+    }
+  },
+  "HuggingFaceTB/SmolVLM-256M-Instruct": {
+    "model_name": "HuggingFaceTB/SmolVLM-256M-Instruct",
+    "sample_count": 2500,
+    "accuracy": 0.3256,
+    "kappa": 0.1225,
+    "avg_latency": 0.435,
+    "throughput_fps": 2.3,
+    "subtask_accuracy": {
+      "Anomaly Detection": 0.5576,
+      "Defect Analysis": 0.2652,
+      "Defect Classification": 0.2545,
+      "Defect Description": 0.2491,
+      "Defect Localization": 0.296,
+      "Object Analysis": 0.3357,
+      "Object Classification": 0.3357,
+      "Object Details": 0.3011,
+      "Object Structure": 0.3357
     }
   },
   "google/gemma-4-E4B-it": {

@@ -1,0 +1,822 @@
+{
+  "config": {
+    "name": "UI test: gate sweep",
+    "notes": "",
+    "n": 27,
+    "seed": 42,
+    "condition": "any",
+    "save_thumbnails": true,
+    "datasets": [],
+    "subtasks": [],
+    "sweep": [
+      {
+        "node_id": 9,
+        "param": "gate_value",
+        "values": [
+          0.8,
+          1,
+          1.2
+        ],
+        "text": "0.8, 1.0, 1.2"
+      }
+    ],
+    "run_id": "20260927-155701-9b96",
+    "created": "2026-09-27T15:57:01",
+    "sweep_axes": [
+      {
+        "node_id": 9,
+        "param": "gate_value",
+        "values": [
+          0.8,
+          1,
+          1.2
+        ],
+        "key": "Heatmap \u2192 Box#9.gate_value"
+      }
+    ],
+    "n_variants": 3,
+    "n_samples": 27,
+    "total": 81,
+    "system": {
+      "cuda": false,
+      "device": "cpu",
+      "ram_total_gb": 15.6,
+      "ram_avail_gb": 7.6
+    }
+  },
+  "metrics": {
+    "n_executions": 81,
+    "n_errors": 0,
+    "labels": [
+      "arm_a",
+      "arm_b"
+    ],
+    "variants": [
+      {
+        "id": "v0",
+        "params": {
+          "Heatmap \u2192 Box#9.gate_value": 0.8
+        }
+      },
+      {
+        "id": "v1",
+        "params": {
+          "Heatmap \u2192 Box#9.gate_value": 1
+        }
+      },
+      {
+        "id": "v2",
+        "params": {
+          "Heatmap \u2192 Box#9.gate_value": 1.2
+        }
+      }
+    ],
+    "answer": [
+      {
+        "n": 27,
+        "correct": 6,
+        "acc": 0.2222222222222222,
+        "ci_lo": 0.10607095489408955,
+        "ci_hi": 0.4075729546307081,
+        "kappa": -0.061797752808988804,
+        "macro_acc": 0.2222222222222222,
+        "parse_fail": 0.0,
+        "latency": 3.77584386754919e-05,
+        "per_subtask": {
+          "Anomaly Detection": {
+            "n": 3,
+            "acc": 0.6666666666666666
+          },
+          "Defect Analysis": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Defect Classification": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Defect Description": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Defect Localization": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Analysis": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Classification": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Object Details": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Structure": {
+            "n": 3,
+            "acc": 0.0
+          }
+        },
+        "per_dataset": {
+          "DS-MVTec": {
+            "n": 8,
+            "acc": 0.375
+          },
+          "GoodsAD": {
+            "n": 9,
+            "acc": 0.1111111111111111
+          },
+          "MVTec-LOCO": {
+            "n": 7,
+            "acc": 0.2857142857142857
+          },
+          "VisA": {
+            "n": 3,
+            "acc": 0.0
+          }
+        },
+        "n_fired": 15,
+        "acc_fired": 0.26666666666666666,
+        "acc_not_fired": 0.16666666666666666,
+        "variant": "v0",
+        "label": "arm_a",
+        "params": {
+          "Heatmap \u2192 Box#9.gate_value": 0.8
+        }
+      },
+      {
+        "n": 27,
+        "correct": 6,
+        "acc": 0.2222222222222222,
+        "ci_lo": 0.10607095489408955,
+        "ci_hi": 0.4075729546307081,
+        "kappa": -0.061797752808988804,
+        "macro_acc": 0.2222222222222222,
+        "parse_fail": 0.0,
+        "latency": 2.2172927856445312e-05,
+        "per_subtask": {
+          "Anomaly Detection": {
+            "n": 3,
+            "acc": 0.6666666666666666
+          },
+          "Defect Analysis": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Defect Classification": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Defect Description": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Defect Localization": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Analysis": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Classification": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Object Details": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Structure": {
+            "n": 3,
+            "acc": 0.0
+          }
+        },
+        "per_dataset": {
+          "DS-MVTec": {
+            "n": 8,
+            "acc": 0.375
+          },
+          "GoodsAD": {
+            "n": 9,
+            "acc": 0.1111111111111111
+          },
+          "MVTec-LOCO": {
+            "n": 7,
+            "acc": 0.2857142857142857
+          },
+          "VisA": {
+            "n": 3,
+            "acc": 0.0
+          }
+        },
+        "n_fired": 15,
+        "acc_fired": 0.26666666666666666,
+        "acc_not_fired": 0.16666666666666666,
+        "variant": "v0",
+        "label": "arm_b",
+        "params": {
+          "Heatmap \u2192 Box#9.gate_value": 0.8
+        }
+      },
+      {
+        "n": 27,
+        "correct": 6,
+        "acc": 0.2222222222222222,
+        "ci_lo": 0.10607095489408955,
+        "ci_hi": 0.4075729546307081,
+        "kappa": -0.061797752808988804,
+        "macro_acc": 0.2222222222222222,
+        "parse_fail": 0.0,
+        "latency": 3.77584386754919e-05,
+        "per_subtask": {
+          "Anomaly Detection": {
+            "n": 3,
+            "acc": 0.6666666666666666
+          },
+          "Defect Analysis": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Defect Classification": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Defect Description": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Defect Localization": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Analysis": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Classification": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Object Details": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Structure": {
+            "n": 3,
+            "acc": 0.0
+          }
+        },
+        "per_dataset": {
+          "DS-MVTec": {
+            "n": 8,
+            "acc": 0.375
+          },
+          "GoodsAD": {
+            "n": 9,
+            "acc": 0.1111111111111111
+          },
+          "MVTec-LOCO": {
+            "n": 7,
+            "acc": 0.2857142857142857
+          },
+          "VisA": {
+            "n": 3,
+            "acc": 0.0
+          }
+        },
+        "n_fired": 15,
+        "acc_fired": 0.26666666666666666,
+        "acc_not_fired": 0.16666666666666666,
+        "variant": "v1",
+        "label": "arm_a",
+        "params": {
+          "Heatmap \u2192 Box#9.gate_value": 1
+        }
+      },
+      {
+        "n": 27,
+        "correct": 6,
+        "acc": 0.2222222222222222,
+        "ci_lo": 0.10607095489408955,
+        "ci_hi": 0.4075729546307081,
+        "kappa": -0.061797752808988804,
+        "macro_acc": 0.2222222222222222,
+        "parse_fail": 0.0,
+        "latency": 2.2879353276005497e-05,
+        "per_subtask": {
+          "Anomaly Detection": {
+            "n": 3,
+            "acc": 0.6666666666666666
+          },
+          "Defect Analysis": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Defect Classification": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Defect Description": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Defect Localization": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Analysis": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Classification": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Object Details": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Structure": {
+            "n": 3,
+            "acc": 0.0
+          }
+        },
+        "per_dataset": {
+          "DS-MVTec": {
+            "n": 8,
+            "acc": 0.375
+          },
+          "GoodsAD": {
+            "n": 9,
+            "acc": 0.1111111111111111
+          },
+          "MVTec-LOCO": {
+            "n": 7,
+            "acc": 0.2857142857142857
+          },
+          "VisA": {
+            "n": 3,
+            "acc": 0.0
+          }
+        },
+        "n_fired": 15,
+        "acc_fired": 0.26666666666666666,
+        "acc_not_fired": 0.16666666666666666,
+        "variant": "v1",
+        "label": "arm_b",
+        "params": {
+          "Heatmap \u2192 Box#9.gate_value": 1
+        }
+      },
+      {
+        "n": 27,
+        "correct": 6,
+        "acc": 0.2222222222222222,
+        "ci_lo": 0.10607095489408955,
+        "ci_hi": 0.4075729546307081,
+        "kappa": -0.061797752808988804,
+        "macro_acc": 0.2222222222222222,
+        "parse_fail": 0.0,
+        "latency": 3.77584386754919e-05,
+        "per_subtask": {
+          "Anomaly Detection": {
+            "n": 3,
+            "acc": 0.6666666666666666
+          },
+          "Defect Analysis": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Defect Classification": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Defect Description": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Defect Localization": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Analysis": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Classification": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Object Details": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Structure": {
+            "n": 3,
+            "acc": 0.0
+          }
+        },
+        "per_dataset": {
+          "DS-MVTec": {
+            "n": 8,
+            "acc": 0.375
+          },
+          "GoodsAD": {
+            "n": 9,
+            "acc": 0.1111111111111111
+          },
+          "MVTec-LOCO": {
+            "n": 7,
+            "acc": 0.2857142857142857
+          },
+          "VisA": {
+            "n": 3,
+            "acc": 0.0
+          }
+        },
+        "n_fired": 6,
+        "acc_fired": 0.0,
+        "acc_not_fired": 0.2857142857142857,
+        "variant": "v2",
+        "label": "arm_a",
+        "params": {
+          "Heatmap \u2192 Box#9.gate_value": 1.2
+        }
+      },
+      {
+        "n": 27,
+        "correct": 6,
+        "acc": 0.2222222222222222,
+        "ci_lo": 0.10607095489408955,
+        "ci_hi": 0.4075729546307081,
+        "kappa": -0.061797752808988804,
+        "macro_acc": 0.2222222222222222,
+        "parse_fail": 0.0,
+        "latency": 2.269391660337095e-05,
+        "per_subtask": {
+          "Anomaly Detection": {
+            "n": 3,
+            "acc": 0.6666666666666666
+          },
+          "Defect Analysis": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Defect Classification": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Defect Description": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Defect Localization": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Analysis": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Classification": {
+            "n": 3,
+            "acc": 0.0
+          },
+          "Object Details": {
+            "n": 3,
+            "acc": 0.3333333333333333
+          },
+          "Object Structure": {
+            "n": 3,
+            "acc": 0.0
+          }
+        },
+        "per_dataset": {
+          "DS-MVTec": {
+            "n": 8,
+            "acc": 0.375
+          },
+          "GoodsAD": {
+            "n": 9,
+            "acc": 0.1111111111111111
+          },
+          "MVTec-LOCO": {
+            "n": 7,
+            "acc": 0.2857142857142857
+          },
+          "VisA": {
+            "n": 3,
+            "acc": 0.0
+          }
+        },
+        "n_fired": 6,
+        "acc_fired": 0.0,
+        "acc_not_fired": 0.2857142857142857,
+        "variant": "v2",
+        "label": "arm_b",
+        "params": {
+          "Heatmap \u2192 Box#9.gate_value": 1.2
+        }
+      }
+    ],
+    "paired": [
+      {
+        "n": 27,
+        "acc_a": 0.2222222222222222,
+        "acc_b": 0.2222222222222222,
+        "delta": 0.0,
+        "fixes": 0,
+        "breaks": 0,
+        "p_mcnemar": 1.0,
+        "per_subtask_delta": {
+          "Anomaly Detection": 0.0,
+          "Defect Analysis": 0.0,
+          "Defect Classification": 0.0,
+          "Defect Description": 0.0,
+          "Defect Localization": 0.0,
+          "Object Analysis": 0.0,
+          "Object Classification": 0.0,
+          "Object Details": 0.0,
+          "Object Structure": 0.0
+        },
+        "a": "arm_a",
+        "b": "arm_b",
+        "variant": "v0",
+        "kind": "between arms"
+      },
+      {
+        "n": 27,
+        "acc_a": 0.2222222222222222,
+        "acc_b": 0.2222222222222222,
+        "delta": 0.0,
+        "fixes": 0,
+        "breaks": 0,
+        "p_mcnemar": 1.0,
+        "per_subtask_delta": {
+          "Anomaly Detection": 0.0,
+          "Defect Analysis": 0.0,
+          "Defect Classification": 0.0,
+          "Defect Description": 0.0,
+          "Defect Localization": 0.0,
+          "Object Analysis": 0.0,
+          "Object Classification": 0.0,
+          "Object Details": 0.0,
+          "Object Structure": 0.0
+        },
+        "a": "arm_a",
+        "b": "arm_b",
+        "variant": "v1",
+        "kind": "between arms"
+      },
+      {
+        "n": 27,
+        "acc_a": 0.2222222222222222,
+        "acc_b": 0.2222222222222222,
+        "delta": 0.0,
+        "fixes": 0,
+        "breaks": 0,
+        "p_mcnemar": 1.0,
+        "per_subtask_delta": {
+          "Anomaly Detection": 0.0,
+          "Defect Analysis": 0.0,
+          "Defect Classification": 0.0,
+          "Defect Description": 0.0,
+          "Defect Localization": 0.0,
+          "Object Analysis": 0.0,
+          "Object Classification": 0.0,
+          "Object Details": 0.0,
+          "Object Structure": 0.0
+        },
+        "a": "arm_a",
+        "b": "arm_b",
+        "variant": "v2",
+        "kind": "between arms"
+      },
+      {
+        "n": 27,
+        "acc_a": 0.2222222222222222,
+        "acc_b": 0.2222222222222222,
+        "delta": 0.0,
+        "fixes": 0,
+        "breaks": 0,
+        "p_mcnemar": 1.0,
+        "per_subtask_delta": {
+          "Anomaly Detection": 0.0,
+          "Defect Analysis": 0.0,
+          "Defect Classification": 0.0,
+          "Defect Description": 0.0,
+          "Defect Localization": 0.0,
+          "Object Analysis": 0.0,
+          "Object Classification": 0.0,
+          "Object Details": 0.0,
+          "Object Structure": 0.0
+        },
+        "a": "arm_a@v0",
+        "b": "arm_a@v1",
+        "variant": "v1",
+        "kind": "vs baseline variant"
+      },
+      {
+        "n": 27,
+        "acc_a": 0.2222222222222222,
+        "acc_b": 0.2222222222222222,
+        "delta": 0.0,
+        "fixes": 0,
+        "breaks": 0,
+        "p_mcnemar": 1.0,
+        "per_subtask_delta": {
+          "Anomaly Detection": 0.0,
+          "Defect Analysis": 0.0,
+          "Defect Classification": 0.0,
+          "Defect Description": 0.0,
+          "Defect Localization": 0.0,
+          "Object Analysis": 0.0,
+          "Object Classification": 0.0,
+          "Object Details": 0.0,
+          "Object Structure": 0.0
+        },
+        "a": "arm_a@v0",
+        "b": "arm_a@v2",
+        "variant": "v2",
+        "kind": "vs baseline variant"
+      },
+      {
+        "n": 27,
+        "acc_a": 0.2222222222222222,
+        "acc_b": 0.2222222222222222,
+        "delta": 0.0,
+        "fixes": 0,
+        "breaks": 0,
+        "p_mcnemar": 1.0,
+        "per_subtask_delta": {
+          "Anomaly Detection": 0.0,
+          "Defect Analysis": 0.0,
+          "Defect Classification": 0.0,
+          "Defect Description": 0.0,
+          "Defect Localization": 0.0,
+          "Object Analysis": 0.0,
+          "Object Classification": 0.0,
+          "Object Details": 0.0,
+          "Object Structure": 0.0
+        },
+        "a": "arm_b@v0",
+        "b": "arm_b@v1",
+        "variant": "v1",
+        "kind": "vs baseline variant"
+      },
+      {
+        "n": 27,
+        "acc_a": 0.2222222222222222,
+        "acc_b": 0.2222222222222222,
+        "delta": 0.0,
+        "fixes": 0,
+        "breaks": 0,
+        "p_mcnemar": 1.0,
+        "per_subtask_delta": {
+          "Anomaly Detection": 0.0,
+          "Defect Analysis": 0.0,
+          "Defect Classification": 0.0,
+          "Defect Description": 0.0,
+          "Defect Localization": 0.0,
+          "Object Analysis": 0.0,
+          "Object Classification": 0.0,
+          "Object Details": 0.0,
+          "Object Structure": 0.0
+        },
+        "a": "arm_b@v0",
+        "b": "arm_b@v2",
+        "variant": "v2",
+        "kind": "vs baseline variant"
+      }
+    ],
+    "detector": [
+      {
+        "n_images": 26,
+        "n_defective": 14,
+        "detector": "PatchCore",
+        "auroc_score": "score/tau",
+        "image_auroc": 0.738095238095238,
+        "image_auroc_macro": 1.0,
+        "n_categories_auroc": 4,
+        "pixel_auroc": 0.8732251788105355,
+        "pointing": 0.42857142857142855,
+        "box_iou": 0.057907514134023945,
+        "box_hit": 0.42857142857142855,
+        "tpr": 0.7142857142857143,
+        "fpr": 0.3333333333333333,
+        "variant": "v0",
+        "label": "patchcore",
+        "params": {
+          "Heatmap \u2192 Box#9.gate_value": 0.8
+        }
+      },
+      {
+        "n_images": 26,
+        "n_defective": 14,
+        "detector": "PatchCore",
+        "auroc_score": "score/tau",
+        "image_auroc": 0.738095238095238,
+        "image_auroc_macro": 1.0,
+        "n_categories_auroc": 4,
+        "pixel_auroc": 0.8732251788105355,
+        "pointing": 0.42857142857142855,
+        "box_iou": 0.057907514134023945,
+        "box_hit": 0.42857142857142855,
+        "tpr": 0.7142857142857143,
+        "fpr": 0.3333333333333333,
+        "variant": "v1",
+        "label": "patchcore",
+        "params": {
+          "Heatmap \u2192 Box#9.gate_value": 1
+        }
+      },
+      {
+        "n_images": 26,
+        "n_defective": 14,
+        "detector": "PatchCore",
+        "auroc_score": "score/tau",
+        "image_auroc": 0.738095238095238,
+        "image_auroc_macro": 1.0,
+        "n_categories_auroc": 4,
+        "pixel_auroc": 0.8732251788105355,
+        "pointing": 0.42857142857142855,
+        "box_iou": 0.05404456005751939,
+        "box_hit": 0.2857142857142857,
+        "tpr": 0.35714285714285715,
+        "fpr": 0.08333333333333333,
+        "variant": "v2",
+        "label": "patchcore",
+        "params": {
+          "Heatmap \u2192 Box#9.gate_value": 1.2
+        }
+      }
+    ],
+    "sweep": [
+      {
+        "axis": "Heatmap \u2192 Box#9.gate_value",
+        "label": "arm_a",
+        "points": [
+          {
+            "value": 0.8,
+            "acc": 0.2222222222222222,
+            "n": 27
+          },
+          {
+            "value": 1,
+            "acc": 0.2222222222222222,
+            "n": 27
+          },
+          {
+            "value": 1.2,
+            "acc": 0.2222222222222222,
+            "n": 27
+          }
+        ]
+      },
+      {
+        "axis": "Heatmap \u2192 Box#9.gate_value",
+        "label": "arm_b",
+        "points": [
+          {
+            "value": 0.8,
+            "acc": 0.2222222222222222,
+            "n": 27
+          },
+          {
+            "value": 1,
+            "acc": 0.2222222222222222,
+            "n": 27
+          },
+          {
+            "value": 1.2,
+            "acc": 0.2222222222222222,
+            "n": 27
+          }
+        ]
+      }
+    ],
+    "robustness": [],
+    "spread": [
+      {
+        "axis": "Heatmap \u2192 Box#9.gate_value",
+        "label": "arm_a",
+        "max": 0.2222222222222222,
+        "min": 0.2222222222222222,
+        "range": 0.0,
+        "std": 0.0
+      },
+      {
+        "axis": "Heatmap \u2192 Box#9.gate_value",
+        "label": "arm_b",
+        "max": 0.2222222222222222,
+        "min": 0.2222222222222222,
+        "range": 0.0,
+        "std": 0.0
+      }
+    ]
+  }
+}

@@ -159,3 +159,6 @@ Thumbs.db
 # The generic **/data/ rule above would otherwise swallow them.
 !comparative-analysis/data/
 !comparative-analysis/data/**
+
+# separate git repo (MMAD official code), not tracked here
+mmad-baseline/

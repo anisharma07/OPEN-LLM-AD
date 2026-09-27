@@ -1,0 +1,54 @@
+{
+  "sample_count": 500,
+  "model_id": "Qwen3-VL-2B-Instruct",
+  "vanilla_accuracy": 0.722,
+  "guided_accuracy": 0.686,
+  "accuracy_gain_pct": -3.6,
+  "subtask_accuracy": {
+    "Anomaly Detection": {
+      "vanilla": 60.0,
+      "guided": 58.18,
+      "delta": -1.82
+    },
+    "Defect Analysis": {
+      "vanilla": 81.82,
+      "guided": 83.64,
+      "delta": 1.82
+    },
+    "Defect Classification": {
+      "vanilla": 45.61,
+      "guided": 50.88,
+      "delta": 5.26
+    },
+    "Defect Description": {
+      "vanilla": 78.57,
+      "guided": 73.21,
+      "delta": -5.36
+    },
+    "Defect Localization": {
+      "vanilla": 58.18,
+      "guided": 47.27,
+      "delta": -10.91
+    },
+    "Object Analysis": {
+      "vanilla": 80.36,
+      "guided": 69.64,
+      "delta": -10.71
+    },
+    "Object Classification": {
+      "vanilla": 87.27,
+      "guided": 83.64,
+      "delta": -3.64
+    },
+    "Object Details": {
+      "vanilla": 78.18,
+      "guided": 74.55,
+      "delta": -3.64
+    },
+    "Object Structure": {
+      "vanilla": 80.36,
+      "guided": 76.79,
+      "delta": -3.57
+    }
+  }
+}

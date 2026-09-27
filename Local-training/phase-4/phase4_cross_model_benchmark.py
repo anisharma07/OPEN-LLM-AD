@@ -220,6 +220,39 @@ if len(sample_questions) < target_n:
 # Inference Function
 # =============================================================================
 def run_model_inference(model, processor, pil_img, prompt_text):
+    if hasattr(model, "encode_image") and hasattr(model, "answer_question"):
+        image_embeds = model.encode_image(pil_img)
+        response = model.answer_question(image_embeds, prompt_text, processor)
+        return str(response).strip()
+
+    if "PaliGemma" in model.__class__.__name__:
+        prompt_with_img = "<image>" + prompt_text
+        inputs = processor(text=prompt_with_img, images=pil_img, return_tensors="pt").to(model.device)
+        with torch.inference_mode():
+            output_ids = model.generate(**inputs, max_new_tokens=6, do_sample=False)
+        input_len = inputs["input_ids"].shape[-1]
+        response = processor.decode(output_ids[0][input_len:], skip_special_tokens=True).strip()
+        return response
+
+    if "Idefics3" in model.__class__.__name__:
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image"},
+                    {"type": "text", "text": prompt_text},
+                ],
+            }
+        ]
+        prompt = processor.apply_chat_template(messages, add_generation_prompt=True)
+        inputs = processor(text=prompt, images=[pil_img], return_tensors="pt").to(model.device)
+        with torch.inference_mode():
+            output_ids = model.generate(**inputs, max_new_tokens=4, do_sample=False)
+        input_len = inputs["input_ids"].shape[-1]
+        generated_ids = output_ids[0][input_len:]
+        response = processor.decode(generated_ids, skip_special_tokens=True).strip()
+        return response
+
     messages = [
         {
             "role": "user",
@@ -328,6 +361,54 @@ if not args.generate_plots_only:
         )
         remove_hook_from_module(model.model.language_model.embed_tokens_per_layer, recurse=True)
         remove_hook_from_module(model.model.language_model.embed_tokens, recurse=True)
+    elif "qwen3" in args.model_id.lower():
+        from transformers import Qwen3VLForConditionalGeneration, BitsAndBytesConfig
+        bnb_config = BitsAndBytesConfig(
+            load_in_4bit=True,
+            bnb_4bit_compute_dtype=torch.float16,
+            bnb_4bit_quant_type='nf4',
+            llm_int8_enable_fp32_cpu_offload=True
+        )
+        try:
+            model = Qwen3VLForConditionalGeneration.from_pretrained(
+                args.model_id,
+                quantization_config=bnb_config,
+                device_map="auto",
+                trust_remote_code=True,
+            )
+        except Exception as e:
+            print(f"   Fallback to float16 loading: {e}")
+            model = Qwen3VLForConditionalGeneration.from_pretrained(
+                args.model_id,
+                torch_dtype=torch.float16,
+                device_map="auto",
+                trust_remote_code=True,
+            )
+    elif "smolvlm" in args.model_id.lower():
+        from transformers import Idefics3ForConditionalGeneration
+        model = Idefics3ForConditionalGeneration.from_pretrained(
+            args.model_id,
+            torch_dtype=torch.float16,
+            device_map="auto",
+            trust_remote_code=True,
+        )
+    elif "moondream" in args.model_id.lower():
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+        processor = AutoTokenizer.from_pretrained(args.model_id, trust_remote_code=True)
+        model = AutoModelForCausalLM.from_pretrained(
+            args.model_id,
+            trust_remote_code=True,
+            torch_dtype=torch.float16,
+            device_map="auto",
+        )
+    elif "paligemma" in args.model_id.lower():
+        from transformers import PaliGemmaForConditionalGeneration
+        processor = AutoProcessor.from_pretrained(args.model_id)
+        model = PaliGemmaForConditionalGeneration.from_pretrained(
+            args.model_id,
+            torch_dtype=torch.float16,
+            device_map="auto",
+        )
     else:
         from transformers import BitsAndBytesConfig
         bnb_config = BitsAndBytesConfig(
@@ -485,7 +566,7 @@ sns.set_theme(style="whitegrid", font_scale=1.1)
 fig, ax = plt.subplots(figsize=(10, 6), dpi=300)
 m_names = list(comparison_data.keys())
 acc_vals = [comparison_data[m]["accuracy"] * 100 for m in m_names]
-palette = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"]
+palette = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2"]
 
 bars = ax.bar(m_names, acc_vals, color=palette[:len(m_names)], width=0.55, edgecolor="black", alpha=0.9)
 ax.set_ylabel("Clean Benchmark Accuracy (%) [N=2,500]", fontsize=12, fontweight="bold")

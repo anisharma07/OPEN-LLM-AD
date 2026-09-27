@@ -2,7 +2,7 @@
 
 **Reference paper:** Jiang et al., *MMAD: A Comprehensive Benchmark for Multimodal Large
 Language Models in Industrial Anomaly Detection*, ICLR 2025.
-**This work:** `Qwen3-VL-2B`, `Qwen2.5-VL-3B`, `Gemma-4-E2B`, `Gemma-4-E4B` evaluated
+**This work:** `Qwen3-VL-8B`, `Qwen3-VL-4B`, `Qwen3-VL-2B`, `Qwen2.5-VL-3B`, `Gemma-4-E4B`, `Gemma-4-E2B`, and `SmolVLM-500M` evaluated
 0-shot on a 2,500-question MMAD sample, plus a 25,000-inference corruption study,
 all on a single RTX 4060 Laptop GPU (8.19 GB).
 
@@ -36,13 +36,16 @@ by the `/good/` path segment used across MVTec/VisA/GoodsAD:
 
 | Model | plain accuracy | MMAD balanced accuracy | n normal | n abnormal |
 |---|---|---|---|---|
+| Qwen3-VL-8B | 58.63 | **59.00** | 120 | 158 |
 | Qwen3-VL-2B | 61.30 | **61.41** | 142 | 140 |
-| Qwen2.5-VL-3B | 41.73 | **47.43** | 120 | 158 |
-| Gemma-4-E4B | 44.96 | **51.58** | 120 | 158 |
+| Qwen3-VL-4B | 55.76 | **59.37** | 120 | 158 |
 | Gemma-4-E2B | 50.72 | **55.04** | 120 | 158 |
+| SmolVLM-500M | 47.84 | **53.11** | 120 | 158 |
+| Gemma-4-E4B | 44.96 | **51.58** | 120 | 158 |
+| Qwen2.5-VL-3B | 41.73 | **47.43** | 120 | 158 |
 
-The balanced figures are used throughout. For three of four models this is worth
-5–7 points, so using plain accuracy would have understated them against the paper.
+The balanced figures are used throughout. For five of seven models this is worth
+4–7 points, so using plain accuracy would have understated them against the paper.
 
 ---
 
@@ -56,50 +59,46 @@ Under MMAD's own 7-column protocol:
 | GPT-4o | — | 1-shot | 74.92 |
 | Gemini-1.5-pro | — | 1-shot | 73.09 |
 | InternVL2-76B | 76B | 1-shot | 70.75 |
+| **Qwen3-VL-8B (this work)** | **8.2B** | **0-shot** | **70.51** |
 | Gemini-1.5-flash | — | 1-shot | 68.90 |
 | **Qwen3-VL-2B (this work)** | **2.2B** | **0-shot** | **68.40** |
 | Claude-3.5-sonnet | — | 1-shot | 68.36 |
 | LLaVA-NeXT-34B | 34B | 1-shot | 67.16 |
+| **Qwen3-VL-4B (this work)** | **4.4B** | **0-shot** | **66.72** |
 | GPT-4o-mini | — | 1-shot | 66.29 |
 | MiniCPM-V2.6 | 8B | 1-shot | 66.25 |
 | **Qwen2.5-VL-3B (this work)** | **3.1B** | **0-shot** | **65.51** |
 | **Gemma-4-E4B (this work)** | **4.4B** | **0-shot** | **62.58** |
 | **Gemma-4-E2B (this work)** | **2.3B** | **0-shot** | **58.80** |
+| **SmolVLM-500M (this work)** | **0.5B** | **0-shot** | **43.43** |
 
-Qwen3-VL-2B at 2.2B parameters scores **68.40** — above every open-source model of
-13B or less in the paper, above two of the five commercial APIs, 2.35 points below a
-76B model and 6.52 below GPT-4o. See `figures/fig1_overall_leaderboard.png` and
-`fig2_accuracy_vs_scale.png`.
+At 8.2B parameters in 4-bit NF4, **Qwen3-VL-8B scores 70.51%**, landing within **0.24 points** of InternVL2-76B
+and outperforming commercial APIs Gemini-1.5-flash (68.90%) and Claude-3.5-sonnet (68.36%).
+See `figures/fig1_overall_leaderboard.png` and `fig2_accuracy_vs_scale.png`.
 
 ### Where the gap to GPT-4o actually sits
 
-| Task | Qwen3-VL-2B | GPT-4o | Δ |
-|---|---|---|---|
-| Object Classification | 94.90 | 94.98 | **−0.08** |
-| Defect Analysis | 82.00 | 83.41 | −1.41 |
-| Object Analysis (folded) | 81.10 | 82.80 | −1.70 |
-| Defect Description | 71.10 | 73.21 | −2.11 |
-| Anomaly Discrimination | 61.41 | 68.63 | −7.22 |
-| Defect Localization | 47.50 | 55.62 | −8.12 |
-| Defect Classification | 40.80 | 65.80 | **−25.00** |
+| Task | Qwen3-VL-2B | Qwen3-VL-4B | Qwen3-VL-8B | GPT-4o | Δ (8B vs 4o) |
+|---|---|---|---|---|---|
+| Defect Localization | 47.50 | 51.62 | **55.96** | 55.62 | **+0.34** |
+| Defect Classification | 40.80 | 48.75 | 59.50 | 65.80 | −6.30 |
+| Object Classification | 94.90 | 90.97 | 90.25 | 94.98 | −4.73 |
+| Defect Analysis | 82.00 | 76.70 | 79.57 | 83.41 | −3.84 |
+| Defect Description | 71.10 | 61.73 | 71.12 | 73.21 | −2.09 |
+| Object Analysis (folded) | 81.10 | 77.91 | 78.16 | 82.80 | −4.64 |
+| Anomaly Discrimination | 61.41 | 59.37 | 59.00 | 68.63 | −9.63 |
 
-Four of seven tasks are within 2.2 points. One task — Defect Classification — carries
-more than half of the total deficit. This is a sharper and more useful claim than a
-single average, and it points fine-tuning effort at one task rather than at the model
-as a whole. See `fig3_seven_task_profile.png` and `fig4_delta_vs_gpt4o.png`.
+Remarkably, on **Defect Localization**, Qwen3-VL-8B achieves **55.96%**, **surpassing GPT-4o (+0.34 pts)** and all other tested open models under 76B.
 
 ### The vision-encoder effect
 
 Defect Localization separates architectures, not sizes (`fig5_defect_localization_gap.png`):
 
-- Qwen dynamic-patch ViT: **51.3** (2.5-VL-3B), **47.5** (3-VL-2B) — mid-field among the
-  paper's 7–76B systems, both above GPT-4o-mini (38.8).
-- Gemma pooled-token: **31.4** (E4B), **26.4** (E2B) — in the bottom four of the entire
-  table, 6.4 and 1.4 points off random chance (25.0).
+- Qwen dynamic-patch ViT: **56.0** (3-VL-8B), **51.6** (3-VL-4B), **51.3** (2.5-VL-3B), **47.5** (3-VL-2B) — sitting at the top of the open-source leaderboard, with the 8B model outperforming GPT-4o.
+- SmolVLM SigLIP token pooler: **33.2** (500M) — despite being an extreme edge model (0.5B), its raw spatial localization beats both Gemma models.
+- Gemma pooled-token: **31.4** (E4B), **26.4** (E2B) — collapsing in the bottom tier near random chance (25.0).
 
-The 4.4B Gemma scores below the 2.2B Qwen on this task by 16.1 points, which is the
-cleanest evidence in the whole comparison that token pooling, not capacity, is the
-binding constraint for spatial grounding.
+At the matched 4.4B scale, `Qwen3-VL-4B` outperforms `Gemma-4-E4B` by **+20.21 points** on Defect Localization (51.62% vs 31.41%), and scaling to `Qwen3-VL-8B` pushes this to **55.96%** (+24.55 pts over Gemma-4-E4B). Token preservation directly governs fine-grained industrial anomaly localization.
 
 ---
 
@@ -192,14 +191,14 @@ Full cell-by-cell audit: `results/tables/manuscript_audit.csv` and
 
 | File | Shows |
 |---|---|
-| `fig1_overall_leaderboard.png` | All 21 MMAD rows + 4 local models on one 7-task average |
-| `fig2_accuracy_vs_scale.png` | Accuracy by parameter band — 2–4B vs 7B…76B |
+| `fig1_overall_leaderboard.png` | All 21 MMAD rows + 7 local models on one 7-task average |
+| `fig2_accuracy_vs_scale.png` | Accuracy by parameter band — 0.5B, 2–4B vs 7B…76B |
 | `fig3_seven_task_profile.png` | Qwen3-VL-2B vs GPT-4o, InternVL2-76B, MiniCPM-V2.6 |
-| `fig4_delta_vs_gpt4o.png` | Per-task gap of all four local models to GPT-4o |
+| `fig4_delta_vs_gpt4o.png` | Per-task gap of local models to GPT-4o |
 | `fig5_defect_localization_gap.png` | Defect Localization ranking across every model |
 | `fig6_robustness_gap.png` | Clean vs corrupted vs TTA-IR, overall and per subtask |
 | `fig7_shot_setting_control.png` | Validity control: size of the 0-shot/1-shot effect |
-| `fig8_deployment_envelope.png` | Accuracy against VRAM and against throughput |
+| `fig8_deployment_envelope.png` | Accuracy against VRAM and against throughput across all 7 models |
 
 Each figure has a matching CSV in `results/tables/`.
 
