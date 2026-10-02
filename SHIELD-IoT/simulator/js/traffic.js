@@ -137,9 +137,10 @@ export function createTraffic({ state, rng, net }) {
   const dev = id => state.devices.get(id);
   const has = id => state.devices.has(id);
   const ipPrefix = GATEWAY_IP.slice(0, GATEWAY_IP.lastIndexOf('.') + 1);
-  // A device takes part in everyday traffic when it is powered; the unregistered
-  // board additionally stops once SHIELD-IoT has blocked it.
-  const up = id => has(id) && net.powered(id) && (dev(id).role !== 'unknown' || !net.blocked(id));
+  // A device takes part in everyday traffic when it is powered. A block does not
+  // silence it: the unregistered board does not know it was blocked and keeps
+  // probing (more slowly, as nothing answers), so the router firewall drops it.
+  const up = id => has(id) && net.powered(id);
 
   let packetSeq = 0;
   let uploadCount = 0;
@@ -929,7 +930,7 @@ export function createTraffic({ state, rng, net }) {
     every('watch', () => rng.exp(45000), t => httpsVisit(t, 'watch', HOSTS.watch, { req: [300, 700], chunks: [1, 2], what: 'health sync', linger: [300, 1200] }));
     every('fridge', () => rng.jitter(90000, 20000), t => httpsVisit(t, 'fridge', HOSTS.fridge, { req: [200, 400], chunks: [1, 1], what: 'vendor telemetry', linger: [200, 900] }));
     every('thermostat', () => rng.jitter(120000, 30000), t => httpsVisit(t, 'thermostat', HOSTS.thermostat, { req: [200, 320], chunks: [1, 1], what: 'weather forecast', linger: [200, 900] }));
-    every('rogue', () => rng.jitter(250, 60), rogueSweep);
+    every('rogue', () => (net.blocked('rogue') ? rng.jitter(1000, 250) : rng.jitter(250, 60)), rogueSweep);
     every('rogue', () => rng.exp(4000), rogueDns);
   }
 

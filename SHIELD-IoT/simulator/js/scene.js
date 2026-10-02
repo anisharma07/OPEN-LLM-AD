@@ -42,6 +42,7 @@ const MAX_SPARKS = 320;            // burst particles
 const MAX_SEGS = 5;                // bezier segments per packet path
 const CLICK_SLOP_PX = 5;
 const FOCUS_SEC = 0.8;
+const SHADOW_EVERY_SEC = 0.05;     // shadow map refresh period (real time)
 const INTRO_SEC = 2.6;
 const HOME_PHI = 0.93;             // polar angle of the home view (from straight down)
 const HOME_THETA = 0.6;            // azimuth of the home view (from +z towards +x)
@@ -87,6 +88,8 @@ const ROOM_LABEL_SPOTS = {
 // camera approaches it. Wall devices face their local +z (catalog rotY).
 const WALL_TYPES = new Set(['tv', 'clock', 'ac', 'thermostat', 'camera', 'meter', 'lock']);
 const CEILING_TYPES = new Set(['light', 'fan']);
+// Floor appliances with a front (door, drum) that the camera should face when focusing.
+const FRONT_TYPES = new Set(['washer', 'fridge']);
 
 const TV_CHANNEL_HEX = {
   'Cricket Live': 0x7fd18b, News: 0x7fa8ff, Movies: 0xffb27a, Cartoons: 0xff8fd8, 'SHIELD Dashboard': 0xf2b134,
@@ -1128,6 +1131,10 @@ export async function createScene({ bus, state, container }) {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  // The house is static; only a few small parts move (fan blades, doors, the
+  // vacuum), so the shadow maps are redrawn at ~20 Hz instead of every frame.
+  renderer.shadowMap.autoUpdate = false;
+  renderer.shadowMap.needsUpdate = true;
   const canvas = renderer.domElement;
   canvas.style.display = 'block';
   canvas.style.touchAction = 'none';
@@ -1193,13 +1200,22 @@ export async function createScene({ bus, state, container }) {
     arcs.forEach(a => a.dispose());
     return g;
   })();
-  const markerMat = (hex, opacity) => new THREE.MeshBasicMaterial({
-    color: hex, transparent: true, opacity, depthTest: false, depthWrite: false, toneMapped: false, side: THREE.DoubleSide,
+  // depth: hidden behind the device and walls like a real decal (pulled towards
+  // the camera so it never fights the surface it lies on); otherwise drawn on top.
+  const markerMat = (hex, opacity, depth = false) => new THREE.MeshBasicMaterial({
+    color: hex, transparent: true, opacity, depthTest: depth, depthWrite: false, toneMapped: false, side: THREE.DoubleSide,
+    polygonOffset: depth, polygonOffsetFactor: -2, polygonOffsetUnits: -4,
   });
 
+  // Selection ring: a crisp depth-tested ring plus a faint copy drawn on top, so
+  // the selection still shows through walls without covering the device itself.
   const selectRing = new THREE.Group();
-  const selectMatA = markerMat(HEX.select, 0.9), selectMatB = markerMat(HEX.select, 0.65);
-  selectRing.add(new THREE.Mesh(ringGeo, selectMatA), new THREE.Mesh(ringDashGeo, selectMatB));
+  const selectDash = [];
+  for (const [opA, opB, depth] of [[0.9, 0.65, true], [0.22, 0.16, false]]) {
+    const dash = new THREE.Mesh(ringDashGeo, markerMat(HEX.select, opB, depth));
+    selectRing.add(new THREE.Mesh(ringGeo, markerMat(HEX.select, opA, depth)), dash);
+    selectDash.push(dash);
+  }
   selectRing.renderOrder = 20;
   selectRing.children.forEach(c => { c.renderOrder = 20; });
   selectRing.visible = false;
@@ -1434,7 +1450,8 @@ export async function createScene({ bus, state, container }) {
     if (mount === 'wall') {
       // Ring stands upright around the device, sized to its face.
       const across = Math.abs(Math.cos(rotY)) * v1.x + Math.abs(Math.sin(rotY)) * v1.z;
-      radius = clamp(Math.max(across, v1.y) / 2 + 0.08, 0.16, 1.0);
+      // Circumscribed, so the ring frames the face instead of crossing it.
+      radius = clamp(Math.hypot(across, v1.y) / 2 + 0.05, 0.16, 1.0);
     } else {
       radius = clamp(Math.max(v1.x, v1.z) / 2 + 0.14, 0.34, 1.9);
     }
@@ -1597,15 +1614,27 @@ export async function createScene({ bus, state, container }) {
     if (!rec) return;
     box.setFromObject(rec.group);
     box.getSize(v1);
-    const r = clamp(Math.max(v1.x, v1.z) / 2 + 0.07, 0.2, 0.32);
-    const h = clamp(v1.y + 0.25, 0.42, 0.75);
-    shieldFx.position.set(rec.group.position.x, box.min.y, rec.group.position.z);
+    // The dome covers the sensor and the router it guards, so it reads as
+    // "the inline shield" from the home view, not as a small ornament.
+    let r = Math.max(v1.x, v1.z) / 2 + 0.07;
+    let cx = rec.group.position.x, cz = rec.group.position.z;
+    const router = recs.get('router');
+    if (router) {
+      const dx = router.group.position.x - cx, dz = router.group.position.z - cz;
+      cx += dx / 2;
+      cz += dz / 2;
+      r = Math.max(r, Math.hypot(dx, dz) / 2 + 0.24);
+    }
+    r = clamp(r, 0.3, 0.6);
+    const h = clamp(r * 1.9, 0.6, 1.1);
+    shieldFx.position.set(cx, box.min.y, cz);
     spin.scale.set(r, h, r);
     base.scale.set(r, 1, r);
     shieldFx.userData.h = h;
-    halo.position.y = h * 0.45;
-    halo.scale.setScalar(r * 8);
     shieldFx.userData.r = r;
+    shieldFx.userData.halo = clamp(r * 4.6, 1.6, 2.6);
+    halo.position.y = h * 0.45;
+    halo.scale.setScalar(shieldFx.userData.halo);
   }
 
   // ---- packet routing ------------------------------------------------------------
@@ -1759,6 +1788,7 @@ export async function createScene({ bus, state, container }) {
     setNdc(e.clientX, e.clientY);
     const id = pick();
     if (id) focus(id);
+    else goHome();                          // double-click empty space: back to the overview
   }
   canvas.addEventListener('pointerdown', onPointerDown);
   canvas.addEventListener('pointerup', onPointerUp);
@@ -1780,14 +1810,104 @@ export async function createScene({ bus, state, container }) {
     userMoved = true;
   });
 
+  /**
+   * Home view: the fixed viewing direction, at the smallest distance where the
+   * whole house (plan, walls and porch) fits inside the part of the canvas the
+   * HUD panels leave uncovered.
+   */
   function homeView(outPos, outTarget) {
     outTarget.copy(HOME_TARGET);
-    const vFov = THREE.MathUtils.degToRad(camera.fov);
-    const hFov = 2 * Math.atan(Math.tan(vFov / 2) * camera.aspect);
-    const radius = 11.6;                         // half-diagonal of the plan, plus the porch
-    const dist = (radius / Math.sin(Math.min(vFov, hFov) / 2)) * 0.9;
-    sph.set(clamp(dist, 12, controls.maxDistance), HOME_PHI, HOME_THETA);
-    outPos.setFromSpherical(sph).add(outTarget);
+    sph.set(1, HOME_PHI, HOME_THETA);
+    v3.setFromSpherical(sph);                    // unit vector from the target to the camera
+    fitCam.copy(camera);
+    const m = 0.035;                             // margin, as a fraction of the NDC range
+    const x0 = (safe.l / width) * 2 - 1 + m, x1 = (safe.r / width) * 2 - 1 - m;
+    const y0 = 1 - (safe.b / height) * 2 + m, y1 = 1 - (safe.t / height) * 2 - m;
+    const fits = dist => {
+      fitCam.position.copy(v3).multiplyScalar(dist).add(outTarget);
+      fitCam.lookAt(outTarget);
+      fitCam.updateMatrixWorld(true);
+      for (const p of HOME_FIT_POINTS) {
+        fitPt.copy(p).project(fitCam);
+        if (fitPt.x < x0 || fitPt.x > x1 || fitPt.y < y0 || fitPt.y > y1 || fitPt.z > 1) return false;
+      }
+      return true;
+    };
+    let lo = 6, hi = controls.maxDistance;
+    if (fits(lo)) hi = lo;
+    else {
+      for (let i = 0; i < 24; i++) {
+        const mid = (lo + hi) / 2;
+        if (fits(mid)) hi = mid; else lo = mid;
+      }
+    }
+    outPos.copy(v3).multiplyScalar(hi).add(outTarget);
+  }
+
+  // ---- uncovered area: the HUD floats over the full-window canvas on desktops ----------
+  // The projection centre is moved to the middle of the area the panels leave
+  // free, so the home view and focus flights frame things where they can be seen.
+  const fitCam = new THREE.PerspectiveCamera();
+  const fitPt = new THREE.Vector3();
+  const HOME_FIT_POINTS = [];
+  {
+    const b = HOUSE.bounds;
+    for (const x of [b.minX - 0.2, b.maxX + 0.2]) {
+      for (const z of [b.minZ - 0.2, b.maxZ + 1.0]) {       // + the front porch
+        for (const y of [0, HOUSE.wallHeight]) HOME_FIT_POINTS.push(new THREE.Vector3(x, y, z));
+      }
+    }
+  }
+  const safe = { l: 0, r: 1, t: 0, b: 1 };       // canvas pixels
+  const OCCLUDERS = ['topbar', 'panel-home', 'panel-shield', 'drawer'];
+
+  /** Measures the canvas area not covered by the HUD panels (all of it on narrow layouts). */
+  function measureSafeArea() {
+    safe.l = 0; safe.r = width; safe.t = 0; safe.b = height;
+    const c = container.getBoundingClientRect();
+    const gap = 8;
+    const rectOf = id => {
+      const el = document.getElementById(id);
+      if (!el) return null;
+      const q = el.getBoundingClientRect();
+      if (q.width < 1 || q.height < 1) return null;
+      if (q.right <= c.left || q.left >= c.right || q.bottom <= c.top || q.top >= c.bottom) return null;
+      return q;
+    };
+    const top = rectOf('topbar');
+    if (top && top.bottom - c.top < c.height * 0.3) safe.t = Math.max(safe.t, top.bottom - c.top + gap);
+    // Side panels only count while they run down the side (not when collapsed to a header).
+    const left = rectOf('panel-home');
+    if (left && left.height > c.height * 0.5 && left.left - c.left < c.width * 0.2) safe.l = Math.max(safe.l, left.right - c.left + gap);
+    const right = rectOf('panel-shield');
+    if (right && right.height > c.height * 0.5 && c.right - right.right < c.width * 0.2) safe.r = Math.min(safe.r, right.left - c.left - gap);
+    const bottom = rectOf('drawer');
+    if (bottom && c.bottom - bottom.bottom < c.height * 0.2) safe.b = Math.min(safe.b, bottom.top - c.top - gap);
+    // Fall back to the whole canvas when the panels leave too little room.
+    if (safe.r - safe.l < width * 0.3) { safe.l = 0; safe.r = width; }
+    if (safe.b - safe.t < height * 0.3) { safe.t = 0; safe.b = height; }
+  }
+
+  function applySafeArea() {
+    measureSafeArea();
+    const dx = (safe.l + safe.r) / 2 - width / 2;
+    const dy = (safe.t + safe.b) / 2 - height / 2;
+    if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) camera.clearViewOffset();
+    else camera.setViewOffset(width, height, -dx, -dy, width, height);
+    camera.updateProjectionMatrix();
+  }
+
+  /** Back to the home overview (after a reset, or a double-click on empty space). */
+  function goHome() {
+    homeView(v1, v2);
+    userMoved = false;
+    if (reducedMotion) {
+      fly.active = false;
+      camera.position.copy(v1);
+      controls.target.copy(v2);
+    } else {
+      flyTo(v1, v2, FOCUS_SEC * 1.4);
+    }
   }
 
   function flyTo(pos, target, dur) {
@@ -1805,6 +1925,8 @@ export async function createScene({ bus, state, container }) {
   const FOCUS_CANDIDATES = [[0.9, 0], [0.62, 0], [0.9, 0.9], [0.9, -0.9], [0.62, 1.8], [0.62, -1.8], [0.62, Math.PI], [0.28, 0]];
   // Wall devices: start square-on to the device's face, then swing a little.
   const FOCUS_WALL = [[1.12, 0], [0.9, 0], [1.12, 0.5], [1.12, -0.5], [0.7, 0], [0.9, 0.9], [0.9, -0.9], [0.5, 0]];
+  // Front-facing appliances: a little above eye level, in front of the door.
+  const FOCUS_FRONT = [[0.95, 0], [0.75, 0], [0.95, 0.5], [0.95, -0.5], [0.6, 0.9], [0.6, -0.9], [0.45, 0], ...FOCUS_CANDIDATES];
   const focusRay = new THREE.Raycaster();
 
   /**
@@ -1821,10 +1943,22 @@ export async function createScene({ bus, state, container }) {
     focusRay.near = 0.05;
     focusRay.far = len;
     if (focusRay.intersectObjects(env.occluders, false).length) return false;
+    if (focusRay.intersectObjects(focusBlockers, false).length) return false;
     focusRay.set(camPos, v3.negate());
     focusRay.near = 0;
     focusRay.far = Math.max(0, len - 0.03);
     return focusRay.intersectObjects(env.occluders, false).length === 0;
+  }
+
+  // Other devices' meshes can hide the focused one too (a pendant lamp in
+  // front of the TV), so focus() also steers around them.
+  const focusBlockers = [];
+  function collectBlockers(except) {
+    focusBlockers.length = 0;
+    for (const r of recList) {
+      if (r === except || !r.present || r.device.role === 'cloud') continue;
+      r.group.traverseVisible(o => { if (o.isMesh) focusBlockers.push(o); });
+    }
   }
 
   function focus(id) {
@@ -1845,16 +1979,32 @@ export async function createScene({ bus, state, container }) {
     } else {
       // Wall devices are approached from the side they face; everything else
       // from the current viewing direction, swinging round if that is blocked.
+      collectBlockers(rec);
       const wall = rec.mount === 'wall';
+      const front = !wall && FRONT_TYPES.has(rec.device.type);
       sph.setFromVector3(v3.copy(camera.position).sub(controls.target));
-      const baseTheta = wall ? rec.rotY : sph.theta;
+      const baseTheta = wall || front ? rec.rotY : sph.theta;
+      // Sight lines from the centre and from points towards the edges of the
+      // device, so nothing hides part of it (a lamp across the bottom of the TV).
+      const samples = [target];
+      for (const [x, y, z] of [[0, 0.35, 0], [0, -0.35, 0], [0.35, 0, 0], [-0.35, 0, 0], [0, 0, 0.35], [0, 0, -0.35]]) {
+        samples.push(new THREE.Vector3(x * v2.x, y * v2.y, z * v2.z).add(target));
+      }
+      const visible = p => samples.every(sp => clearView(sp, p));
       let found = false;
-      for (const [phi, dTheta] of wall ? FOCUS_WALL : FOCUS_CANDIDATES) {
+      for (const [phi, dTheta] of wall ? FOCUS_WALL : front ? FOCUS_FRONT : FOCUS_CANDIDATES) {
+        sph.set(dist, phi, baseTheta + dTheta);
+        camPos.setFromSpherical(sph).add(target);
+        if (camPos.y > 0.4 && visible(camPos)) { found = true; break; }
+      }
+      // Nothing fully clear: settle for a clear line to the centre.
+      for (const [phi, dTheta] of found ? [] : wall ? FOCUS_WALL : front ? FOCUS_FRONT : FOCUS_CANDIDATES) {
         sph.set(dist, phi, baseTheta + dTheta);
         camPos.setFromSpherical(sph).add(target);
         if (camPos.y > 0.4 && clearView(target, camPos)) { found = true; break; }
       }
       if (!found) camPos.setFromSpherical(sph.set(dist, 0.2, baseTheta)).add(target);
+      focusBlockers.length = 0;
     }
     userMoved = true;
     if (reducedMotion) {
@@ -1868,16 +2018,17 @@ export async function createScene({ bus, state, container }) {
 
   // ---- resize and adaptive resolution ------------------------------------------------
   let width = 0, height = 0;
-  function resize() {
+  /** smooth: glide to the re-framed home view (panels opening/closing) instead of jumping. */
+  function resize(force = false, smooth = false) {
     const w = Math.max(1, Math.floor(container.clientWidth));
     const h = Math.max(1, Math.floor(container.clientHeight));
-    if (w === width && h === height) return;
+    if (w === width && h === height && !force) return;
     width = w;
     height = h;
     renderer.setSize(w, h);
     labelRenderer.setSize(w, h);
     camera.aspect = w / h;
-    camera.updateProjectionMatrix();
+    applySafeArea();
     updatePointScale();
     if (!userMoved) {
       // Still on the home view (or its intro): re-frame for the new aspect.
@@ -1885,6 +2036,8 @@ export async function createScene({ bus, state, container }) {
       if (fly.active) {
         fly.toPos.copy(v1);
         fly.toTarget.copy(v2);
+      } else if (smooth && !reducedMotion) {
+        flyTo(v1, v2, 0.45);
       } else {
         camera.position.copy(v1);
         controls.target.copy(v2);
@@ -1897,6 +2050,18 @@ export async function createScene({ bus, state, container }) {
   }
   const resizeObserver = new ResizeObserver(() => resize());
   resizeObserver.observe(container);
+  // Panels collapsing or the drawer opening change the uncovered area, not the canvas.
+  const safeKey = () => `${safe.l}|${safe.r}|${safe.t}|${safe.b}`;
+  const occluderObserver = new ResizeObserver(() => {
+    if (width <= 1 || height <= 1) return;
+    const before = safeKey();
+    measureSafeArea();
+    if (safeKey() !== before) resize(true, true);
+  });
+  for (const id of OCCLUDERS) {
+    const el = document.getElementById(id);
+    if (el) occluderObserver.observe(el);
+  }
 
   let frameAcc = 0, frameCount = 0;
   function adaptResolution(realDtMs) {
@@ -1962,6 +2127,7 @@ export async function createScene({ bus, state, container }) {
   bus.on('sim:after-reset', () => {
     clearAll();
     buildAll();
+    goHome();
     shieldPulse = 0;
     threatLevel = 'low';
     driftState = 'stable';
@@ -2066,7 +2232,7 @@ export async function createScene({ bus, state, container }) {
     baseMat.opacity = 0.35 + 0.5 * p;
     haloMat.color.copy(edgeMat.color);
     haloMat.opacity = 0.3 + breathe * 2 + 0.4 * p + (hot ? 0.1 : 0);
-    halo.scale.setScalar(shieldFx.userData.r * (8 + 2.5 * p));
+    halo.scale.setScalar(shieldFx.userData.halo * (1 + 0.3 * p));
     // Scanning band: rises through the dome; faster while drifting.
     const speed = driftState === 'drift' ? 1.6 : driftState === 'warning' ? 1.0 : 0.55;
     const f = reducedMotion ? 0.5 : (realT * speed) % 1;
@@ -2109,7 +2275,8 @@ export async function createScene({ bus, state, container }) {
       obj.position.copy(rec.center);
       obj.rotation.set(Math.PI / 2, rec.rotY, 0, 'YXZ');
     } else {
-      obj.position.set(rec.port.x, rec.ringY + lift, rec.port.z);
+      const c = rec.device.type === 'vacuum' ? rec.port : rec.center;
+      obj.position.set(c.x, rec.ringY + lift, c.z);
       obj.rotation.set(0, 0, 0, 'XYZ');
     }
     obj.scale.setScalar(rec.radius * scale);
@@ -2120,7 +2287,7 @@ export async function createScene({ bus, state, container }) {
     if (sel && sel.present) {
       selectRing.visible = true;
       placeRing(selectRing, sel, 0.006, reducedMotion ? 1 : 1 + 0.05 * Math.sin(realT * 3));
-      selectRing.children[1].rotation.y += dt * 0.6;
+      for (const dash of selectDash) dash.rotation.y += dt * 0.6;
     } else {
       selectRing.visible = false;
     }
@@ -2153,6 +2320,7 @@ export async function createScene({ bus, state, container }) {
     }
   }
 
+  let shadowAcc = 0;
   function tick(realDtMs, simDtMs) {
     const realDt = Math.min(Math.max(realDtMs, 0), 100) / 1000;
     const simDt = Math.max(simDtMs || 0, 0) / 1000;
@@ -2176,6 +2344,11 @@ export async function createScene({ bus, state, container }) {
     adaptResolution(realDtMs);
 
     if (contextLost || width <= 1 || height <= 1) return;
+    shadowAcc += realDt;
+    if (shadowAcc >= SHADOW_EVERY_SEC) {
+      shadowAcc = 0;
+      renderer.shadowMap.needsUpdate = true;
+    }
     renderer.render(scene, camera);
     labelRenderer.render(scene, camera);
   }
