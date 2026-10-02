@@ -2227,11 +2227,14 @@ export async function createScene({ bus, state, container }) {
     else scanMat.color.setHex(HEX.drift);
     baseMat.color.copy(edgeMat.color);
     const breathe = reducedMotion ? 0 : 0.04 * Math.sin(realT * 2.2);
-    shellMat.opacity = 0.11 + breathe + 0.32 * p + (hot ? 0.06 : 0);
-    edgeMat.opacity = 0.7 + 0.3 * p;
+    // In close-ups (focus on the router, hub or sensor) the dome fades back so
+    // it frames the devices instead of covering them.
+    const near = clamp((camera.position.distanceTo(shieldFx.position) - 2.5) / 6, 0.3, 1);
+    shellMat.opacity = (0.11 + breathe + 0.32 * p + (hot ? 0.06 : 0)) * near;
+    edgeMat.opacity = (0.7 + 0.3 * p) * (0.4 + 0.6 * near);
     baseMat.opacity = 0.35 + 0.5 * p;
     haloMat.color.copy(edgeMat.color);
-    haloMat.opacity = 0.3 + breathe * 2 + 0.4 * p + (hot ? 0.1 : 0);
+    haloMat.opacity = (0.3 + breathe * 2 + 0.4 * p + (hot ? 0.1 : 0)) * near;
     halo.scale.setScalar(shieldFx.userData.halo * (1 + 0.3 * p));
     // Scanning band: rises through the dome; faster while drifting.
     const speed = driftState === 'drift' ? 1.6 : driftState === 'warning' ? 1.0 : 0.55;

@@ -7,7 +7,7 @@
 :root {
   color-scheme: dark;
   --bg: #0d131e;
-  --panel: rgba(19, 27, 41, 0.86);
+  --panel: rgba(19, 27, 41, 0.93);
   --panel-solid: #131b29;
   --panel-raised: #18223a;
   --inset: rgba(8, 12, 20, 0.45);
@@ -116,16 +116,14 @@ input:focus-visible + .switch-track { outline: 2px solid var(--accent); outline-
 .scene-error span { color: var(--muted); font-size: 12px; }
 
 /* ---- panels ---------------------------------------------------------- */
+/* No backdrop blur: the panels cover large parts of a canvas that redraws every
+   frame, so a blur would be recomputed every frame (it cost about 40% of the
+   frame rate in testing). A nearly opaque fill reads the same. */
 .panel {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  -webkit-backdrop-filter: blur(14px) saturate(1.1);
-  backdrop-filter: blur(14px) saturate(1.1);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.32);
-}
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .panel { background: var(--panel-solid); }
 }
 .hud { position: relative; z-index: 2; }
 
@@ -755,7 +753,7 @@ kbd { display: inline-block; padding: 0 5px; border-radius: 3px; border: 1px sol
     grid-row: 4; min-height: 0; overflow-y: auto; overscroll-behavior: contain; background: var(--bg);
     padding: 0 calc(var(--gutter) + var(--safe-r)) calc(16px + var(--safe-b)) calc(var(--gutter) + var(--safe-l));
   }
-  .panel { background: transparent; border: 0; border-radius: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .panel { background: transparent; border: 0; border-radius: 0; box-shadow: none; }
 
   /* top bar rows: brand · clock · threat · help / play · speed · mode · reset */
   .brand { order: 10; }
