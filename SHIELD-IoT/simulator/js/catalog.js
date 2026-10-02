@@ -1,5 +1,5 @@
 // Static data shared by every module: the home's floor plan, its devices,
-// the attack catalogue and the research numbers quoted in the UI.
+// the research numbers quoted in the UI and outside resources.
 // Units: metres. Floor at y = 0, ceiling at y = 2.8. +z points to the street.
 
 export const HOUSE = {
@@ -42,7 +42,7 @@ export const DEVICES = [
     ip: '192.168.0.2', mac: 'a4:2b:b0:5e:1d:02', vendor: 'SHIELD-IoT edge appliance',
     protocols: ['inline tap'], pos: [0.75, 0.95, 0.35], rotY: Math.PI,
     controls: [], props: {},
-    desc: 'Inline IDS/IPS. Fuses ML evidence, TCP/ARP/MQTT protocol invariants and a drift monitor, then alerts or blocks at the router firewall.',
+    desc: 'Inline IDS/IPS. Fuses ML evidence, TCP/ARP/MQTT protocol invariants, a device inventory check and a drift monitor, then alerts or blocks at the router firewall.',
     links: [
       { label: 'Edge-IIoTset dataset', url: 'https://ieee-dataport.org/documents/edge-iiotset-new-comprehensive-realistic-cyber-security-dataset-iot-and-iiot-applications' },
       { label: 'ToN-IoT datasets (UNSW)', url: 'https://research.unsw.edu.au/projects/toniot-datasets' },
@@ -255,72 +255,20 @@ export const DEVICES = [
     links: [{ label: 'NIST IoT Cybersecurity Program', url: 'https://www.nist.gov/itl/applied-cybersecurity/nist-cybersecurity-iot-program' }],
   },
   {
-    id: 'attacker', name: 'Remote Attacker', type: 'attacker', role: 'attacker', room: null, wan: true,
-    ip: '203.0.113.66', mac: null, vendor: 'Kali Linux laptop in a parked van',
-    protocols: ['any'], pos: [11.5, 0, 11], rotY: -2.4,
-    controls: [], props: {},
-    desc: 'Internet-side adversary (TEST-NET-3 address). Reaches the home only through the router WAN port.',
-    links: [{ label: 'MITRE ATT&CK for ICS', url: 'https://attack.mitre.org/matrices/ics/' }],
-  },
-  {
-    id: 'rogue', name: 'Unknown Device', type: 'rogue', role: 'attacker', room: 'utility',
-    ip: '192.168.0.170', mac: 'b8:27:eb:de:ad:70', vendor: 'Unidentified Raspberry Pi',
-    protocols: ['any'], pos: [3.7, 0.08, 5.55], rotY: 0.5,
-    controls: [], props: {},
-    desc: 'A rogue board hidden behind the washer, on the LAN. 192.168.0.170 is the address the Edge-IIoTset audit found only in attack traffic.',
+    id: 'rogue', name: 'Unknown Device', type: 'rogue', role: 'unknown', room: 'utility',
+    ip: '192.168.0.170', mac: 'b8:27:eb:de:ad:70', vendor: 'Unregistered board',
+    protocols: ['ARP', 'DNS'], pos: [3.7, 0.08, 5.55], rotY: 0.5,
+    controls: [{ key: 'plugged', label: 'Plugged in', type: 'toggle' }],
+    props: { plugged: false },
+    desc: 'A board nobody registered, hidden behind the washer. SHIELD-IoT flags any MAC that is not in the home inventory. 192.168.0.170 is the address the Edge-IIoTset audit found only in attack traffic.',
     links: [],
   },
 ];
 
-// Edge-IIoTset has Normal plus 14 attack classes. "Crafted" probes target the
-// invariant engines directly and are labelled with their own class.
+// Edge-IIoTset has Normal plus 14 attack classes; the ML surrogate outputs over these.
 export const CLASSES = [
   'Normal', 'Backdoor', 'DDoS_HTTP', 'DDoS_ICMP', 'DDoS_TCP', 'DDoS_UDP', 'Fingerprinting', 'MITM',
   'Password', 'Port_Scanning', 'Ransomware', 'SQL_injection', 'Uploading', 'Vulnerability_scanner', 'XSS',
-];
-
-// family drives colour coding in the UI; label is the ground-truth class.
-export const ATTACKS = [
-  { id: 'DDoS_UDP', name: 'UDP flood', family: 'DDoS', label: 'DDoS_UDP', proto: 'UDP', defaultRate: 60, defaultDuration: 20, needsLan: false, target: 'device', spoofable: true,
-    desc: 'Floods the target with random-port UDP datagrams.' },
-  { id: 'DDoS_ICMP', name: 'ICMP (ping) flood', family: 'DDoS', label: 'DDoS_ICMP', proto: 'ICMP', defaultRate: 60, defaultDuration: 20, needsLan: false, target: 'device', spoofable: true,
-    desc: 'Echo-request flood that saturates a small device.' },
-  { id: 'DDoS_TCP', name: 'TCP SYN flood', family: 'DDoS', label: 'DDoS_TCP', proto: 'TCP', defaultRate: 70, defaultDuration: 20, needsLan: false, target: 'device', spoofable: true,
-    desc: 'Half-open SYN connections that never complete the handshake.' },
-  { id: 'DDoS_HTTP', name: 'HTTP flood', family: 'DDoS', label: 'DDoS_HTTP', proto: 'HTTP', defaultRate: 40, defaultDuration: 20, needsLan: false, target: 'device', spoofable: false,
-    desc: 'Valid-looking GET requests at volume. The weakest class in the baseline (F1 0.72).' },
-  { id: 'Port_Scanning', name: 'Port scan', family: 'Scanning', label: 'Port_Scanning', proto: 'TCP', defaultRate: 40, defaultDuration: 15, needsLan: false, target: 'subnet', spoofable: false,
-    desc: 'SYN probes across many ports and hosts to map the network.' },
-  { id: 'Fingerprinting', name: 'OS fingerprinting', family: 'Scanning', label: 'Fingerprinting', proto: 'TCP', defaultRate: 15, defaultDuration: 15, needsLan: false, target: 'device', spoofable: false,
-    desc: 'Odd flag combinations and window sizes to identify the device OS (F1 0.80).' },
-  { id: 'Vulnerability_scanner', name: 'Vulnerability scanner', family: 'Scanning', label: 'Vulnerability_scanner', proto: 'HTTP', defaultRate: 20, defaultDuration: 20, needsLan: false, target: 'device', spoofable: false,
-    desc: 'Requests known-vulnerable paths such as /cgi-bin/ and /.env.' },
-  { id: 'Password', name: 'Password brute force', family: 'Injection', label: 'Password', proto: 'HTTP', defaultRate: 12, defaultDuration: 25, needsLan: false, target: 'device', spoofable: false,
-    desc: 'Repeated login attempts against the device admin page (F1 0.80).' },
-  { id: 'SQL_injection', name: 'SQL injection', family: 'Injection', label: 'SQL_injection', proto: 'HTTP', defaultRate: 8, defaultDuration: 20, needsLan: false, target: 'device', spoofable: false,
-    desc: "Payloads like ' OR 1=1-- in query strings (F1 0.77)." },
-  { id: 'XSS', name: 'Cross-site scripting', family: 'Injection', label: 'XSS', proto: 'HTTP', defaultRate: 8, defaultDuration: 20, needsLan: false, target: 'device', spoofable: false,
-    desc: 'Injects <script> payloads into the device web UI.' },
-  { id: 'Uploading', name: 'Malicious upload', family: 'Malware', label: 'Uploading', proto: 'HTTP', defaultRate: 6, defaultDuration: 20, needsLan: false, target: 'device', spoofable: false,
-    desc: 'Large POST bodies dropping a payload. Hard to tell from normal uploads (F1 0.71).' },
-  { id: 'Backdoor', name: 'Backdoor / C2 beacon', family: 'Malware', label: 'Backdoor', proto: 'TCP', defaultRate: 10, defaultDuration: 30, needsLan: false, target: 'device', spoofable: false,
-    desc: 'Plants a reverse shell, then beacons to the attacker on an odd port.' },
-  { id: 'Ransomware', name: 'Ransomware', family: 'Malware', label: 'Ransomware', proto: 'TCP', defaultRate: 10, defaultDuration: 30, needsLan: false, target: 'device', spoofable: false,
-    desc: 'Pushes an encryptor over SMB-like sessions. Delivered fully, it locks the device.' },
-  { id: 'MITM', name: 'ARP spoofing (MITM)', family: 'MITM', label: 'MITM', proto: 'ARP', defaultRate: 6, defaultDuration: 25, needsLan: true, target: 'device', spoofable: false,
-    desc: 'Gratuitous ARP replies claiming the gateway IP, so the victim sends its traffic to the attacker. LAN only.' },
-
-  // Crafted probes aimed at the invariant engines (research Steps 5A to 5C).
-  { id: 'TCP_SYN_FIN', name: 'SYN+FIN packets', family: 'Crafted', label: 'Fingerprinting', proto: 'TCP', defaultRate: 5, defaultDuration: 10, needsLan: false, target: 'device', spoofable: false, invariant: 'INV_TCP_01',
-    desc: 'SYN and FIN set together. Never valid (INV_TCP_01).' },
-  { id: 'TCP_NULL_PAYLOAD', name: 'Null flags with payload', family: 'Crafted', label: 'Fingerprinting', proto: 'TCP', defaultRate: 5, defaultDuration: 10, needsLan: false, target: 'device', spoofable: false, invariant: 'INV_TCP_02',
-    desc: 'No TCP flags but tcp.len > 0. Invalid (INV_TCP_02).' },
-  { id: 'TCP_SYN_ACK_INIT', name: 'Initial SYN with ACK', family: 'Crafted', label: 'Fingerprinting', proto: 'TCP', defaultRate: 5, defaultDuration: 10, needsLan: false, target: 'device', spoofable: false, invariant: 'INV_TCP_03',
-    desc: 'Opens a connection with SYN+ACK. Invalid (INV_TCP_03).' },
-  { id: 'ARP_MALFORMED', name: 'Malformed ARP', family: 'Crafted', label: 'MITM', proto: 'ARP', defaultRate: 5, defaultDuration: 10, needsLan: true, target: 'device', spoofable: false, invariant: 'INV_ARP_01',
-    desc: 'Bad opcode or hardware size other than 6 (INV_ARP_01).' },
-  { id: 'MQTT_MALFORMED', name: 'Malformed MQTT', family: 'Crafted', label: 'Vulnerability_scanner', proto: 'MQTT', defaultRate: 5, defaultDuration: 10, needsLan: false, target: 'device', spoofable: false, invariant: 'INV_MQTT_*',
-    desc: 'Reserved packet types, reserved CONNECT flag or QoS 3. Experimental rules for the planned Step 5C.' },
 ];
 
 // Numbers quoted from the SHIELD-IoT research book. Only values the book states.
@@ -361,4 +309,3 @@ export const RESOURCES = [
 ];
 
 export const deviceById = Object.fromEntries(DEVICES.map(d => [d.id, d]));
-export const attackById = Object.fromEntries(ATTACKS.map(a => [a.id, a]));

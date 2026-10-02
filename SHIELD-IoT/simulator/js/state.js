@@ -9,10 +9,8 @@ function freshDevice(d) {
     ...d,
     props: structuredClone(d.props),
     online: true,
-    status: 'ok',          // 'ok' | 'alert' | 'blocked' | 'compromised'
+    status: 'ok',          // 'ok' | 'alert' | 'blocked' | 'offline'
     blocked: false,
-    compromised: false,
-    maliciousRx: 0,        // malicious packets delivered to this device
     stats: { tx: 0, rx: 0, dropped: 0 },
   };
 }
@@ -34,7 +32,6 @@ export function createState() {
       alerts: [],                      // newest first, capped at 300
       metrics: null,                   // latest 'ids:metrics' payload
     },
-    campaigns: new Map(),              // attack campaigns, owned by network.js
   };
 }
 
@@ -47,7 +44,6 @@ export function resetState(state) {
   state.ids.blocked = fresh.ids.blocked;
   state.ids.alerts = fresh.ids.alerts;
   state.ids.metrics = null;
-  state.campaigns = fresh.campaigns;
 }
 
 export function deviceByIp(state, ip) {
