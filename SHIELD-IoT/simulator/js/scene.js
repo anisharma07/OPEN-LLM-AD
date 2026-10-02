@@ -83,6 +83,11 @@ const ROOM_LABEL_SPOTS = {
   study: [7.0, 2.3, false],
 };
 
+// How a device is mounted decides where its selection ring goes and how the
+// camera approaches it. Wall devices face their local +z (catalog rotY).
+const WALL_TYPES = new Set(['tv', 'clock', 'ac', 'thermostat', 'camera', 'meter', 'lock']);
+const CEILING_TYPES = new Set(['light', 'fan']);
+
 const TV_CHANNEL_HEX = {
   'Cricket Live': 0x7fd18b, News: 0x7fa8ff, Movies: 0xffb27a, Cartoons: 0xff8fd8, 'SHIELD Dashboard': 0xf2b134,
 };
@@ -278,14 +283,20 @@ function noiseCanvas(size, base, spread, seed, count) {
   return c;
 }
 
+// Colour where the night sky meets the ground; the fog uses it too so the far
+// lawn melts into the horizon.
+const HORIZON = '#15223f';
+
+/** Vertical sky gradient, used as an equirectangular background (row 0 = zenith, middle = horizon). */
 function skyCanvas() {
   const c = makeCanvas(4, 512);
   const g = c.getContext('2d');
   const grad = g.createLinearGradient(0, 0, 0, 512);
-  grad.addColorStop(0, '#02040b');
-  grad.addColorStop(0.45, '#071027');
-  grad.addColorStop(0.78, '#0f1c38');
-  grad.addColorStop(1, '#16233f');
+  grad.addColorStop(0, '#010309');
+  grad.addColorStop(0.25, '#040918');
+  grad.addColorStop(0.42, '#0b1530');
+  grad.addColorStop(0.5, HORIZON);
+  grad.addColorStop(1, HORIZON);
   g.fillStyle = grad;
   g.fillRect(0, 0, 4, 512);
   return c;
@@ -329,8 +340,11 @@ function buildEnvironment(scene, aniso) {
   const occluders = [];   // solid static meshes the focus camera must see past
 
   // ---- sky, stars, moon, fog ------------------------------------------------
-  scene.background = canvasTexture(skyCanvas(), 1, false);
-  scene.fog = new THREE.Fog(0x0e1830, 38, 105);
+  // World-space sky: the gradient stays put when the camera tilts.
+  const sky = canvasTexture(skyCanvas(), 1, false);
+  sky.mapping = THREE.EquirectangularReflectionMapping;
+  scene.background = sky;
+  scene.fog = new THREE.Fog(HORIZON, 40, 120);
 
   {
     const rnd = mulberry32(5);
@@ -431,8 +445,9 @@ function buildEnvironment(scene, aniso) {
 
   // ---- ground and street -----------------------------------------------------
   const lawnTex = canvasTexture(noiseCanvas(256, '#1f3a29', 0.12, 3, 5000), aniso);
-  lawnTex.repeat.set(36, 36);
-  const lawn = new THREE.Mesh(new THREE.PlaneGeometry(220, 220), new THREE.MeshStandardMaterial({ color: 0x8aa792, map: lawnTex, roughness: 1 }));
+  lawnTex.repeat.set(100, 100);   // ~6 m per tile
+  // A wide disc whose rim lies far beyond the fog, so no ground edge is ever visible.
+  const lawn = new THREE.Mesh(new THREE.CircleGeometry(300, 48), new THREE.MeshStandardMaterial({ color: 0x8aa792, map: lawnTex, roughness: 1 }));
   lawn.rotation.x = -Math.PI / 2;
   lawn.position.y = -0.02;
   lawn.receiveShadow = true;
@@ -494,39 +509,35 @@ function buildEnvironment(scene, aniso) {
     scene.add(glow);
   }
 
-  // Trees and hedges (shared geometry, flat shaded).
+  // Trees and hedges: transformed copies merged into one mesh per material
+  // (three draw calls instead of thirty-odd), flat shaded.
   {
     const cone = new THREE.ConeGeometry(1, 1, 7);
     const trunk = new THREE.CylinderGeometry(0.12, 0.16, 1, 6);
     const bush = new THREE.IcosahedronGeometry(1, 0);
+    const m4 = new THREE.Matrix4();
+    const q = new THREE.Quaternion();
+    const up = new THREE.Vector3(0, 1, 0);
+    const at = new THREE.Vector3();
+    const sc = new THREE.Vector3();
+    const placed = (geo, x, y, z, sx, sy, sz, rotY = 0) =>
+      geo.clone().applyMatrix4(m4.compose(at.set(x, y, z), q.setFromAxisAngle(up, rotY), sc.set(sx, sy, sz)));
     const trees = [[-12.5, -3.5, 1.2], [-11.8, 3.6, 1.0], [12.4, -3.2, 1.25], [12.2, 4.4, 0.95], [-6.5, -10, 1.3], [6.8, -10.5, 1.15], [13.5, -10.5, 1.4], [-14, -11, 1.2], [-3, -12.5, 1.0]];
     for (const [x, z, s] of trees) {
-      const t = new THREE.Mesh(trunk, M.trunk);
-      t.position.set(x, 0.5 * s, z);
-      t.scale.set(s, s, s);
-      t.castShadow = true;
-      scene.add(t);
-      occluders.push(t);
+      add('trunk', placed(trunk, x, 0.5 * s, z, s, s, s));
       for (let k = 0; k < 2; k++) {
-        const c = new THREE.Mesh(cone, M.pine);
-        c.scale.set(1.25 * s * (1 - k * 0.25), 1.9 * s, 1.25 * s * (1 - k * 0.25));
-        c.position.set(x, s * (1.6 + k * 1.0), z);
-        c.rotation.y = x + k;
-        c.castShadow = true;
-        scene.add(c);
-        occluders.push(c);
+        const w = 1.25 * s * (1 - k * 0.25);
+        add('pine', placed(cone, x, s * (1.6 + k * 1.0), z, w, 1.9 * s, w, x + k));
       }
     }
     for (const [x, z, s] of [[-3.6, 6.75, 0.5], [-6.4, 6.7, 0.55], [-8.4, 6.8, 0.45], [3.4, 6.75, 0.5], [6.3, 6.7, 0.55], [8.3, 6.8, 0.45], [-10, -1, 0.6], [10, 1.5, 0.55]]) {
-      const b = new THREE.Mesh(bush, M.leaf);
-      b.position.set(x, s * 0.7, z);
-      b.scale.set(s * 1.3, s, s * 1.1);
-      b.rotation.y = x * 1.7;
-      b.castShadow = true;
-      scene.add(b);
-      occluders.push(b);
+      add('leaf', placed(bush, x, s * 0.7, z, s * 1.3, s, s * 1.1, x * 1.7));
     }
+    cone.dispose();
+    trunk.dispose();
+    bush.dispose();
   }
+
 
   // ---- house: foundation and floors -----------------------------------------
   add('plinth', boxGeo(b.minX - 0.25, -0.3, b.minZ - 0.25, b.maxX + 0.25, -0.003, b.maxZ + 0.25));
@@ -824,19 +835,24 @@ function createPacketSystem(parent, hooks) {
   geo.setDrawRange(0, 0);
 
   const material = new THREE.ShaderMaterial({
-    uniforms: { uScale: { value: 600 } },
+    // uScale: pixels per world unit at distance 1. uKnee: above this many pixels
+    // a sprite grows only gently, so close-ups do not fill the view with blobs.
+    uniforms: { uScale: { value: 600 }, uKnee: { value: 16 } },
     vertexShader: /* glsl */`
       attribute vec3 aColor;
       attribute float aSize;
       attribute float aAlpha;
       uniform float uScale;
+      uniform float uKnee;
       varying vec3 vColor;
       varying float vAlpha;
       void main() {
         vColor = aColor;
         vAlpha = aAlpha;
         vec4 mv = modelViewMatrix * vec4(position, 1.0);
-        gl_PointSize = clamp(aSize * uScale / -mv.z, 1.0, 96.0);
+        float px = aSize * uScale / -mv.z;
+        if (px > uKnee) px = uKnee + (px - uKnee) * 0.3;
+        gl_PointSize = clamp(px, 1.5, 72.0);
         gl_Position = projectionMatrix * mv;
       }`,
     fragmentShader: /* glsl */`
@@ -887,7 +903,7 @@ function createPacketSystem(parent, hooks) {
   let sNext = 0;
 
   const RGB = [hexToRgb(HEX.allowed, [0, 0, 0]), hexToRgb(HEX.alerted, [0, 0, 0]), hexToRgb(HEX.dropped, [0, 0, 0])];
-  const HEAD_SIZE = [0.15, 0.19, 0.2];
+  const HEAD_SIZE = [0.2, 0.24, 0.25];
   const tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3(), tmpC = new THREE.Vector3(), tmpOut = new THREE.Vector3();
 
   function release(i) {
@@ -1045,14 +1061,16 @@ function createPacketSystem(parent, hooks) {
     }
     geo.setDrawRange(0, n);
     if (n > 0) {
-      for (const [a, w] of ATTRS) {
-        a.clearUpdateRanges();
-        a.addUpdateRange(0, n * w);
-        a.needsUpdate = true;
+      // Upload only the live prefix of each buffer.
+      for (let a = 0; a < ATTRS.length; a++) {
+        const at = ATTRS[a];
+        at.clearUpdateRanges();
+        at.addUpdateRange(0, n * at.itemSize);
+        at.needsUpdate = true;
       }
     }
   }
-  const ATTRS = [[aPos, 3], [aCol, 3], [aSize, 1], [aAlpha, 1]];
+  const ATTRS = [aPos, aCol, aSize, aAlpha];
 
   function clear() {
     for (let i = 0; i < MAX_PACKETS; i++) if (active[i]) release(i);
@@ -1060,7 +1078,10 @@ function createPacketSystem(parent, hooks) {
     geo.setDrawRange(0, 0);
   }
 
-  function setScale(px) { material.uniforms.uScale.value = px; }
+  function setScale(px, dprNow) {
+    material.uniforms.uScale.value = px;
+    material.uniforms.uKnee.value = 16 * dprNow;
+  }
 
   function dispose() {
     parent.remove(points);
@@ -1189,10 +1210,12 @@ export async function createScene({ bus, state, container }) {
   fxRoot.add(selectRing, hoverRing);
 
   // Expanding rings for ids:block (pooled).
+  const rippleGeo = new THREE.RingGeometry(0.95, 1, 72).rotateX(-Math.PI / 2);
   const blockRings = Array.from({ length: 6 }, () => {
-    const m = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({
-      color: HEX.dropped, transparent: true, opacity: 0, depthWrite: false, toneMapped: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+    const m = new THREE.Mesh(rippleGeo, new THREE.MeshBasicMaterial({
+      color: HEX.dropped, transparent: true, opacity: 0, depthTest: false, depthWrite: false, toneMapped: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
     }));
+    m.renderOrder = 18;
     m.visible = false;
     m.userData = { t: 0, dur: 1.4, from: 0.3, to: 3 };
     fxRoot.add(m);
@@ -1232,7 +1255,11 @@ export async function createScene({ bus, state, container }) {
   base.position.y = 0.004;
   const spin = new THREE.Group();
   spin.add(shell, edges, scan);
-  shieldFx.add(spin, base);
+  // Soft halo so the sensor still reads as "the shield" from the home view.
+  const haloMat = new THREE.SpriteMaterial({ map: env.glowTex, color: HEX.shield, transparent: true, opacity: 0.4, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false });
+  const halo = new THREE.Sprite(haloMat);
+  halo.renderOrder = 5;
+  shieldFx.add(spin, base, halo);
   shieldFx.visible = false;
   fxRoot.add(shieldFx);
   let shieldPulse = 0;
@@ -1274,12 +1301,13 @@ export async function createScene({ bus, state, container }) {
   let pickables = [];          // visible device groups
 
   const linkGeoPoints = 28;
+  const LAN_OPACITY = 0.3;
 
   function makeLink(kindName) {
     const positions = new Float32Array(linkGeoPoints * 3);
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage));
-    const solid = new THREE.LineBasicMaterial({ color: HEX.link, transparent: true, opacity: 0.25, depthWrite: false, toneMapped: false });
+    const solid = new THREE.LineBasicMaterial({ color: HEX.link, transparent: true, opacity: LAN_OPACITY, depthWrite: false, toneMapped: false });
     const dashed = new THREE.LineDashedMaterial({ color: HEX.linkOffline, transparent: true, opacity: 0.3, dashSize: 0.14, gapSize: 0.12, depthWrite: false, toneMapped: false });
     const line = new THREE.Line(geo, solid);
     line.frustumCulled = false;
@@ -1293,7 +1321,7 @@ export async function createScene({ bus, state, container }) {
       pulse: 0,
       pulseColor: new THREE.Color(HEX.allowed),
       baseColor: new THREE.Color(HEX.link),
-      baseOpacity: 0.25,
+      baseOpacity: LAN_OPACITY,
       dirty: true,
     };
   }
@@ -1332,7 +1360,7 @@ export async function createScene({ bus, state, container }) {
       if (wantDashed) link.line.computeLineDistances();
     }
     const kindBase = link.kind === 'inline' ? HEX.shield : link.kind === 'fibre' ? HEX.fibre : HEX.link;
-    const kindOpacity = link.kind === 'inline' ? 0.75 : link.kind === 'fibre' ? 0.5 : 0.25;
+    const kindOpacity = link.kind === 'inline' ? 0.75 : link.kind === 'fibre' ? 0.5 : LAN_OPACITY;
     switch (mode) {
       case 'blocked': link.baseColor.setHex(HEX.dropped); link.baseOpacity = 0.7; break;
       case 'alert': link.baseColor.setHex(HEX.alerted); link.baseOpacity = 0.5; break;
@@ -1398,15 +1426,33 @@ export async function createScene({ bus, state, container }) {
     group.updateMatrixWorld(true);
     box.setFromObject(group);
     box.getSize(v1);
+    const rotY = device.rotY || 0;
+    const mount = device.role === 'cloud' ? 'cloud'
+      : WALL_TYPES.has(device.type) ? 'wall'
+        : CEILING_TYPES.has(device.type) ? 'ceiling' : 'floor';
+    let radius;
+    if (mount === 'wall') {
+      // Ring stands upright around the device, sized to its face.
+      const across = Math.abs(Math.cos(rotY)) * v1.x + Math.abs(Math.sin(rotY)) * v1.z;
+      radius = clamp(Math.max(across, v1.y) / 2 + 0.08, 0.16, 1.0);
+    } else {
+      radius = clamp(Math.max(v1.x, v1.z) / 2 + 0.14, 0.34, 1.9);
+    }
     const rec = {
       id: device.id,
       device,
       model,
       group,
+      mount,
+      rotY,
       port: new THREE.Vector3(),
-      radius: clamp(Math.max(v1.x, v1.z) / 2 + 0.14, 0.34, 1.9),
+      // Wall devices: centre of the upright ring, nudged off the wall.
+      center: box.getCenter(new THREE.Vector3()).addScaledVector(v2.set(Math.sin(rotY), 0, Math.cos(rotY)), 0.04),
+      radius,
       topOffset: Math.max(0.12, box.max.y - group.position.y),
-      ringY: device.role === 'cloud' ? box.min.y : device.pos[1] <= 1.1 ? device.pos[1] + 0.015 : 0.015,
+      // Floor rings: on the surface the device stands on, on the floor below
+      // ceiling devices, under the cloud's belly.
+      ringY: mount === 'cloud' ? box.min.y : mount === 'floor' ? device.pos[1] + 0.015 : 0.015,
       status: 'ok',
       present: true,
       link: null,
@@ -1468,7 +1514,9 @@ export async function createScene({ bus, state, container }) {
       rec.lightTarget = on ? 26 * clamp(Number(d.props.brightness ?? 100) / 100, 0, 1) : 0;
       if (typeof d.props.color === 'string') rec.light.color.set(d.props.color);
     }
-    if (rec.id === 'router') for (const r of recList) refreshLink(r);
+    if (rec.id === 'router') {
+      for (const r of recList) { refreshLink(r); refreshLabel(r); }
+    }
   }
 
   function refreshLink(rec) {
@@ -1483,14 +1531,34 @@ export async function createScene({ bus, state, container }) {
     setLinkMode(rec.link, mode);
   }
 
+  function routerIsDown() {
+    const router = recs.get('router');
+    return !!router && router.status === 'offline';
+  }
+
+  /** Short state text after the name: "off" for a switched-off device, otherwise the status. */
+  function statusText(rec) {
+    if (rec.status === 'ok') return '';
+    const p = rec.device.props || {};
+    if (rec.status === 'offline' && !routerIsDown()) {
+      if (p.power === false) return '· off';
+      if (p.wifi === false) return '· Wi-Fi off';
+    }
+    if (rec.status === 'offline' && rec.id === 'router') return '· rebooting';
+    return `· ${STATUS_TEXT[rec.status] || rec.status}`;
+  }
+
   function refreshLabel(rec) {
     const el = rec.labelEl;
     const selected = state.selectedId === rec.id;
-    const show = rec.present && (selected || hoverId === rec.id || rec.status !== 'ok');
+    // While the router reboots every LAN device is offline; only the router's
+    // own label (plus hovered/selected ones) is shown, the dashed links say the rest.
+    const outage = rec.status === 'offline' && rec.id !== 'router' && routerIsDown();
+    const show = rec.present && (selected || hoverId === rec.id || (rec.status !== 'ok' && !outage));
     rec.label.visible = show;
     const cls = `sc-label is-${rec.status}${selected ? ' is-selected' : ''}`;
     if (el.className !== cls) el.className = cls;
-    const text = rec.status === 'ok' ? '' : `· ${STATUS_TEXT[rec.status] || rec.status}`;
+    const text = statusText(rec);
     if (rec.labelState.textContent !== text) rec.labelState.textContent = text;
   }
 
@@ -1530,63 +1598,77 @@ export async function createScene({ bus, state, container }) {
     box.setFromObject(rec.group);
     box.getSize(v1);
     const r = clamp(Math.max(v1.x, v1.z) / 2 + 0.07, 0.2, 0.32);
-    const h = clamp(v1.y + 0.16, 0.32, 0.6);
+    const h = clamp(v1.y + 0.25, 0.42, 0.75);
     shieldFx.position.set(rec.group.position.x, box.min.y, rec.group.position.z);
     spin.scale.set(r, h, r);
     base.scale.set(r, 1, r);
     shieldFx.userData.h = h;
+    halo.position.y = h * 0.45;
+    halo.scale.setScalar(r * 8);
+    shieldFx.userData.r = r;
   }
 
   // ---- packet routing ------------------------------------------------------------
-  /** Build waypoints src -> router -> shield -> dst; returns the waypoint count. */
+  // The path under construction lives in WP/CTRL; pathN counts its waypoints and
+  // pathShield is the waypoint index of the shield (-1 if the path stops before it).
+  let pathN = 0;
+  let pathShield = -1;
+
+  /** Append a waypoint (skipping near-duplicates). fibre: the segment follows the ISP fibre. */
+  function pushWaypoint(p, fibre) {
+    if (pathN > 0 && WP[pathN - 1].distanceToSquared(p) < 0.0025) return;
+    if (pathN > MAX_SEGS) return;
+    WP[pathN].copy(p);
+    if (pathN > 0) {
+      const prev = WP[pathN - 1];
+      if (fibre) {
+        // fibreControl expects (cloud end, house end): the cloud is the higher one.
+        if (prev.y > p.y) fibreControl(prev, p, CTRL[pathN - 1]);
+        else fibreControl(p, prev, CTRL[pathN - 1]);
+      } else {
+        arcControl(prev, p, CTRL[pathN - 1]);
+      }
+    }
+    pathN++;
+  }
+
+  /**
+   * Build waypoints src -> router -> shield -> dst into WP/CTRL. stopAt is
+   * 'router' (firewall drop), 'shield' (IDS drop) or null (delivered).
+   * Ports are recomputed here because some devices move (the vacuum).
+   */
   function buildPath(srcId, dstId, stopAt) {
+    pathN = 0;
+    pathShield = -1;
     const router = recs.get('router');
     const shield = recs.get('shield');
-    if (!router) return { n: 0, shieldIndex: -1 };
-    let n = 0;
-    const push = (p, fibre) => {
-      if (n > 0 && WP[n - 1].distanceToSquared(p) < 0.0025) return;   // skip duplicate points
-      if (n > MAX_SEGS) return;
-      WP[n].copy(p);
-      if (n > 0) {
-        if (fibre) fibreControl(WP[n - 1].y > p.y ? WP[n - 1] : p, WP[n - 1].y > p.y ? p : WP[n - 1], CTRL[n - 1]);
-        else arcControl(WP[n - 1], p, CTRL[n - 1]);
-      }
-      n++;
-    };
     const src = recs.get(srcId);
     const dst = recs.get(dstId);
-    if (!src || !dst) return { n: 0, shieldIndex: -1 };
-    if (src.device.role === 'cloud') {
-      push(portWorld(src), false);
-      push(wanEntry, true);
-    } else {
-      push(portWorld(src), false);
-    }
-    push(portWorld(router), false);
-    if (stopAt === 'router') return { n, shieldIndex: -1 };
-    let shieldIndex = -1;
+    if (!router || !src || !dst) return;
+    pushWaypoint(portWorld(src), false);
+    if (src.device.role === 'cloud') pushWaypoint(wanEntry, true);
+    pushWaypoint(portWorld(router), false);
+    if (stopAt === 'router') return;
     if (shield) {
-      push(portWorld(shield), false);
-      shieldIndex = n - 1;
+      pushWaypoint(portWorld(shield), false);
+      pathShield = pathN - 1;
     }
-    if (stopAt === 'shield') return { n, shieldIndex };
+    if (stopAt === 'shield') return;
     if (dst.device.role === 'cloud') {
-      push(wanEntry, false);
-      push(portWorld(dst), true);
+      pushWaypoint(wanEntry, false);
+      pushWaypoint(portWorld(dst), true);
     } else {
-      push(portWorld(dst), false);
+      pushWaypoint(portWorld(dst), false);
     }
-    return { n, shieldIndex };
   }
 
   function launch(pkt, k, stopAt) {
     if (!pkt) return;
     routerActivity = Math.min(1, routerActivity + 0.18);
     const cap = reducedMotion ? MAX_PACKETS_REDUCED : MAX_PACKETS;
-    const { n, shieldIndex } = buildPath(pkt.src, pkt.dst, stopAt);
-    if (n < 2) return;
-    packets.spawn(k, WP, CTRL, n, shieldIndex, stopAt !== null, cap);
+    buildPath(pkt.src, pkt.dst, stopAt);
+    if (pathN < 2) return;
+    packets.spawn(k, WP, CTRL, pathN, pathShield, stopAt !== null, cap);
     // Links light up for every packet, including ones the animation sampled out.
     const hex = k === KIND_ALLOW ? HEX.allowed : k === KIND_ALERT ? HEX.alerted : HEX.dropped;
     const src = recs.get(pkt.src);
@@ -1669,6 +1751,10 @@ export async function createScene({ bus, state, container }) {
     dragging = false;
     setHover(null);
   }
+  function onPointerCancel() {
+    dragging = false;
+    downOk = false;
+  }
   function onDblClick(e) {
     setNdc(e.clientX, e.clientY);
     const id = pick();
@@ -1678,6 +1764,7 @@ export async function createScene({ bus, state, container }) {
   canvas.addEventListener('pointerup', onPointerUp);
   canvas.addEventListener('pointermove', onPointerMove);
   canvas.addEventListener('pointerleave', onPointerLeave);
+  canvas.addEventListener('pointercancel', onPointerCancel);
   canvas.addEventListener('dblclick', onDblClick);
 
   // ---- camera: home view, intro and focus flights --------------------------------------
@@ -1716,15 +1803,27 @@ export async function createScene({ bus, state, container }) {
   // Candidate viewing angles for focus(): [polar, azimuth offset]. The first
   // one keeps the current direction; the rest swing round or look down.
   const FOCUS_CANDIDATES = [[0.9, 0], [0.62, 0], [0.9, 0.9], [0.9, -0.9], [0.62, 1.8], [0.62, -1.8], [0.62, Math.PI], [0.28, 0]];
+  // Wall devices: start square-on to the device's face, then swing a little.
+  const FOCUS_WALL = [[1.12, 0], [0.9, 0], [1.12, 0.5], [1.12, -0.5], [0.7, 0], [0.9, 0.9], [0.9, -0.9], [0.5, 0]];
   const focusRay = new THREE.Raycaster();
 
-  /** Is the straight line from the target to the camera position free of walls, furniture and trees? */
+  /**
+   * Is the straight line between the target and the camera position free of
+   * walls, furniture and trees? Tested in both directions because a ray that
+   * starts inside a wall does not hit that wall's (back-facing) faces.
+   */
   function clearView(target, camPos) {
     v3.copy(camPos).sub(target);
     const len = v3.length();
-    focusRay.set(target, v3.divideScalar(len));
+    if (len < 1e-3) return false;
+    v3.divideScalar(len);
+    focusRay.set(target, v3);
     focusRay.near = 0.05;
     focusRay.far = len;
+    if (focusRay.intersectObjects(env.occluders, false).length) return false;
+    focusRay.set(camPos, v3.negate());
+    focusRay.near = 0;
+    focusRay.far = Math.max(0, len - 0.03);
     return focusRay.intersectObjects(env.occluders, false).length === 0;
   }
 
@@ -1744,10 +1843,13 @@ export async function createScene({ bus, state, container }) {
       sph.set(dist, 1.18, HOME_THETA);
       camPos.setFromSpherical(sph).add(target);
     } else {
+      // Wall devices are approached from the side they face; everything else
+      // from the current viewing direction, swinging round if that is blocked.
+      const wall = rec.mount === 'wall';
       sph.setFromVector3(v3.copy(camera.position).sub(controls.target));
-      const baseTheta = sph.theta;
+      const baseTheta = wall ? rec.rotY : sph.theta;
       let found = false;
-      for (const [phi, dTheta] of FOCUS_CANDIDATES) {
+      for (const [phi, dTheta] of wall ? FOCUS_WALL : FOCUS_CANDIDATES) {
         sph.set(dist, phi, baseTheta + dTheta);
         camPos.setFromSpherical(sph).add(target);
         if (camPos.y > 0.4 && clearView(target, camPos)) { found = true; break; }
@@ -1777,15 +1879,21 @@ export async function createScene({ bus, state, container }) {
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
     updatePointScale();
-    if (!userMoved && !fly.active) {
+    if (!userMoved) {
+      // Still on the home view (or its intro): re-frame for the new aspect.
       homeView(v1, v2);
-      camera.position.copy(v1);
-      controls.target.copy(v2);
+      if (fly.active) {
+        fly.toPos.copy(v1);
+        fly.toTarget.copy(v2);
+      } else {
+        camera.position.copy(v1);
+        controls.target.copy(v2);
+      }
     }
   }
   function updatePointScale() {
     const px = renderer.getPixelRatio() * height / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2));
-    packets.setScale(px);
+    packets.setScale(px, renderer.getPixelRatio());
   }
   const resizeObserver = new ResizeObserver(() => resize());
   resizeObserver.observe(container);
@@ -1824,15 +1932,15 @@ export async function createScene({ bus, state, container }) {
     if (rec) applyDevice(rec);
   });
   const onBlockChange = blocked => ({ ip, deviceId } = {}) => {
-    const id = deviceId || state.byIp.get(ip);
-    const rec = recs.get(id);
-    if (!rec) return;
-    applyDevice(rec);
-    if (blocked) {
-      const sh = recs.get('shield');
-      if (sh) emitRing(sh.group.position.x, shieldFx.position.y + 0.01, sh.group.position.z, HEX.shield, 0.3, 3.2, 1.3);
+    const rec = recs.get(deviceId || state.byIp.get(ip));
+    if (rec) applyDevice(rec);
+    if (!blocked) return;
+    // A new firewall rule: a saffron ripple from the sensor, a red one at the device.
+    const sh = recs.get('shield');
+    if (sh) emitRing(sh.group.position.x, shieldFx.position.y + 0.01, sh.group.position.z, HEX.shield, 0.3, 3.2, 1.3);
+    pulseShield(KIND_DROP, 1);
+    if (rec && rec.present) {
       emitRing(rec.port.x, rec.ringY + 0.01, rec.port.z, HEX.dropped, rec.radius * 0.6, rec.radius * 3.2, 1.1);
-      pulseShield(KIND_DROP, 1);
       pulseLink(rec.link, HEX.dropped, 1);
     }
   };
@@ -1956,6 +2064,9 @@ export async function createScene({ bus, state, container }) {
     shellMat.opacity = 0.11 + breathe + 0.32 * p + (hot ? 0.06 : 0);
     edgeMat.opacity = 0.7 + 0.3 * p;
     baseMat.opacity = 0.35 + 0.5 * p;
+    haloMat.color.copy(edgeMat.color);
+    haloMat.opacity = 0.3 + breathe * 2 + 0.4 * p + (hot ? 0.1 : 0);
+    halo.scale.setScalar(shieldFx.userData.r * (8 + 2.5 * p));
     // Scanning band: rises through the dome; faster while drifting.
     const speed = driftState === 'drift' ? 1.6 : driftState === 'warning' ? 1.0 : 0.55;
     const f = reducedMotion ? 0.5 : (realT * speed) % 1;
@@ -1992,13 +2103,23 @@ export async function createScene({ bus, state, container }) {
     tvGlow.intensity = 2.6 * tvGlowLevel * flicker;
   }
 
+  /** Put a ring marker on a device: upright around wall devices, flat on the floor otherwise. */
+  function placeRing(obj, rec, lift, scale) {
+    if (rec.mount === 'wall') {
+      obj.position.copy(rec.center);
+      obj.rotation.set(Math.PI / 2, rec.rotY, 0, 'YXZ');
+    } else {
+      obj.position.set(rec.port.x, rec.ringY + lift, rec.port.z);
+      obj.rotation.set(0, 0, 0, 'XYZ');
+    }
+    obj.scale.setScalar(rec.radius * scale);
+  }
+
   function updateMarkers(dt) {
     const sel = state.selectedId ? recs.get(state.selectedId) : null;
     if (sel && sel.present) {
       selectRing.visible = true;
-      selectRing.position.set(sel.port.x, sel.ringY + 0.006, sel.port.z);
-      const pulse = reducedMotion ? 1 : 1 + 0.05 * Math.sin(realT * 3);
-      selectRing.scale.setScalar(sel.radius * pulse);
+      placeRing(selectRing, sel, 0.006, reducedMotion ? 1 : 1 + 0.05 * Math.sin(realT * 3));
       selectRing.children[1].rotation.y += dt * 0.6;
     } else {
       selectRing.visible = false;
@@ -2006,8 +2127,7 @@ export async function createScene({ bus, state, container }) {
     const hov = hoverId && hoverId !== state.selectedId ? recs.get(hoverId) : null;
     if (hov && hov.present) {
       hoverRing.visible = true;
-      hoverRing.position.set(hov.port.x, hov.ringY + 0.004, hov.port.z);
-      hoverRing.scale.setScalar(hov.radius);
+      placeRing(hoverRing, hov, 0.004, 1);
     } else {
       hoverRing.visible = false;
     }
