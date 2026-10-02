@@ -346,6 +346,14 @@ function svgEl(tag, attrs = {}, text) {
   return el;
 }
 
+let measureCtx = null;
+/** Width in CSS px of `text` in `font`, via an offscreen canvas. */
+function measureText(text, font) {
+  measureCtx ??= document.createElement('canvas').getContext('2d');
+  measureCtx.font = font;
+  return measureCtx.measureText(String(text)).width;
+}
+
 /** Bar path with a 4px rounded data end and a square baseline. */
 function barPath(x0, y, w, h, r = 4) {
   const rr = Math.min(r, w / 2, h / 2);
@@ -375,19 +383,23 @@ export function createBarChart(container, rows, opts = {}) {
     lastW = W;
     const T = readTokens();
     const rowH = 24, barH = 12;
-    const labelW = Math.min(150, Math.max(96, W * 0.3));
-    const valueW = delta ? 108 : 52;
+    // Size the label column to the longest label so nothing is clipped.
+    const longest = Math.max(...rows.map(r => measureText(r.label, `11px ${cssVar('--font-sans', 'sans-serif')}`)));
+    const labelW = Math.min(Math.max(64, Math.ceil(longest) + 12), Math.round(W * 0.45));
+    const showDelta = delta && W >= 420;   // on narrow widths the delta stays in the tooltip
+    const valueW = showDelta ? 112 : 44;   // values sit in their own column, clear of the reference line
     const top = ref ? 22 : 8;
     const axisH = 18;
-    const plotW = Math.max(60, W - labelW - valueW - 8);
+    const plotW = Math.max(60, W - labelW - valueW - 12);
     const H = top + rows.length * rowH + axisH;
     const x = v => labelW + (Math.max(0, Math.min(v, max)) / max) * plotW;
+    const tickSet = plotW < 220 ? ticks.filter((t, i) => i === 0 || i === ticks.length - 1 || Math.abs(t - max / 2) < 1e-9) : ticks;
 
     const svg = svgEl('svg', {
       width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': ariaLabel, class: 'bar-chart',
     });
     // Recessive vertical grid and tick labels.
-    for (const t of ticks) {
+    for (const t of tickSet) {
       const gx = Math.round(x(t)) + 0.5;
       svg.appendChild(svgEl('line', { x1: gx, x2: gx, y1: top - 4, y2: top + rows.length * rowH, stroke: T.line, 'stroke-width': 1 }));
       svg.appendChild(svgEl('text', {
@@ -409,10 +421,10 @@ export function createBarChart(container, rows, opts = {}) {
         d: barPath(labelW, y + (rowH - barH) / 2, x(r.value) - labelW, barH),
         fill: r.emphasis ? cssVar('--viz-bar-strong', '#9fb4dc') : cssVar('--viz-bar', '#5f7fb6'),
       }));
-      const vx = x(r.value) + 6;
+      const vx = labelW + plotW + 12;
       const val = svgEl('text', { x: vx, y: y + rowH / 2, 'dominant-baseline': 'central', fill: T.fg, class: 'bc-value' });
       val.appendChild(svgEl('tspan', {}, r.value.toFixed(digits)));
-      if (delta && ref && r.value !== ref.value) {
+      if (showDelta && ref && r.value !== ref.value) {
         const d = r.value - ref.value;
         val.appendChild(svgEl('tspan', { dx: 6, fill: T.muted }, `${d > 0 ? '+' : '−'}${Math.abs(d).toFixed(digits)}`));
       }

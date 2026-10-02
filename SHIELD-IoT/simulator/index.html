@@ -71,7 +71,7 @@
       <input type="radio" name="ids-mode" id="mode-prevent" value="prevent" checked>
       <label for="mode-prevent" title="Inline IPS: drops suspicious packets and blocks repeat offenders at the router">Prevent<span class="seg-extra"> (inline block)</span></label>
       <input type="radio" name="ids-mode" id="mode-detect" value="detect">
-      <label for="mode-detect" title="IDS only: raises alerts but never drops or blocks automatically">Detect only</label>
+      <label for="mode-detect" title="IDS only: raises alerts but never drops or blocks automatically">Detect<span class="seg-extra-plain"> only</span></label>
     </fieldset>
 
     <div id="threat-pill" class="threat-pill" data-level="low" role="status" title="Threat level from SHIELD-IoT alerts over the last 30 s of sim time">
@@ -110,7 +110,7 @@
     <aside id="panel-home" class="panel side side-left" aria-labelledby="home-title">
       <div class="panel-head">
         <h2 id="home-title">Home network</h2>
-        <span class="panel-meta mono" id="home-meta"></span>
+        <span class="panel-meta" id="home-meta"></span>
         <button id="btn-collapse-left" type="button" class="btn btn-icon btn-collapse" aria-expanded="true" aria-controls="home-body" aria-label="Collapse the Home network panel" title="Collapse panel">
           <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
@@ -119,7 +119,7 @@
         <section class="callout" id="rogue-callout" aria-labelledby="rogue-title">
           <div class="callout-text">
             <h3 id="rogue-title">Plug in an unknown device</h3>
-            <p>A board nobody registered, hidden behind the washer. SHIELD-IoT will flag it because its MAC address is not in the home inventory.</p>
+            <p>An unregistered board behind the washer. SHIELD-IoT will flag it because its MAC address is not in the home inventory.</p>
           </div>
           <label class="switch" for="rogue-plugged">
             <input type="checkbox" id="rogue-plugged" role="switch">

@@ -1626,16 +1626,16 @@ class StatusFx {
   }
 
   /** Put a unit band around the model: at its base (halo) or middle (cage). */
-  placeRing(mesh, pad, atBase) {
+  placeRing(mesh, pad, atBase, minR = 0.06) {
     const { box, size, center } = this;
     const mount = this.kit.mount;
     if (mount === 'wall') {
-      const r = Math.max(0.05, 0.5 * Math.hypot(size.x, size.y) * pad);
+      const r = Math.max(minR, 0.5 * Math.hypot(size.x, size.y) * pad);
       mesh.position.set(center.x, center.y, box.max.z + 0.012);
       mesh.rotation.x = Math.PI / 2;
       mesh.userData.r = r;
     } else {
-      const r = Math.max(0.06, 0.5 * Math.hypot(size.x, size.z) * pad);
+      const r = Math.max(minR, 0.5 * Math.hypot(size.x, size.z) * pad);
       const y = !atBase ? center.y : mount === 'ceiling' ? box.min.y - 0.01 : box.min.y + 0.006;
       mesh.position.set(center.x, y, center.z);
       mesh.userData.r = r;
@@ -1649,23 +1649,26 @@ class StatusFx {
     root.userData.fx = true;
     const maxDim = Math.max(size.x, size.y, size.z);
     const spriteMat = kit.own(new THREE.SpriteMaterial({
-      map: glowTexture(), color: COLOR.alert, transparent: true, opacity: 0.6, depthWrite: false, blending: THREE.AdditiveBlending,
+      map: glowTexture(), color: COLOR.alert, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending,
     }));
     const sprite = new THREE.Sprite(spriteMat);
     sprite.userData.fx = true;
     sprite.position.copy(center);
     if (kit.mount === 'wall') sprite.position.z = box.max.z + 0.03;
-    const s = clamp(maxDim * 1.6, 0.25, 6);
+    const s = clamp(maxDim * 1.8, 0.45, 6);   // tiny devices still get a halo visible from the street
     sprite.scale.set(s, s, 1);
-    const ringMat = kit.own(new THREE.MeshBasicMaterial({
-      color: COLOR.alert, transparent: true, opacity: 0.8, depthWrite: false, side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
-    }));
-    const band = new THREE.Mesh(bandGeometry(), ringMat);
-    band.userData.fx = true;
-    this.placeRing(band, kit.mount === 'wall' ? 1.08 : 1.25, true);
-    root.add(sprite, band);
+    // A steady amber ring that breathes, plus a "ping" ring that expands and fades.
+    const ringParams = { color: COLOR.alert, transparent: true, opacity: 0.8, depthWrite: false, side: THREE.DoubleSide };
+    const ringMat = kit.own(new THREE.MeshBasicMaterial(ringParams));
+    const pingMat = kit.own(new THREE.MeshBasicMaterial(ringParams));
+    const ring = new THREE.Mesh(bandGeometry(), ringMat);
+    const ping = new THREE.Mesh(bandGeometry(), pingMat);
+    const pad = kit.mount === 'wall' ? 1.08 : 1.25;
+    this.placeRing(ring, pad, true, 0.16);
+    this.placeRing(ping, pad, true, 0.16);
+    for (const m of [sprite, ring, ping]) { m.userData.fx = true; root.add(m); }
     kit.fxParent.add(root);
-    this.halo = { root, spriteMat, band, ringMat };
+    this.halo = { root, spriteMat, ringMat, ping, pingMat };
   }
 
   buildCage() {
@@ -1673,12 +1676,22 @@ class StatusFx {
     const maxDim = Math.max(size.x, size.y, size.z);
     const pad = clamp(maxDim * 0.08, 0.012, 0.15);
     const wall = kit.mount === 'wall', ceiling = kit.mount === 'ceiling';
-    const x0 = box.min.x - pad, x1 = box.max.x + pad;
-    const y0 = box.min.y - (ceiling ? pad : pad * 0.4), y1 = box.max.y + (ceiling ? 0 : pad);
-    const z0 = wall ? box.min.z : box.min.z - pad, z1 = box.max.z + pad;
+    let x0 = box.min.x - pad, x1 = box.max.x + pad;
+    let y0 = box.min.y - (ceiling ? pad : pad * 0.4), y1 = box.max.y + (ceiling ? 0 : pad);
+    let z0 = wall ? box.min.z : box.min.z - pad, z1 = box.max.z + pad;
+    // Small devices get a cage of at least ~22 cm so it reads from the street.
+    const MIN = 0.22;
+    if (x1 - x0 < MIN) { const c = (x0 + x1) / 2; x0 = c - MIN / 2; x1 = c + MIN / 2; }
+    if (!wall && z1 - z0 < MIN) { const c = (z0 + z1) / 2; z0 = c - MIN / 2; z1 = c + MIN / 2; }
+    if (y1 - y0 < MIN * 0.8) {
+      if (ceiling) y0 = y1 - MIN * 0.8;
+      else if (wall) { const c = (y0 + y1) / 2; y0 = c - MIN * 0.4; y1 = c + MIN * 0.4; }
+      else y1 = y0 + MIN * 0.8;
+    }
     const W = x1 - x0, H = y1 - y0, D = z1 - z0, my = (y0 + y1) / 2;
-    const t = clamp(maxDim * 0.012, 0.0025, 0.022);
-    const spacing = clamp(maxDim / 6, 0.015, 0.3);
+    const cageDim = Math.max(W, H, D);
+    const t = clamp(cageDim * 0.012, 0.003, 0.022);
+    const spacing = clamp(cageDim / 6, 0.03, 0.3);
     const parts = [];
     const bar = (x, z) => parts.push(new THREE.BoxGeometry(t, H, t).translate(x, my, z));
     const nx = Math.max(2, Math.round(W / spacing)), nz = Math.max(2, Math.round(D / spacing));
@@ -1699,8 +1712,8 @@ class StatusFx {
     faces.position.set((x0 + x1) / 2, my, (z0 + z1) / 2);
     faces.scale.set(W, H, D);
     const band = new THREE.Mesh(bandGeometry(), cageRingMat());
-    this.placeRing(band, 1.1, false);
-    if (!wall) band.position.y = my;
+    this.placeRing(band, 1.1, false, 0.5 * (wall ? Math.hypot(W, H) : Math.hypot(W, D)) * 1.04);
+    if (!wall) band.position.set((x0 + x1) / 2, my, (z0 + z1) / 2);
     for (const m of [bars, faces, band]) { m.userData.fx = true; root.add(m); }
     kit.fxParent.add(root);
     this.cage = { root, band };
@@ -1709,10 +1722,11 @@ class StatusFx {
   /** Per-frame animation in real seconds; only runs while the status is not 'ok'. */
   update(now) {
     if (this.status === 'alert' && this.halo) {
-      const h = this.halo, p = (now * 0.85) % 1;
-      h.band.scale.setScalar(h.band.userData.r * (0.8 + 0.5 * p));
-      h.ringMat.opacity = 0.9 * (1 - p);
-      h.spriteMat.opacity = 0.2 + 0.28 * (0.5 + 0.5 * Math.sin(now * 5.5));
+      const h = this.halo, p = (now * 0.8) % 1, beat = 0.5 + 0.5 * Math.sin(now * 5.5);
+      h.ping.scale.setScalar(h.ping.userData.r * (1 + 0.6 * p));
+      h.pingMat.opacity = 0.75 * (1 - p);
+      h.ringMat.opacity = 0.5 + 0.4 * beat;
+      h.spriteMat.opacity = 0.3 + 0.35 * beat;
     } else if (this.status === 'blocked' && this.cage) {
       const band = this.cage.band, spin = now * 0.6;
       if (this.kit.mount === 'wall') band.rotation.set(Math.PI / 2, spin, 0);
@@ -1975,7 +1989,7 @@ function buildLight(kit) {
     return new THREE.LatheGeometry(pts, 32);
   });
   const glass = kit.mat({ color: 0xf4f1ea, emissive: 0xffd8a8, emissiveIntensity: 0, roughness: 0.35, side: THREE.DoubleSide }, true);
-  kit.add(b, shadeGeo, glass, 0, -0.16, 0).castShadow = true;
+  kit.add(b, shadeGeo, glass, 0, -0.16, 0);
   kit.add(b, flatTorus(0.156, 0.004, 6, 40), brass, 0, -0.33, 0);
   const bulb = kit.mat({ color: 0xfff6e8, emissive: 0xffd8a8, emissiveIntensity: 0, roughness: 0.3 }, true);
   kit.add(b, sphere(0.045, 20, 14), bulb, 0, -0.27, 0);
@@ -2032,16 +2046,17 @@ function buildAc(kit) {
   kit.port.set(0.3, H / 2 + 0.03, 0);
 
   const MODE_HEX = { Cool: 0x9fd8ff, Dry: 0x8ff0d8, Fan: 0xe8eef7 };
-  let lv = 0, angle = 0, key = '', mode = null;
+  let lv = 0, angle = 0, shownOn = null, shownTemp = null, shownMode = null, mode = null;
   return (d, dt, t, rdt) => {
     const on = d.props.power !== false;
     lv += ((on ? 1 : 0) - lv) * damp(2.5, rdt);
     const swing = on ? 0.55 + 0.32 * Math.sin(t * 0.9) : 0;
     angle += (swing - angle) * damp(3, rdt);
     louvre.rotation.x = -angle;
-    const k = `${on}|${d.props.temp}|${d.props.mode}`;
-    if (k !== key) {
-      key = k;
+    if (on !== shownOn || d.props.temp !== shownTemp || d.props.mode !== shownMode) {
+      shownOn = on;
+      shownTemp = d.props.temp;
+      shownMode = d.props.mode;
       paintAc(scr.ctx, scr.w, scr.h, on, Number(d.props.temp) || 24, d.props.mode || 'Cool');
       scr.tex.needsUpdate = true;
     }
@@ -2134,7 +2149,7 @@ function buildVacuum(kit, device) {
   const y0 = floorY + 0.008;
   const mover = kit.pivot(b);
   kit.fxParent = mover;
-  kit.add(mover, cyl(0.17, 0.168, 0.07, 40), matte(0xe9ecf0, 0.4), 0, y0 + 0.035, 0).castShadow = true;
+  kit.add(mover, cyl(0.17, 0.168, 0.07, 40), matte(0xe9ecf0, 0.4), 0, y0 + 0.035, 0);
   kit.add(mover, cyl(0.163, 0.167, 0.008, 40), metal(0xcfd4db, 0.3, 0.25), 0, y0 + 0.074, 0);
   kit.add(mover, cyl(0.174, 0.174, 0.045, 40, true, -Math.PI / 2, Math.PI), matte(0x2a2e35, 0.6), 0, y0 + 0.03, 0);
   const lidar = kit.pivot(mover, 0, y0 + 0.078, -0.045);
@@ -2270,15 +2285,15 @@ function buildFridge(kit) {
   for (const y of [-0.45, 0.05, 0.5]) kit.add(hinge, box(0.32, 0.06, 0.045), bin, -W / 4, y, -0.024);
   kit.port.set(0, H + 0.05, zc);
 
-  let angle = 0, key = '';
+  let angle = 0, shownTemp = null, shownOpen = null;
   return (d, dt, t, rdt) => {
     const open = !!d.props.doorOpen;
     angle += ((open ? 1.75 : 0) - angle) * damp(open ? 3 : 4, rdt);
     hinge.rotation.y = angle;
     kit.glow(lightMat, angle > 0.05 ? 1.6 : 0);
-    const k = `${d.props.temp}|${open}`;
-    if (k !== key) {
-      key = k;
+    if (d.props.temp !== shownTemp || open !== shownOpen) {
+      shownTemp = d.props.temp;
+      shownOpen = open;
       paintFridge(scr.ctx, scr.w, scr.h, d.props.temp ?? 4, open);
       scr.tex.needsUpdate = true;
     }
@@ -2423,16 +2438,17 @@ function buildWatch(kit) {
   kit.add(b, flatCircle(0.0195, 32), scr.mat, 0, 0.0122, 0);
   kit.port.set(0, 0.04, 0);
 
-  let key = '';
+  let shownHr = -1, shownBig = null, shownSteps = null, shownMinute = -1;
   return (d, dt, t) => {
     const hr = Math.round(Number(d.props.heartRate) || 0);
     const big = ((t * hr) / 60) % 1 < 0.18;
-    const s = simDaySeconds(t);
-    const time = formatTime(s, false);
-    const k = `${hr}|${big}|${d.props.steps}|${time}`;
-    if (k !== key) {
-      key = k;
-      paintWatch(scr.ctx, scr.w, hr, Number(d.props.steps) || 0, big, time);
+    const s = simDaySeconds(t), minute = Math.floor(s / 60);
+    if (hr !== shownHr || big !== shownBig || d.props.steps !== shownSteps || minute !== shownMinute) {
+      shownHr = hr;
+      shownBig = big;
+      shownSteps = d.props.steps;
+      shownMinute = minute;
+      paintWatch(scr.ctx, scr.w, hr, Number(d.props.steps) || 0, big, formatTime(s, false));
       scr.tex.needsUpdate = true;
     }
     kit.glow(scr.mat, 1.25);
@@ -2482,12 +2498,12 @@ function buildThermostat(kit) {
   kit.add(b, circle(0.0365, 40), scr.mat, 0, 0, 0.0302);
   kit.port.set(0, 0.07, 0.02);
 
-  let key = '';
+  let shownCurrent = null, shownTarget = null;
   return (d) => {
     const current = Number(d.props.current ?? 24), target = Number(d.props.target ?? 23.5);
-    const k = `${current}|${target}`;
-    if (k !== key) {
-      key = k;
+    if (current !== shownCurrent || target !== shownTarget) {
+      shownCurrent = current;
+      shownTarget = target;
       paintThermostat(scr.ctx, scr.w, current, target);
       scr.tex.needsUpdate = true;
     }
@@ -2563,16 +2579,17 @@ function buildWasher(kit) {
   kit.add(shake, rbox(0.03, 0.09, 0.025, 0.008, 1), metal(0xd0d4da, 0.25, 0.45), 0.172, doorY, zf + 0.038);
   kit.port.set(0, H + 0.06, -0.2);
 
-  let omega = 0, key = '';
+  let omega = 0, shownRunning = null, shownMin = null, shownProgram = null;
   return (d, dt, t) => {
     const running = !!d.props.running;
     const target = running ? (Math.sin(t * 0.45) > -0.3 ? 6.5 : -5) : 0;
     omega += (target - omega) * damp(1.5, dt);
     drum.rotation.z = (drum.rotation.z + clamp(omega * dt, -0.5, 0.5)) % TAU;
     shake.position.x = running ? 0.0012 * Math.sin(t * 61) : 0;
-    const k = `${running}|${d.props.remainingMin}|${d.props.program}`;
-    if (k !== key) {
-      key = k;
+    if (running !== shownRunning || d.props.remainingMin !== shownMin || d.props.program !== shownProgram) {
+      shownRunning = running;
+      shownMin = d.props.remainingMin;
+      shownProgram = d.props.program;
       paintWasher(scr.ctx, scr.w, scr.h, running, Number(d.props.remainingMin) || 0, d.props.program);
       scr.tex.needsUpdate = true;
     }
