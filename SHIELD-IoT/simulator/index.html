@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>SHIELD-IoT Smart Home Lab</title>
+  <meta name="description" content="A 3D smart-home network with the SHIELD-IoT intrusion detection and prevention sensor inline at the router.">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0d131e">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z' fill='%23f2b134'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+  { "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+  } }
+  </script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <noscript><p class="noscript">SHIELD-IoT Smart Home Lab needs JavaScript (ES modules) and WebGL to run.</p></noscript>
+
+  <!-- 3D view: scene.js renders into this container, behind the HUD. -->
+  <div id="scene" class="scene" role="region" aria-label="3D view of the smart home">
+    <div id="scene-error" class="scene-error" role="status" hidden>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18v12H3zM8 3h8l1 4H7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 4l16 16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <strong>3D view unavailable on this browser</strong>
+      <span id="scene-error-detail">The panels still work: the home network, SHIELD-IoT and the packet log run as usual.</span>
+    </div>
+  </div>
+
+  <!-- ===== Top bar ===================================================== -->
+  <header id="topbar" class="topbar panel">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2.2 4.2 5.1v5.8c0 4.9 3.3 9.2 7.8 10.9 4.5-1.7 7.8-6 7.8-10.9V5.1z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <path d="M8.3 12.1l2.6 2.6 4.9-5.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="brand-text">
+        <span class="brand-name">SHIELD-IoT</span>
+        <span class="brand-sub">Smart Home Lab</span>
+      </div>
+    </div>
+
+    <div class="tb-clock" title="Simulation clock, India Standard Time">
+      <span class="tb-caption" id="clock-caption">Sim time · IST</span>
+      <time id="sim-clock" class="mono" aria-describedby="clock-caption"><span class="clock-date" id="clock-date">Thu 2 Oct · </span><span id="clock-time">19:42:00</span></time>
+    </div>
+
+    <span class="tb-break" aria-hidden="true"></span>
+
+    <div class="tb-sim">
+      <button id="btn-pause" type="button" class="btn btn-icon" aria-pressed="false" aria-label="Pause simulation" title="Pause (Space)">
+        <svg class="ico-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="2.5" width="3" height="11" rx="1"/><rect x="9.5" y="2.5" width="3" height="11" rx="1"/></svg>
+        <svg class="ico-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.6v10.8a.6.6 0 0 0 .9.5l8.4-5.4a.6.6 0 0 0 0-1L5.4 2.1a.6.6 0 0 0-.9.5z"/></svg>
+      </button>
+      <fieldset class="seg" id="speed-group">
+        <legend class="sr-only">Simulation speed</legend>
+        <input type="radio" name="sim-speed" id="speed-0_5" value="0.5"><label for="speed-0_5">0.5×</label>
+        <input type="radio" name="sim-speed" id="speed-1" value="1" checked><label for="speed-1">1×</label>
+        <input type="radio" name="sim-speed" id="speed-2" value="2"><label for="speed-2">2×</label>
+        <input type="radio" name="sim-speed" id="speed-4" value="4"><label for="speed-4">4×</label>
+      </fieldset>
+    </div>
+
+    <fieldset class="seg seg-mode" id="mode-group">
+      <legend class="sr-only">SHIELD-IoT mode</legend>
+      <input type="radio" name="ids-mode" id="mode-prevent" value="prevent" checked>
+      <label for="mode-prevent" title="Inline IPS: drops suspicious packets and blocks repeat offenders at the router">Prevent<span class="seg-extra"> (inline block)</span></label>
+      <input type="radio" name="ids-mode" id="mode-detect" value="detect">
+      <label for="mode-detect" title="IDS only: raises alerts but never drops or blocks automatically">Detect<span class="seg-extra-plain"> only</span></label>
+    </fieldset>
+
+    <div id="threat-pill" class="threat-pill" data-level="low" role="status" title="Threat level from SHIELD-IoT alerts over the last 30 s of sim time">
+      <span class="threat-dot" aria-hidden="true"></span>
+      <span class="threat-caption">Threat</span>
+      <strong id="threat-value">low</strong>
+    </div>
+
+    <div class="tb-actions">
+      <div class="reset-wrap" id="reset-wrap">
+        <button id="btn-reset" type="button" class="btn btn-ghost" aria-controls="reset-confirm" aria-expanded="false">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.2 8a4.8 4.8 0 1 0 1.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M3.4 2.2v3h3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Reset</span>
+        </button>
+        <span class="reset-confirm" id="reset-confirm" hidden>
+          <span class="reset-q">Reset the whole home?</span>
+          <button id="btn-reset-confirm" type="button" class="btn btn-danger">Reset</button>
+          <button id="btn-reset-cancel" type="button" class="btn btn-ghost">Cancel</button>
+        </span>
+      </div>
+      <button id="btn-help" type="button" class="btn btn-icon" aria-haspopup="dialog" aria-controls="help-dialog" aria-label="How to use this lab" title="How to use this lab">?</button>
+    </div>
+  </header>
+
+  <!-- Narrow screens: one tabbed sheet below the scene. -->
+  <nav id="sheet-tabs" class="sheet-tabs" role="tablist" aria-label="Panels">
+    <button type="button" role="tab" id="mtab-home" data-mtab="home" aria-controls="panel-home" aria-selected="true">Home</button>
+    <button type="button" role="tab" id="mtab-shield" data-mtab="shield" aria-controls="panel-shield" aria-selected="false" tabindex="-1">SHIELD<span class="tab-badge" id="mtab-shield-badge" hidden></span></button>
+    <button type="button" role="tab" id="mtab-log" data-mtab="log" aria-controls="pane-log" aria-selected="false" tabindex="-1">Log</button>
+    <button type="button" role="tab" id="mtab-research" data-mtab="research" aria-controls="pane-research" aria-selected="false" tabindex="-1">Research</button>
+    <button type="button" role="tab" id="mtab-resources" data-mtab="resources" aria-controls="pane-resources" aria-selected="false" tabindex="-1">Resources</button>
+  </nav>
+
+  <main id="hud" class="hud">
+    <!-- ===== Left panel: Home network ================================== -->
+    <aside id="panel-home" class="panel side side-left" aria-labelledby="home-title">
+      <div class="panel-head">
+        <h2 id="home-title">Home network</h2>
+        <span class="panel-meta" id="home-meta"></span>
+        <button id="btn-collapse-left" type="button" class="btn btn-icon btn-collapse" aria-expanded="true" aria-controls="home-body" aria-label="Collapse the Home network panel" title="Collapse panel">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="panel-body home-body" id="home-body">
+        <section class="callout" id="rogue-callout" aria-labelledby="rogue-title">
+          <div class="callout-text">
+            <h3 id="rogue-title">Plug in an unknown device</h3>
+            <p>An unregistered board behind the washer. SHIELD-IoT will flag it because its MAC address is not in the home inventory.</p>
+          </div>
+          <label class="switch" for="rogue-plugged">
+            <input type="checkbox" id="rogue-plugged" role="switch">
+            <span class="switch-track" aria-hidden="true"></span>
+            <span class="switch-text">Plugged in</span>
+          </label>
+        </section>
+
+        <div class="device-list-wrap" id="device-list-wrap">
+          <div class="list-head" aria-hidden="true"><span>Device</span><span>tx / rx per s</span></div>
+          <div id="device-list" class="device-list"></div>
+        </div>
+
+        <section id="device-card" class="device-card" aria-labelledby="card-title" aria-live="off"></section>
+      </div>
+    </aside>
+
+    <!-- ===== Right panel: SHIELD-IoT ===================================== -->
+    <aside id="panel-shield" class="panel side side-right" aria-labelledby="shield-title">
+      <div class="panel-head">
+        <svg class="panel-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2 4.2 5.1v5.8c0 4.9 3.3 9.2 7.8 10.9 4.5-1.7 7.8-6 7.8-10.9V5.1z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>
+        <h2 id="shield-title">SHIELD-IoT</h2>
+        <span class="panel-meta" id="shield-meta">inline at the router</span>
+        <button id="btn-collapse-right" type="button" class="btn btn-icon btn-collapse" aria-expanded="true" aria-controls="shield-body" aria-label="Collapse the SHIELD-IoT panel" title="Collapse panel">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="panel-body shield-body" id="shield-body">
+        <!-- (a) stats -->
+        <dl class="stats" id="ids-stats">
+          <div class="stat"><dt>Inspected</dt><dd class="mono" id="stat-inspected">0</dd></div>
+          <div class="stat"><dt>Alerts</dt><dd class="mono" id="stat-alerts">0</dd></div>
+          <div class="stat"><dt>Dropped</dt><dd class="mono" id="stat-dropped">0</dd></div>
+          <div class="stat"><dt>Blocked</dt><dd class="mono" id="stat-blocked">0</dd></div>
+          <div class="stat"><dt>Packets/s</dt><dd class="mono" id="stat-pps">0</dd></div>
+          <div class="stat"><dt>Avg latency</dt><dd class="mono"><span id="stat-latency">0</span><small> µs</small></dd></div>
+        </dl>
+
+        <!-- (b) live traffic chart -->
+        <section class="sec" aria-labelledby="chart-title">
+          <div class="sec-head">
+            <h3 id="chart-title">Live traffic <span class="sec-sub">last 60 s</span></h3>
+            <ul class="legend" aria-label="Chart legend">
+              <li><span class="key key-allowed" aria-hidden="true"></span>Allowed</li>
+              <li><span class="key key-dropped" aria-hidden="true"></span>Dropped</li>
+              <li><span class="key key-alert" aria-hidden="true"></span>Alert</li>
+            </ul>
+          </div>
+          <div class="chart-wrap">
+            <canvas id="traffic-chart" class="traffic-chart" role="img" aria-label="Live traffic chart"></canvas>
+          </div>
+        </section>
+
+        <!-- (g) alert feed -->
+        <section class="sec" aria-labelledby="alerts-title">
+          <div class="sec-head">
+            <h3 id="alerts-title">Alerts</h3>
+            <span class="sec-meta mono" id="alerts-meta">none yet</span>
+          </div>
+          <ol id="alert-feed" class="alert-feed" aria-live="off"></ol>
+          <p class="empty" id="alert-empty">No alerts. Everyday home traffic is protocol-valid, so the invariant engines stay quiet.</p>
+        </section>
+
+        <!-- (h) blocked list -->
+        <section class="sec" aria-labelledby="blocked-title">
+          <div class="sec-head">
+            <h3 id="blocked-title">Blocked at the router</h3>
+            <span class="sec-meta mono" id="blocked-meta">0</span>
+          </div>
+          <ul id="blocked-list" class="blocked-list"></ul>
+          <p class="empty" id="blocked-empty">Nothing is blocked.</p>
+        </section>
+
+        <!-- (c) evidence layers -->
+        <section class="sec" aria-labelledby="layers-title">
+          <div class="sec-head">
+            <h3 id="layers-title">Evidence layers</h3>
+            <span class="sec-meta">hits</span>
+          </div>
+          <ul class="layer-list" id="layer-list">
+            <li class="layer-row">
+              <label class="switch" for="layer-ml">
+                <input type="checkbox" id="layer-ml" role="switch" data-layer="ml">
+                <span class="switch-track" aria-hidden="true"></span>
+                <span class="switch-text">ML evidence <span class="sub">(LightGBM surrogate)</span></span>
+              </label>
+              <span class="hits mono" id="hits-ml" title="Packets where the ML surrogate leaned towards an attack class">0</span>
+            </li>
+            <li class="layer-row">
+              <label class="switch" for="layer-tcp">
+                <input type="checkbox" id="layer-tcp" role="switch" data-layer="tcp">
+                <span class="switch-track" aria-hidden="true"></span>
+                <span class="switch-text">TCP invariants <span class="sub">(Step 5A)</span></span>
+              </label>
+              <span class="hits mono" id="hits-tcp">0</span>
+            </li>
+            <li class="layer-row">
+              <label class="switch" for="layer-arp">
+                <input type="checkbox" id="layer-arp" role="switch" data-layer="arp">
+                <span class="switch-track" aria-hidden="true"></span>
+                <span class="switch-text">ARP invariant <span class="sub">(Step 5B)</span></span>
+              </label>
+              <span class="hits mono" id="hits-arp" title="INV_ARP_01 violations">0</span>
+            </li>
+            <li class="layer-row">
+              <label class="switch" for="layer-mqtt">
+                <input type="checkbox" id="layer-mqtt" role="switch" data-layer="mqtt">
+                <span class="switch-track" aria-hidden="true"></span>
+                <span class="switch-text">MQTT invariants <span class="sub">(Step 5C, experimental)</span></span>
+              </label>
+              <span class="hits mono" id="hits-mqtt">0</span>
+            </li>
+            <li class="layer-row">
+              <label class="switch" for="layer-drift">
+                <input type="checkbox" id="layer-drift" role="switch" data-layer="drift">
+                <span class="switch-track" aria-hidden="true"></span>
+                <span class="switch-text">Drift monitor <span class="sub">(PSI)</span></span>
+              </label>
+              <span class="hits mono" id="hits-drift" title="Current population stability index">0</span>
+            </li>
+            <li class="layer-row layer-fixed">
+              <span class="always-on" aria-hidden="true">on</span>
+              <span class="switch-text">Inventory check <span class="sub">(MAC/IP not in the home inventory, always on)</span></span>
+              <span class="hits mono" id="hits-inventory" title="Packets from a source that is not in the home inventory">0</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- (d) thresholds -->
+        <section class="sec" aria-labelledby="tuning-title">
+          <div class="sec-head"><h3 id="tuning-title">Response tuning</h3></div>
+          <div class="ctl ctl-range">
+            <div class="ctl-line">
+              <label for="ids-threshold">ML alert threshold</label>
+              <output id="ids-threshold-out" for="ids-threshold" class="mono">0.80</output>
+            </div>
+            <input type="range" id="ids-threshold" min="0.5" max="0.99" step="0.01" value="0.8">
+            <p class="hint">Attack probability at which ML evidence alone raises an alert.</p>
+          </div>
+          <div class="ctl ctl-range">
+            <div class="ctl-line">
+              <label for="ids-autoblock">Auto-block after</label>
+              <output id="ids-autoblock-out" for="ids-autoblock" class="mono">5 alerts</output>
+            </div>
+            <input type="range" id="ids-autoblock" min="1" max="20" step="1" value="5">
+            <p class="hint" id="autoblock-hint">Alerts from one source within 10 s before it is blocked at the router (Prevent mode).</p>
+          </div>
+        </section>
+
+        <!-- (e) drift -->
+        <section class="sec" aria-labelledby="drift-title">
+          <div class="sec-head">
+            <h3 id="drift-title">Drift monitor</h3>
+            <span class="drift-state" id="drift-state" data-state="stable">stable</span>
+          </div>
+          <div class="gauge" id="drift-gauge" role="meter" aria-labelledby="drift-title" aria-valuemin="0" aria-valuemax="0.5" aria-valuenow="0" aria-valuetext="PSI 0.000, stable">
+            <div class="gauge-track" aria-hidden="true">
+              <span class="zone zone-stable"></span><span class="zone zone-warning"></span><span class="zone zone-drift"></span>
+              <span class="gauge-needle" id="drift-needle"></span>
+            </div>
+            <div class="gauge-scale mono" aria-hidden="true"><span>0</span><span class="t-warn">0.10</span><span class="t-drift">0.25</span><span>0.50</span></div>
+          </div>
+          <div class="kv-row">
+            <span>PSI <b class="mono" id="drift-psi">0.000</b></span>
+            <span id="drift-phase">learning the reference</span>
+            <span>PIWS buffer <b class="mono" id="piws-count">0</b></span>
+          </div>
+          <p class="hint">PIWS (protocol-invariant weak supervision) is a research hypothesis, not a proven result.</p>
+        </section>
+
+        <!-- (f) protocol mix + false alarms -->
+        <section class="sec" aria-labelledby="mix-title">
+          <div class="sec-head">
+            <h3 id="mix-title">Protocol mix <span class="sec-sub">last 10 s</span></h3>
+            <span class="sec-meta mono" id="mix-total">0 pkts</span>
+          </div>
+          <div class="mix-bar" id="mix-bar" role="img" aria-label="Protocol mix"></div>
+          <ul class="mix-legend" id="mix-legend"></ul>
+          <div class="fa-row">
+            <span class="fa-label" id="fa-label" tabindex="0" aria-describedby="fa-tip">False-alarm rate
+              <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M8 7.2v4M8 4.9v.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span class="tip" role="tooltip" id="fa-tip">Alerts or drops on traffic that is actually normal. Ground truth is known only because this is a simulation; a real sensor cannot measure this live.</span>
+            </span>
+            <b class="mono" id="fa-rate">0.00%</b>
+            <span class="mono muted" id="fa-count">0 of 0</span>
+          </div>
+        </section>
+      </div>
+    </aside>
+
+    <!-- ===== Bottom drawer ================================================ -->
+    <section id="drawer" class="panel drawer" aria-label="Packet log, research and resources">
+      <div class="drawer-head">
+        <div class="tabs" role="tablist" id="drawer-tabs" aria-label="Drawer sections">
+          <button type="button" role="tab" id="dtab-log" data-dtab="log" aria-controls="pane-log" aria-selected="true">Packet log</button>
+          <button type="button" role="tab" id="dtab-research" data-dtab="research" aria-controls="pane-research" aria-selected="false" tabindex="-1">Research</button>
+          <button type="button" role="tab" id="dtab-resources" data-dtab="resources" aria-controls="pane-resources" aria-selected="false" tabindex="-1">Resources</button>
+        </div>
+        <button id="btn-drawer" type="button" class="btn btn-icon btn-collapse" aria-expanded="true" aria-controls="drawer-body" aria-label="Collapse the drawer" title="Collapse drawer">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="drawer-body" id="drawer-body">
+        <div class="pane pane-log" id="pane-log" role="tabpanel" aria-labelledby="dtab-log">
+          <div class="log-tools">
+            <label class="switch switch-sm" for="log-pause">
+              <input type="checkbox" id="log-pause" role="switch">
+              <span class="switch-track" aria-hidden="true"></span>
+              <span class="switch-text">Pause log</span>
+            </label>
+            <div class="field-inline">
+              <label for="log-filter">Protocol</label>
+              <select id="log-filter">
+                <option value="">All</option>
+              </select>
+            </div>
+            <span class="log-meta mono" id="log-meta"></span>
+          </div>
+          <div class="log-table">
+            <div class="log-row log-header" aria-hidden="true">
+              <span data-col="time">Sim time</span>
+              <span data-col="route">Source → destination</span>
+              <span data-col="proto">Proto</span>
+              <span data-col="ports">Ports</span>
+              <span data-col="len" class="num">Len</span>
+              <span data-col="verdict">Verdict</span>
+            </div>
+            <div class="log-rows" id="log-rows" role="list" aria-label="Last 200 packets, newest first"></div>
+            <p class="empty" id="log-empty">No packets yet.</p>
+          </div>
+        </div>
+        <div class="pane pane-research" id="pane-research" role="tabpanel" aria-labelledby="dtab-research" hidden></div>
+        <div class="pane pane-resources" id="pane-resources" role="tabpanel" aria-labelledby="dtab-resources" hidden></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toasts" class="toasts" aria-live="polite" aria-relevant="additions"></div>
+
+  <!-- ===== How-to overlay ================================================ -->
+  <dialog id="help-dialog" class="help" aria-labelledby="help-title">
+    <div class="help-head">
+      <h2 id="help-title">How to use the lab</h2>
+      <button id="btn-help-close" type="button" class="btn btn-icon" aria-label="Close">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <ol class="help-steps">
+      <li><b>Watch the home.</b> Every device shares one Wi-Fi network. Packets travel device → router → SHIELD-IoT → destination: cyan is allowed, amber is flagged, red is dropped.</li>
+      <li><b>Control devices.</b> Pick a device in the Home network list or click it in the 3D view, then use its card: switch lights, set the AC, start the washer or speak to Alexa. Each command is real MQTT traffic through the hub.</li>
+      <li><b>Plug in the unknown device.</b> Its MAC address is not in the home inventory, so SHIELD-IoT raises an alert and, in Prevent mode, blocks it at the router.</li>
+      <li><b>Tune the sensor.</b> Switch evidence layers, the ML threshold and auto-blocking in the SHIELD-IoT panel. Detect only raises alerts without dropping anything.</li>
+      <li><b>Inspect packets.</b> The Packet log shows the last 200 packets; click one to see its fields and why SHIELD-IoT allowed, flagged or dropped it.</li>
+    </ol>
+    <p class="help-keys"><kbd>Space</kbd> pause or resume · <kbd>Esc</kbd> clear the selection · drag to orbit, right-drag to pan, scroll to zoom, double-click a device to fly to it (empty space: back to the overview)</p>
+    <p class="help-note">The detection layers follow Anirudh Sharma's SHIELD-IoT research (NIT Hamirpur). The ML layer is a surrogate tuned to the book's frozen LightGBM baseline, not the trained model, and this version has no attack launcher.</p>
+  </dialog>
+</body>
+</html>
